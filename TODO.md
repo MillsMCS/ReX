@@ -7,16 +7,16 @@
 - [ ] Write insertion text for putting initial data into tables  
 
 - [ ] Determine what insert methods we need (DBHelper)
-    * Create tables
-    * addDog
-    * addFood
+    * private void updateMyDatabase((SQLiteDatabase db, int oldVersion, int newVersion)
+    * private void addDog
+    * private void addFood
     
 - [ ] Write update/insert methods (DBUtilities)
-* addAllergy  
-* deleteAllergy
-* updateDogName
-* updateDogBreed 
-* updateDogWeight
+    * public boolean addAllergy  
+    * public boolean deleteAllergy
+    * public boolean updateDogName
+    * public boolean updateDogBreed 
+    * public boolean updateDogWeight
 
 - [ ] Determine what get methods we need  
 - [ ] Write get methods  
