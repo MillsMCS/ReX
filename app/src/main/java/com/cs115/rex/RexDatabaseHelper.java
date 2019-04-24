@@ -10,6 +10,7 @@ public class RexDatabaseHelper extends SQLiteOpenHelper {
 
     RexDatabaseHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
+
     }
 
     @Override
@@ -27,15 +28,24 @@ public class RexDatabaseHelper extends SQLiteOpenHelper {
 
 
     private void updateMyDatabase(SQLiteDatabase db, int oldVersion, int newVersion) {
-//        if (oldVersion < 1) {
-//            db.execSQL("CREATE TABLE DRINK (_id INTEGER PRIMARY KEY AUTOINCREMENT, "
-//                    + "NAME TEXT, "
-//                    + "DESCRIPTION TEXT, "
-//                    + "IMAGE_RESOURCE_ID INTEGER);");
+        if (oldVersion < 1) {
+            db.execSQL("CREATE TABLE FOOD (_id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    + "NAME TEXT, "
+                    + "TOXICITY INTEGER, "
+                    + "IMAGE_RESOURCE_ID INTEGER, "
+                    + "QUOTE TEXT);");
+            db.execSQL("CREATE TABLE DOG (_id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    + "NAME TEXT, "
+                    + "WEIGHT TEXT, "
+                    + "BREED TEXT, "
+                    + "PHOTO TEXT)");
+            db.execSQL("CREATE TABLE ALLERGIES (_id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    + "FOREIGN KEY(FOOD_ID) REFERENCES FOOD(_id),"
+                    + "FOREIGN KEY(DOG_ID) REFERENCES DOG(_id));");
 //            insertDrink(db, "Latte", "Espresso and steamed milk", R.drawable.latte);
-//            insertDrink(db, "Cappuccino", "Espresso, hot milk and steamed-milk foam",
-//                    R.drawable.cappuccino);
+//            insertDrink(db, "Cappuccino", "Espresso, hot milk and steamed-milk foam",R.drawable.cappuccino);
 //            insertDrink(db, "Filter", "Our best drip coffee", R.drawable.filter);
 
         }
+    }
 }
