@@ -1,16 +1,12 @@
 package com.cs115.rex;
 
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.nfc.Tag;
 import android.util.Log;
-import android.util.StateSet;
-
-import java.sql.Blob;
-import java.sql.SQLException;
 
 public class RexDatabaseHelper extends SQLiteOpenHelper {
 
@@ -40,38 +36,22 @@ public class RexDatabaseHelper extends SQLiteOpenHelper {
     //column names ALLERGIES_TABLE
     private static final Integer ALLERGIE_ID = 0;
 
-    // DOG_TABLE create statement
-    private static final String CREATE_TABLE_DOG = "CREATE TABLE " + DOG_TABLE + "("+
-            DOG_ID + "INTEGER PRIMARY KEY AUTOINCREMENT," +
-            DOG_NAME + " TEXT," +
-            DOG_WEIGHT + "INTEGER," +
-            DOG_BREED + "TEXT," +
-            DOG_PHOTO + " BLOB);";
-    //FOOD_TABLE create statement
-    private static final String CREATE_TABLE_FOOD = "CREATE TABLE " + FOOD_TABLE + "(" +
-            FOOD_ID + "INTEGER PRIMARY KEY AUTOINCREMENT," +
-            FOOD_NAME + "TEXT," +
-            FOOD_TOXICITY + "INTEGER, " +
-            FOOD_IMAGE_RESOURCE_ID + "INTEGER," +
-            FOOD_QUOTE + "INTEGER);";
 
-    //ALLERGIES_TABLE create statement
-    private static final String CREATE_TABLE_ALLERGIES = "CREATE TABLE " + ALLERGIES_TABLE + "("+
-            ALLERGIE_ID + "INTEGER PRIMARY KEY AUTOINCREMENT," +
-            FOOD_ID + "INTEGER, " +
-            DOG_ID + "INTEGER);";
-
+//
+//    SQLiteDatabase db;
+//    ContentResolver contentResolver;
 
 
     RexDatabaseHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
+//        contentResolver = context.getContentResolver();
+//        db = this.getWritableDatabase();
         Log.d(TAG, "Created");
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         updateMyDatabase(db, 0, DB_VERSION);
-
         Log.d(TAG, "Databases created successfully");
     }
 
@@ -81,11 +61,34 @@ public class RexDatabaseHelper extends SQLiteOpenHelper {
 
     }
 
-    //private static void updateDogName(SQLiteDatabase db, )
-
-
+//    //private static void updateDogName(SQLiteDatabase db, )
+//
+//
     private void updateMyDatabase(SQLiteDatabase db, int oldVersion, int newVersion) {
         if (oldVersion < 1) {
+            //FOOD_TABLE create statement
+            final String CREATE_TABLE_FOOD = "CREATE TABLE " + FOOD_TABLE + " (" +
+                    FOOD_ID + "INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    FOOD_NAME + "TEXT," +
+                    FOOD_TOXICITY + "INTEGER, " +
+                    FOOD_IMAGE_RESOURCE_ID + "INTEGER," +
+                    FOOD_QUOTE + "INTEGER);";
+
+            // DOG_TABLE create statement
+            final String CREATE_TABLE_DOG = "CREATE TABLE " + DOG_TABLE + " (" +
+                    DOG_ID + "INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    DOG_NAME + " TEXT," +
+                    DOG_WEIGHT + "INTEGER," +
+                    DOG_BREED + "TEXT," +
+                    DOG_PHOTO + " BLOB NOT NULL);";
+
+
+            //ALLERGIES_TABLE create statement
+            final String CREATE_TABLE_ALLERGIES = "CREATE TABLE " + ALLERGIES_TABLE + " (" +
+                    ALLERGIE_ID + "INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    FOOD_ID + "INTEGER, " +
+                    DOG_ID + "INTEGER);";
+
             db.execSQL(CREATE_TABLE_FOOD);
             insertFood(db,"Alcohol", 9, R.drawable.alcohol,R.string.symptom9);
             insertFood(db,"Apple", 8, R.drawable.apple,R.string.symptom8);
@@ -117,7 +120,7 @@ public class RexDatabaseHelper extends SQLiteOpenHelper {
             insertFood(db,"Yeast Dough", 5, R.drawable.yeast_dough,R.string.symptom5);
 
             db.execSQL(CREATE_TABLE_DOG);
-
+//            insertDog(db, "Rex","120", "Scotish Terrier",);
 
             db.execSQL(CREATE_TABLE_ALLERGIES);
 
@@ -130,7 +133,6 @@ public class RexDatabaseHelper extends SQLiteOpenHelper {
         foodValues.put("IMAGE_RESOURCE_ID", resourceId);
         foodValues.put("QUOTE", quote);
         db.insert("FOOD", null, foodValues);
-        db.close();
     }
     private static void insertDog(SQLiteDatabase db, String name, String weight, String breed, byte[] photo) throws SQLiteException{
         ContentValues dogValues = new ContentValues();
@@ -139,13 +141,11 @@ public class RexDatabaseHelper extends SQLiteOpenHelper {
         dogValues.put("BREED", breed);
         dogValues.put("PHOTO", photo);
         db.insert("DOG", null, dogValues);
-        db.close();
     }
     private static void insertAllergie(SQLiteDatabase db, int foodId, int dogID)throws SQLiteException{
         ContentValues allergiesValues = new ContentValues();
         allergiesValues.put("FOOD_ID", foodId);
         allergiesValues.put("DOG_ID", dogID);
         db.insert("ALLERGIES", null, allergiesValues);
-        db.close();
     }
 }
