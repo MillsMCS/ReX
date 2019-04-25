@@ -19,4 +19,10 @@
     <string name="symptom_marijuana">Symptoms- prolonged depression, vomiting, incoordination,
         sleepiness, excitation, hypersalivation, dilated pupils, low blood pressure,
     low body temperature,seizure, coma, death(rare) </string>
+    <string name="main_image_desc">Dog profile picture or ReX logo</string>
+    <string name="search_string">Search</string>
+    <string name="search_hint">Type search text</string>
+    <string name="profile_name">Profile</string>
+    <string name="results_name">Results</string>
+    <string name="results_placeholder">Results Test</string>
 </resources>

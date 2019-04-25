@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <include
+        layout="@layout/toolbar_main"
+        android:id="@+id/toolbar" />
+
+    <ImageView
+        android:id="@+id/photo"
+        android:layout_below="@id/toolbar"
+        android:layout_width="110dp"
+        android:layout_height="110dp"
+        android:layout_marginTop="20dp"
+        android:src="@mipmap/rex_icon_scottish"
+        android:layout_centerHorizontal="true"
+        android:contentDescription="@string/main_image_desc" />
+
+    <EditText
+        android:id="@+id/search_bar"
+        android:layout_below="@id/photo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:inputType="text"
+        android:hint="@string/search_hint"/>
+
+        <!-- TODO consider autofillhints. We could possibly implement them from the database.
+        android:autofillHints=""
+        -->
+
+    <Button
+        android:id="@+id/search_button"
+        android:layout_below="@id/search_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="30dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="30dp"
+        android:text="@string/search_string"
+        android:onClick="onClickSearch"/>
+</RelativeLayout>
+
