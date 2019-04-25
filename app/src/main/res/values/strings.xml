@@ -1,3 +1,22 @@
 <resources>
     <string name="app_name">ReX</string>
+    <string name="symptom10">Symptoms- vomiting, diarrhea, panting, excessive thirst, excessive urination,
+    hyperactivity, abnormal heart rhythm, tremors, seizures, and even death</string>
+    <string name="symptom9">Symptoms- vomiting, diarrhea, decreased coordination, central nervous
+    system depression, difficulty breathing, tremors, abnormal blood acidity, coma, and even death</string>
+    <string name="symptom8"> Symptoms- brick red mucous membrane, dilated pupils, difficulty breathing
+    panting, shock</string>
+    <string name="symptom7">Symptoms- vomiting, diarrhea, possible obstruction of throat</string>
+    <string name="symptom6">Symptoms- contact dermatitis, vomiting, diarrhea, anorexia, allergic reactions</string>
+    <string name="symptom5">Symptoms- possible stomach bloating, potential stomach twist</string>
+    <string name="symptom4">Symptoms- gastrointestinal and dermal irritation</string>
+    <string name="symptom3">Symptoms- stomach upset, loose stool, possible diarrhea</string>
+    <string name="symptom2">Symptoms- minor stomach upset</string>
+    <string name="symptom1">Symptoms- non toxic to dogs</string>
+    <string name="symptom_onion_family">Symptoms- vomiting, breakdown of red blood cells,
+        blood in urine, weakness, high heart rate, panting</string>
+    <string name="symptom_grape">Symptoms- potential kidney failure</string>
+    <string name="symptom_marijuana">Symptoms- prolonged depression, vomiting, incoordination,
+        sleepiness, excitation, hypersalivation, dilated pupils, low blood pressure,
+    low body temperature,seizure, coma, death(rare) </string>
 </resources>
