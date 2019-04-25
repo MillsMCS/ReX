@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">ReX</string>
+
+    <string name="main_image_desc">Dog profile picture or ReX logo</string>
+
+    <string name="search_string">Search</string>
+    <string name="search_hint">Type search text</string>
+
+    <string name="profile_name">Profile</string>
+
+    <string name="results_name">Results</string>
+
+    <string name="results_placeholder">Results Test</string>
+
+
 </resources>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- TODO evaluate layout, large, land fragment_search layouts for use of a possible include file with common elements to avoid duplicate code -->
+<!-- TODO investigate correcting image resources for alternative resolutions/sizes for scottish rex image -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.cs115.rex.MainActivity" >
+
+    <include
+        layout="@layout/toolbar_main"
+        android:id="@+id/toolbar" />
+
+    <ImageView
+        android:id="@+id/photo"
+        android:layout_below="@id/toolbar"
+        android:layout_width="130dp"
+        android:layout_height="130dp"
+        android:layout_marginTop="40dp"
+        android:src="@mipmap/rex_icon_scottish"
+        android:layout_centerHorizontal="true"
+        android:contentDescription="@string/main_image_desc" />
+
+    <EditText
+        android:id="@+id/search_bar"
+        android:layout_below="@id/photo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:inputType="text"
+        android:hint="@string/search_hint"/>
+
+        <!-- TODO consider autofillhints. We could possibly implement them from the database.
+        android:autofillHints=""
+        -->
+
+    <Button
+        android:id="@+id/search_button"
+        android:layout_below="@id/search_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="30dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="30dp"
+        android:text="@string/search_string"
+        android:onClick="onClickSearch"/>
+
+</RelativeLayout>
