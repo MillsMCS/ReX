@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- TODO investigate correcting image resources for alternative resolutions/sizes for profile settings icon -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <include
+        layout="@layout/toolbar_main"
+        android:id="@+id/toolbar" />
+
+    <ImageView
+        android:id="@+id/photo"
+        android:layout_below="@id/toolbar"
+        android:layout_marginTop="40dp"
+        android:layout_width="130dp"
+        android:layout_height="130dp"
+        android:src="@mipmap/rex_icon_scottish"
+        android:layout_centerHorizontal="true"
+        android:contentDescription="@string/main_image_desc" />
+
+    <!-- TODO fill out profile layout -->
+    <!-- TODO set up fragments -->
+
+</RelativeLayout>

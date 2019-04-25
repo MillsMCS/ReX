@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal" >
+
+    <!-- TODO consider that App Bar doesn't extend across the full width of the screen -->
+
+    <fragment
+        android:name="com.cs115.rex.SearchFragment"
+        android:id="@+id/search_frag"
+        android:layout_width="0dp"
+        android:layout_weight="2"
+        android:layout_height="match_parent" />
+
+    <!-- Right border between search/results and detail fragment -->
+    <View
+        android:id="@+id/border"
+
+        android:layout_width="2dp"
+        android:layout_height="match_parent"
+        android:background="@color/colorAccent" />
+
+    <!--will hold whatever DetailFragment when the user makes a choice-->
+    <FrameLayout
+        android:id="@+id/detail_container"
+
+        android:layout_width="0dp"
+        android:layout_weight="3"
+        android:layout_height="match_parent" />
+
+</LinearLayout>
