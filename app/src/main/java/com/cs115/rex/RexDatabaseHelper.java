@@ -3,20 +3,76 @@ package com.cs115.rex;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.nfc.Tag;
+import android.util.Log;
+import android.util.StateSet;
+
+import java.sql.Blob;
+import java.sql.SQLException;
 
 public class RexDatabaseHelper extends SQLiteOpenHelper {
+
+    private static final String TAG = null;
+
     private static final String DB_NAME = "rex";
     private static final int DB_VERSION = 0;
+    // Table names
+    private static final String FOOD_TABLE = "food";
+    private static final String DOG_TABLE = "dog";
+    private static final String ALLERGIES_TABLE = "allergies";
+
+    //column names FOOD_TABLE
+    private static final Integer FOOD_ID = 0;
+    private static final String FOOD_NAME = "food_name";
+    private static final Integer FOOD_TOXICITY = 0;
+    private static final Integer FOOD_IMAGE_RESOURCE_ID = 0;
+    private static final Integer FOOD_QUOTE = 0;
+
+    //column names DOG_TABLE
+    private static final Integer DOG_ID = 0;
+    private static final String DOG_NAME = "dog_name";
+    private static final Integer DOG_WEIGHT = 0;
+    private static final String  DOG_BREED = "dog_breed";
+    private static final String  DOG_PHOTO = "dog_iamge";
+
+    //column names ALLERGIES_TABLE
+    private static final Integer ALLERGIE_ID = 0;
+
+    // DOG_TABLE create statement
+    private static final String CREATE_TABLE_DOG = "CREATE TABLE " + DOG_TABLE + "("+
+            DOG_ID + "INTEGER PRIMARY KEY AUTOINCREMENT," +
+            DOG_NAME + " TEXT," +
+            DOG_WEIGHT + "INTEGER," +
+            DOG_BREED + "TEXT," +
+            DOG_PHOTO + " BLOB);";
+    //FOOD_TABLE create statement
+    private static final String CREATE_TABLE_FOOD = "CREATE TABLE " + FOOD_TABLE + "(" +
+            FOOD_ID + "INTEGER PRIMARY KEY AUTOINCREMENT," +
+            FOOD_NAME + "TEXT," +
+            FOOD_TOXICITY + "INTEGER, " +
+            FOOD_IMAGE_RESOURCE_ID + "INTEGER," +
+            FOOD_QUOTE + "INTEGER);";
+
+    //ALLERGIES_TABLE create statement
+    private static final String CREATE_TABLE_ALLERGIES = "CREATE TABLE " + ALLERGIES_TABLE + "("+
+            ALLERGIE_ID + "INTEGER PRIMARY KEY AUTOINCREMENT," +
+            FOOD_ID + "INTEGER, " +
+            DOG_ID + "INTEGER);";
+
+
 
     RexDatabaseHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
-
+        Log.d(TAG, "Created");
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         updateMyDatabase(db, 0, DB_VERSION);
+
+        Log.d(TAG, "Databases created successfully");
     }
 
     @Override
@@ -30,11 +86,7 @@ public class RexDatabaseHelper extends SQLiteOpenHelper {
 
     private void updateMyDatabase(SQLiteDatabase db, int oldVersion, int newVersion) {
         if (oldVersion < 1) {
-            db.execSQL("CREATE TABLE FOOD (" +"_id INTEGER PRIMARY KEY AUTOINCREMENT, "
-                    + "NAME TEXT, "
-                    + "TOXICITY INTEGER, "
-                    + "IMAGE_RESOURCE_ID INTEGER, "
-                    + "QUOTE INTEGER);");
+            db.execSQL(CREATE_TABLE_FOOD);
             insertFood(db,"Alcohol", 9, R.drawable.alcohol,R.string.symptom9);
             insertFood(db,"Apple", 8, R.drawable.apple,R.string.symptom8);
             insertFood(db,"Apricot", 8, R.drawable.apricot,R.string.symptom8);
@@ -63,40 +115,37 @@ public class RexDatabaseHelper extends SQLiteOpenHelper {
             insertFood(db,"Tomato", 1, R.drawable.tomato,R.string.symptom1);
             insertFood(db,"Watermelon", 1, R.drawable.watermelon,R.string.symptom1);
             insertFood(db,"Yeast Dough", 5, R.drawable.yeast_dough,R.string.symptom5);
-            db.execSQL("CREATE TABLE DOG (" + "_id INTEGER PRIMARY KEY AUTOINCREMENT, "
-                    + "NAME TEXT, "
-                    + "WEIGHT TEXT, "
-                    + "BREED TEXT, "
-                    + "PHOTO TEXT)");
-            db.execSQL("CREATE TABLE ALLERGIES (" + "_id INTEGER PRIMARY KEY AUTOINCREMENT, "
-                    + "FOREIGN KEY(FOOD_ID) REFERENCES FOOD(_id),"
-                    + "FOREIGN KEY(DOG_ID) REFERENCES DOG(_id));");
-//            insertDrink(db, "Latte", "Espresso and steamed milk", R.drawable.latte);
-//            insertDrink(db, "Cappuccino", "Espresso, hot milk and steamed-milk foam",R.drawable.cappuccino);
-//            insertDrink(db, "Filter", "Our best drip coffee", R.drawable.filter);
+
+            db.execSQL(CREATE_TABLE_DOG);
+
+
+            db.execSQL(CREATE_TABLE_ALLERGIES);
 
         }
     }
-    private static void insertFood(SQLiteDatabase db, String name, int toxicity, int resourceId, int quote){
+    private static void insertFood(SQLiteDatabase db, String name, int toxicity, int resourceId, int quote)throws SQLiteException {
         ContentValues foodValues = new ContentValues();
         foodValues.put("NAME", name);
         foodValues.put("TOXICITY", toxicity);
         foodValues.put("IMAGE_RESOURCE_ID", resourceId);
         foodValues.put("QUOTE", quote);
         db.insert("FOOD", null, foodValues);
+        db.close();
     }
-    private static void insertDog(SQLiteDatabase db, String name, String weight, String breed, String photo){
+    private static void insertDog(SQLiteDatabase db, String name, String weight, String breed, byte[] photo) throws SQLiteException{
         ContentValues dogValues = new ContentValues();
         dogValues.put("NAME", name);
         dogValues.put("WEIGHT", weight);
         dogValues.put("BREED", breed);
         dogValues.put("PHOTO", photo);
         db.insert("DOG", null, dogValues);
+        db.close();
     }
-    private static void insertAllergie(SQLiteDatabase db, int foodId, int dogID){
+    private static void insertAllergie(SQLiteDatabase db, int foodId, int dogID)throws SQLiteException{
         ContentValues allergiesValues = new ContentValues();
         allergiesValues.put("FOOD_ID", foodId);
         allergiesValues.put("DOG_ID", dogID);
         db.insert("ALLERGIES", null, allergiesValues);
+        db.close();
     }
 }
