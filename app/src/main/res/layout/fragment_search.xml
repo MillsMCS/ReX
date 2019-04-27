@@ -20,7 +20,7 @@
         android:layout_width="130dp"
         android:layout_height="130dp"
         android:layout_marginTop="40dp"
-        android:src="@mipmap/rex_icon_scottish"
+        android:src="@drawable/rex_icon_scottish_nobg"
         android:layout_centerHorizontal="true"
         android:contentDescription="@string/main_image_desc" />
 

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--TODO programmatically generate text and remove hardcoded examples-->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:context="com.cs115.rex.ProfileActivity" >
+
+    <TextView
+        android:id="@+id/AllergyLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Allergy"/>
+
+    <!--TODO add entries via database and remove hardcoded examples-->
+    <!-- TODO consider formatting and the label implementation, as in the design doc -->
+    <ListView
+        android:id="@+id/AllergyListView"
+        android:layout_below="@+id/AllergyLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:entries="@array/sampleAllergies" />
+
+</RelativeLayout>

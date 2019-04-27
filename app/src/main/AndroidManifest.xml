@@ -5,15 +5,16 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/rex"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/rex_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-
+        <activity android:name=".DetailActivity"></activity>
         <!-- windowSoftInputMode hides the soft keyboard until the user selects an appropriate control - the search bar -->
-        <activity android:name=".MainActivity"
+        <activity
+            android:name=".MainActivity"
             android:windowSoftInputMode="stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,11 +22,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".MenuActivity"/>
-        <activity android:name=".ResultsActivity"/>
-        <activity android:name=".ProfileActivity"
+        <activity android:name=".MenuActivity" />
+        <activity android:name=".ResultsActivity" />
+        <activity
+            android:name=".ProfileActivity"
             android:label="@string/profile_name" />
-
     </application>
+
 </manifest>

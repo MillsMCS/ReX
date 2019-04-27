@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--TODO programmatically generate text and remove hardcoded examples-->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:context="com.cs115.rex.ProfileActivity" >
+
+    <TextView
+        android:id="@+id/nameLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Name"/>
+
+    <TextView
+        android:id="@+id/nameView"
+        android:layout_below="@+id/nameLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:text="Name View"/>
+
+    <TextView
+        android:id="@+id/breedLabel"
+        android:layout_below="@+id/nameView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Breed"/>
+
+    <TextView
+        android:id="@+id/breedView"
+        android:layout_below="@+id/breedLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:text="Breed View"/>
+
+    <TextView
+        android:id="@+id/WeightLabel"
+        android:layout_below="@+id/breedView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Weight"/>
+
+    <TextView
+        android:id="@+id/WeightView"
+        android:layout_below="@+id/WeightLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Weight View"/>
+
+</RelativeLayout>

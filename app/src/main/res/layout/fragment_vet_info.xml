@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--TODO programmatically generate text and remove hardcoded examples-->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:context="com.cs115.rex.ProfileActivity" >
+
+    <TextView
+        android:id="@+id/vetNameLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Vet Name"/>
+
+    <TextView
+        android:id="@+id/vetNameView"
+        android:layout_below="@+id/vetNameLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:text="Vet Name View"/>
+
+    <TextView
+        android:id="@+id/vetPhoneLabel"
+        android:layout_below="@+id/vetNameView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Vet Phone"/>
+
+    <TextView
+        android:id="@+id/vetPhoneView"
+        android:layout_below="@+id/vetPhoneLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:text="Vet Phone View"/>
+
+    <TextView
+        android:id="@+id/vetAddressLabel"
+        android:layout_below="@+id/vetPhoneView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Vet Address"/>
+
+    <TextView
+        android:id="@+id/vetAddressView"
+        android:layout_below="@+id/vetAddressLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Vet Address View"/>
+
+</RelativeLayout>

@@ -12,5 +12,9 @@
 
     <string name="results_placeholder">Results Test</string>
 
+    <array name="sampleAllergies">
+        <item>allergy1</item>
+        <item>allergy2</item>
+    </array>
 
 </resources>
