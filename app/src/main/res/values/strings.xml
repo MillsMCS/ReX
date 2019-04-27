@@ -39,5 +39,9 @@
         hypersalivation, dilated pupils, low blood pressure,
         low body temperature, seizure, coma, death (rare)</string>
 
+    <array name="sampleAllergies">
+        <item>allergy1</item>
+        <item>allergy2</item>
+    </array>
 
 </resources>

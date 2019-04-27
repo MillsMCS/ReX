@@ -25,7 +25,6 @@
     <!--will hold whatever DetailFragment when the user makes a choice-->
     <FrameLayout
         android:id="@+id/detail_container"
-
         android:layout_width="0dp"
         android:layout_weight="3"
         android:layout_height="match_parent" />
