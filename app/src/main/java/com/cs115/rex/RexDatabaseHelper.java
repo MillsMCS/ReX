@@ -9,6 +9,25 @@ public class RexDatabaseHelper extends SQLiteOpenHelper {
     private static final String DB_NAME = "rex";
     private static final int DB_VERSION = 0;
 
+    static String DOG = "DOG";
+    static String ID ="_id";
+    static String NAME ="NAME";
+    static String TOXICITY = "TOXICITY";
+    static String IMAGE_RESOURCE_ID = "IMAGE_RESOURCE_ID";
+    static String QUOTE = "QUOTE";
+    static String WEIGHT = "WEIGHT";
+    static String BREED = "BREED";
+    static String PHOTO = "PHOTO";
+    static int SINGLE_DOG_ID = 1;
+    static String FOOD_ID = "FOOD_ID";
+    static String DOG_ID = "SINGLE_DOG_ID";
+    static String ALLERGY_DOG_ID = "DOG_ID";
+
+    static String ALLERGIES = "ALLERGIES";
+
+
+
+
     RexDatabaseHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
 
@@ -77,8 +96,9 @@ public class RexDatabaseHelper extends SQLiteOpenHelper {
 //            insertDrink(db, "Latte", "Espresso and steamed milk", R.drawable.latte);
 //            insertDrink(db, "Cappuccino", "Espresso, hot milk and steamed-milk foam",R.drawable.cappuccino);
 //            insertDrink(db, "Filter", "Our best drip coffee", R.drawable.filter);
-
         }
+        insertDog(db, SINGLE_DOG_ID, "Fido", "0lbs", "CockerSpaniel", null );
+
     }
     private static void insertFood(SQLiteDatabase db, String name, int toxicity, int resourceId, int quote){
         ContentValues foodValues = new ContentValues();
@@ -88,19 +108,15 @@ public class RexDatabaseHelper extends SQLiteOpenHelper {
         foodValues.put("QUOTE", quote);
         db.insert("FOOD", null, foodValues);
     }
-    private static void insertDog(SQLiteDatabase db, String name, String weight, String breed, String photo){
+    private static void insertDog(SQLiteDatabase db, int dogId, String name, String weight, String breed, String photo){
         ContentValues dogValues = new ContentValues();
+        dogValues.put("ID", dogId);
         dogValues.put("NAME", name);
         dogValues.put("WEIGHT", weight);
         dogValues.put("BREED", breed);
         dogValues.put("PHOTO", photo);
         db.insert("DOG", null, dogValues);
     }
-    private static void insertAllergie(SQLiteDatabase db, int foodId, int dogID){
-        ContentValues allergiesValues = new ContentValues();
-        allergiesValues.put("FOOD_ID", foodId);
-        allergiesValues.put("DOG_ID", dogID);
-        db.insert("ALLERGIES", null, allergiesValues);
-    }
+
 }
 
