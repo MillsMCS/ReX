@@ -71,7 +71,10 @@ public class ProfileActivity extends AppCompatActivity {
             case R.id.action_profile_info:
                 //TODO code to activate edit profile functionality
                 return true;
-
+            case R.id.action_home:
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
