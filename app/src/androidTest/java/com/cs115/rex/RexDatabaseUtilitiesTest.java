@@ -24,7 +24,7 @@ public class RexDatabaseUtilitiesTest {
 
     private static final int DOG1_ID = 1;
     private static final String DOG1_NAME = "Benji";
-    private static final int DOG1_WEIGHT = 220;
+    private static final String DOG1_WEIGHT = "220";
     private static final String DOG1_BREED = "Labrador";
     private static final int FOOD1_ID = 1;
     private static final String FOOD1_NAME = "Chocolate";
@@ -32,22 +32,24 @@ public class RexDatabaseUtilitiesTest {
     private static final int FOOD1_TOX = 10;
     private static final int ALLERGY1_ID = 1;
     private static final String NEW_NAME = "Bruno";
+    private static final String NEW_BREED = "Retriever";
+    private static final String NEW_WEIGHT = "235";
     private SQLiteDatabase db;
+    // This creates a temporary context so database accesses in the tests are isolated.
+    private Context context = InstrumentationRegistry.getTargetContext();
 
     @Before
     public void setUp() throws Exception {
-        // This creates a temporary context so database accesses in the tests are isolated.
-        Context context =
-                InstrumentationRegistry.getTargetContext();
+
         SQLiteOpenHelper rexDatabaseHelper = new RexDatabaseHelper(context);
         SQLiteDatabase db = rexDatabaseHelper.getWritableDatabase();
 
         // Create a dog, DOG1.
-        long rowId = RexDatabaseUtilities.addDog(db, DOG1_ID, DOG1_NAME, DOG1_WEIGHT, DOG1_BREED);
+        long rowId = RexDatabaseHelper.insertDog(db, DOG1_ID, DOG1_NAME, DOG1_WEIGHT, DOG1_BREED);
         //Create a food, FOOD1.
-        rowId = RexDatabaseUtilities.addFood(db, FOOD1_ID, FOOD1_NAME, FOOD1_BLURB, FOOD1_TOX );
+        //rowId = RexDatabaseUtilities.addFood(db, FOOD1_ID, FOOD1_NAME, FOOD1_BLURB, FOOD1_TOX );
         //Create an allergy, ALLERGY1.
-        rowId = RexDatabaseUtilities.addAllergy(db, ALLERGY1_ID, DOG1_ID, FOOD1_NAME);
+        rowId = RexDatabaseUtilities.addAllergy(context, FOOD1_ID, DOG1_ID);
 
     }
 
@@ -59,12 +61,12 @@ public class RexDatabaseUtilitiesTest {
 
     @Test
     public void getDog() throws Exception {
-        Cursor dogCursor = RexDatabaseUtilities.getDog(db, DOG1_ID);
+        Cursor dogCursor = RexDatabaseUtilities.getDog(context);
         if (dogCursor != null){
             dogCursor.moveToFirst();
             assertEquals(DOG1_ID, dogCursor.getInt(0));
             assertEquals(DOG1_NAME, dogCursor.getString(1));
-            assertEquals(DOG1_WEIGHT, dogCursor.getInt(2));
+            assertEquals(DOG1_WEIGHT, dogCursor.getString(2));
             assertEquals(DOG1_BREED, dogCursor.getString(3));
         } else {
             fail();
@@ -72,28 +74,30 @@ public class RexDatabaseUtilitiesTest {
     }
 
     @Test
-    public void getAllergy() throws Exception {
-        Cursor allergyCursor = RexDatabaseUtilities.getAllergy(db, ALLERGY1_ID);
+    public void getAllergies() throws Exception {
+        Cursor allergyCursor = RexDatabaseUtilities.getAllergies(context);
         if (allergyCursor != null){
             allergyCursor.moveToFirst();
             assertEquals(ALLERGY1_ID, allergyCursor.getInt(0));
-            assertEquals(DOG1_ID, allergyCursor.getString(1));
-            assertEquals(FOOD1_NAME, allergyCursor.getString(2));
+            assertEquals(FOOD1_ID, allergyCursor.getString(1));
+            assertEquals(DOG1_ID, allergyCursor.getString(2));
         } else {
             fail();
         }
     }
     @Test
-    public void deleteAllergy() throws Exception {
-
+    public void removeAllergy() throws Exception {
+        RexDatabaseUtilities.removeAllergy(context, ALLERGY1_ID);
+        Cursor allergyCursor = RexDatabaseUtilities.getAllergies(context);
+        assertNull(allergyCursor);
     }
 
 
     @Test
-    public void updateDogName() throws Exception {
-        boolean success = RexDatabaseUtilities.updateDogName(db, DOG1_ID, NEW_NAME);
+    public void updateName() throws Exception {
+        boolean success = RexDatabaseUtilities.updateName(context, NEW_NAME);
         assertEquals(true, success);
-        Cursor dogNameCursor = RexDatabaseUtilities.getDog(db, DOG1_ID);
+        Cursor dogNameCursor = RexDatabaseUtilities.getDog(context);
         if (dogNameCursor != null) {
             dogNameCursor.moveToFirst();
             assertEquals(NEW_NAME, dogNameCursor.getString(1));
@@ -101,6 +105,30 @@ public class RexDatabaseUtilitiesTest {
             fail();
         }
     }
-    public boolean updateDogBreed
-    public boolean updateDogWeight
+
+    @Test
+    public void updateDogBreed() throws Exception {
+        boolean success = RexDatabaseUtilities.updateBreed(context, NEW_BREED);
+        assertEquals(true, success);
+        Cursor dogBreedCursor = RexDatabaseUtilities.getDog(context);
+        if (dogBreedCursor != null) {
+            dogBreedCursor.moveToFirst();
+            assertEquals(NEW_BREED, dogBreedCursor.getString(3));
+        } else {
+            fail();
+        }
+    }
+
+    @Test
+    public void updateDogWeight() throws Exception {
+        boolean success = RexDatabaseUtilities.updateWeight(context, NEW_WEIGHT);
+        assertEquals(true, success);
+        Cursor dogWeightCursor = RexDatabaseUtilities.getDog(context);
+        if (dogWeightCursor != null) {
+            dogWeightCursor.moveToFirst();
+            assertEquals(NEW_WEIGHT, dogWeightCursor.getString(2));
+        } else {
+            fail();
+        }
+    }
 }
