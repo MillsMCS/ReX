@@ -121,7 +121,6 @@ public class RexDatabaseHelper extends SQLiteOpenHelper {
         dogValues.put("PHOTO", photo);
         db.insert("DOG", null, dogValues);
         Log.d(TAG, "success....");
-
     }
 
 }

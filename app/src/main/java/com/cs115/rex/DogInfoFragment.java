@@ -16,67 +16,60 @@ import android.widget.EditText;
  */
 public class DogInfoFragment extends Fragment {
     private static final String TAG = "DOGFRAGMENT";
+    private EditText nameET;
+    private EditText weightET;
+    private EditText breedET;
     private String name;
     private String breed;
     private String weight;
-    private boolean info;
-    private boolean hasInfo;
+    private boolean isRestored;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-
         if(savedInstanceState != null){
             name = savedInstanceState.getString("name");
             breed = savedInstanceState.getString("breed");
             weight = savedInstanceState.getString("weight");
-            hasInfo = savedInstanceState.getBoolean("hasInfo");
+            isRestored = savedInstanceState.getBoolean("isRestored");
         }
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_dog_info, container, false);
-
     }
+
     @Override
     public void onStart(){
         super.onStart();
-        if(hasInfo) {
-            info = true;
             View view = getView();
-
-            Log.d(TAG, "we made it here");
-            Cursor cursor = RexDatabaseUtilities.getDog(view.getContext());
-            Log.d(TAG, "we made it here");
-
-            EditText name = view.findViewById(R.id.nameView);
-            Log.d(TAG, "we made it here");
-
-            EditText breed = view.findViewById(R.id.breedView);
-            Log.d(TAG, "we made it here");
-
-            EditText weight = view.findViewById(R.id.WeightView);
-            Log.d(TAG, "we made it here");
-
-            if (cursor.moveToFirst()) {
-                name.setText(cursor.getColumnIndex("name"));
-                breed.setText(cursor.getColumnIndex("breed"));
-                weight.setText(cursor.getColumnIndex("weight"));
-            }
+            nameET = view.findViewById(R.id.nameView);
+            breedET = view.findViewById(R.id.breedView);
+            weightET = view.findViewById(R.id.WeightView);
+            if (! isRestored){
+                Cursor cursor = RexDatabaseUtilities.getDog(view.getContext());
+                if (cursor.moveToFirst()) {
+                    Log.d(TAG, cursor.getString(0));
+                    nameET.setText(cursor.getString(0));
+                    weightET.setText(cursor.getString(1));
+                    breedET.setText(cursor.getString(2));
+            } else {
+                    nameET.setText(name);
+                    weightET.setText(weight);
+                    breedET.setText(breed);
+                }
         }
-
     }
-    public void onInstanceState(Bundle savedInstanceState){
-        savedInstanceState.putString("name", name);
-        savedInstanceState.putString("breed", breed);
-        savedInstanceState.putString("weight", weight);
-        savedInstanceState.putBoolean("hasInfo", hasInfo);
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState){
+        savedInstanceState.putString("name", nameET.getText().toString());
+        savedInstanceState.putString("breed", breedET.getText().toString());
+        savedInstanceState.putString("weight", weightET.getText().toString());
+        savedInstanceState.putBoolean("isRestored", true);
     }
 
     @Override
     public void onStop(){
         super.onStop();
-        hasInfo = info;
-        info = false;
     }
     // get cursor of dog from database
     // load editTextView values from cursor
@@ -84,3 +77,7 @@ public class DogInfoFragment extends Fragment {
     // compare all editTextViews to cursor values
     // run appropriate methods (where values != )
 }
+
+
+
+
