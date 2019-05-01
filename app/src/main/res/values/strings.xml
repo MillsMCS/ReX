@@ -6,6 +6,9 @@
     <string name="search_string">Search</string>
     <string name="search_hint">Type search text</string>
 
+    <string name="home_menu_item">Search</string>
+    <string name="profile_menu_item">Update Profile</string>
+
     <string name="profile_name">Profile</string>
     <string name="profile_update_name">Profile Update</string>
     <string name="results_name">Results</string>
