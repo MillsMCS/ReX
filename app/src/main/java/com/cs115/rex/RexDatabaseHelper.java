@@ -4,6 +4,9 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Bitmap;
+
+import java.sql.Blob;
 
 public class RexDatabaseHelper extends SQLiteOpenHelper {
     private static final String DB_NAME = "rex";
@@ -70,7 +73,7 @@ public class RexDatabaseHelper extends SQLiteOpenHelper {
                     + "NAME TEXT, "
                     + "WEIGHT TEXT, "
                     + "BREED TEXT, "
-                    + "PHOTO TEXT)");
+                    + "PHOTO BLOB)");
             db.execSQL("CREATE TABLE ALLERGIES (_id INTEGER PRIMARY KEY AUTOINCREMENT, "
                     + "FOREIGN KEY(FOOD_ID) REFERENCES FOOD(_id),"
                     + "FOREIGN KEY(DOG_ID) REFERENCES DOG(_id));");

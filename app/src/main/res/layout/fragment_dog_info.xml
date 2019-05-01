@@ -21,7 +21,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
-        android:text="Name View"/>
+        android:hint="@string/name_hint"/>
 
     <TextView
         android:id="@+id/breedLabel"
@@ -36,7 +36,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
-        android:text="Breed View"/>
+        android:hint="@string/breed_hint"/>
 
     <TextView
         android:id="@+id/WeightLabel"
@@ -50,6 +50,6 @@
         android:layout_below="@+id/WeightLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Weight View"/>
+        android:hint="@string/weight_hint"/>
 
 </RelativeLayout>
