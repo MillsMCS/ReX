@@ -1,11 +1,9 @@
 package com.cs115.rex;
 
-import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,7 +11,6 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,20 +19,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.karumi.dexter.Dexter;
-import com.karumi.dexter.MultiplePermissionsReport;
-import com.karumi.dexter.PermissionToken;
-import com.karumi.dexter.listener.DexterError;
-import com.karumi.dexter.listener.PermissionRequest;
-import com.karumi.dexter.listener.PermissionRequestErrorListener;
-import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Calendar;
-import java.util.List;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -60,16 +49,6 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 showPictureDialog();
-//                Intent in = new Intent(
-//                        Intent.ACTION_PICK,
-//                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//                in.putExtra("crop", "true");
-//                in.putExtra("outputX", 100);
-//                in.putExtra("outputY", 100);
-//                in.putExtra("scale", true);
-//                in.putExtra("return-data", true);
-
-//                startActivityForResult(in, 1);
             }
         });
     }
@@ -140,6 +119,7 @@ public class ProfileActivity extends AppCompatActivity {
             return;
         }
         if (requestCode == GALLERY) {
+
             if (data != null) {
                 Uri contentURI = data.getData();
                 Log.d("onActivityResult", contentURI.toString());
@@ -148,13 +128,7 @@ public class ProfileActivity extends AppCompatActivity {
                     Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), contentURI);
                     String path = saveImage(bitmap);
                     Toast.makeText(ProfileActivity.this, "Image Saved!", Toast.LENGTH_SHORT).show();
-//                    imageview.setImageBitmap(bitmap);
                     imageview.setImageURI(Uri.parse(contentURI.toString()));
-
-//
-//                    DbBitmapUtility util = new DbBitmapUtility();
-//                    util.getBytes(bitmap);
-
 
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -167,8 +141,6 @@ public class ProfileActivity extends AppCompatActivity {
             imageview.setImageBitmap(thumbnail);
             saveImage(thumbnail);
 
-            DbBitmapUtility util = new DbBitmapUtility();
-            util.getBytes(thumbnail);
 
             Toast.makeText(ProfileActivity.this, "Image Saved!", Toast.LENGTH_SHORT).show();
         }
@@ -196,64 +168,14 @@ public class ProfileActivity extends AppCompatActivity {
             fo.close();
             Log.d("TAG", "File Saved::---&gt;" + f.getAbsolutePath());
 
+            RexDatabaseUtilities util = new RexDatabaseUtilities();
+            util.updatePhoto(this, f.getAbsolutePath());
+
             return f.getAbsolutePath();
         } catch (IOException e1) {
             e1.printStackTrace();
         }
         return "";
-    }
-
-    private void requestMultiplePermissions(){
-        Dexter.withActivity(this)
-                .withPermissions(
-                        Manifest.permission.CAMERA,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        Manifest.permission.READ_EXTERNAL_STORAGE)
-                .withListener(new MultiplePermissionsListener() {
-                    @Override
-                    public void onPermissionsChecked(MultiplePermissionsReport report) {
-                        // check if all permissions are granted
-                        if (report.areAllPermissionsGranted()) {
-                            Toast.makeText(getApplicationContext(), "All permissions are granted by user!", Toast.LENGTH_SHORT).show();
-                        }
-
-                        // check for permanent denial of any permission
-                        if (report.isAnyPermissionPermanentlyDenied()) {
-                            // show alert dialog navigating to Settings
-                            //openSettingsDialog();
-                        }
-                    }
-
-                    @Override
-                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
-                        token.continuePermissionRequest();
-                    }
-                }).
-                withErrorListener(new PermissionRequestErrorListener() {
-                    @Override
-                    public void onError(DexterError error) {
-                        Toast.makeText(getApplicationContext(), "Some Error! ", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .onSameThread()
-                .check();
-
-
-
-    }
-    public class DbBitmapUtility {
-
-        // convert from bitmap to byte array
-        public  byte[] getBytes(Bitmap bitmap) {
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.PNG, 0, stream);
-            return stream.toByteArray();
-        }
-
-        // convert from byte array to bitmap
-        public Bitmap getImage(byte[] image) {
-            return BitmapFactory.decodeByteArray(image, 0, image.length);
-        }
     }
 
 }
