@@ -45,18 +45,14 @@ public class RexDatabaseUtilitiesTest {
         SQLiteDatabase db = rexDatabaseHelper.getWritableDatabase();
 
         // Create a dog, DOG1.
-        long rowId = RexDatabaseHelper.insertDog(db, DOG1_ID, DOG1_NAME, DOG1_WEIGHT, DOG1_BREED);
+//        RexDatabaseHelper.insertDog(db, DOG1_ID, DOG1_NAME, DOG1_WEIGHT, DOG1_BREED, null);
         //Create a food, FOOD1.
         //rowId = RexDatabaseUtilities.addFood(db, FOOD1_ID, FOOD1_NAME, FOOD1_BLURB, FOOD1_TOX );
         //Create an allergy, ALLERGY1.
-        rowId = RexDatabaseUtilities.addAllergy(context, FOOD1_ID, DOG1_ID);
+//        RexDatabaseUtilities.addAllergy(context, FOOD1_ID, DOG1_ID);
 
     }
 
-    @After
-    public void takeDown() {
-        db.close();
-    }
 
 
     @Test
@@ -117,6 +113,8 @@ public class RexDatabaseUtilitiesTest {
         } else {
             fail();
         }
+        //TODO: where does this really go?
+        db.close();
     }
 
     @Test
@@ -130,5 +128,11 @@ public class RexDatabaseUtilitiesTest {
         } else {
             fail();
         }
+    }
+
+
+    @After
+    public void takeDown() {
+//        db.close();
     }
 }
