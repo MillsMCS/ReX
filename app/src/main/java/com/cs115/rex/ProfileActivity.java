@@ -9,6 +9,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -27,24 +29,46 @@ import java.io.IOException;
 import java.util.Calendar;
 
 public class ProfileActivity extends AppCompatActivity {
-
-    //For the add photo Blob functionality
     private Button btn;
+    private String TAG = "profileActivity";
     private ImageView imageview;
     private static final String IMAGE_DIRECTORY = " /directory";
     private int GALLERY = 1, CAMERA = 2;
-
+    private boolean isEditing;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
+        // set toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        // set Save / Edit Button
+        final Button editAndSaveBtn = findViewById(R.id.edit_button);
+        String edit_or_save = isEditing ? "Save" : "Edit";
+        editAndSaveBtn.setText(edit_or_save);
+
+        // get Fragments so we can set onclick listeners
+        FragmentManager fm = getSupportFragmentManager();
+        final DogInfoFragment dogInfoFrag = (DogInfoFragment) fm.findFragmentById(R.id.dog_info_frag);
+        final AllergyInfoFragment allergyFrag = (AllergyInfoFragment) fm.findFragmentById(R.id.allergy_info_frag);
+        editAndSaveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "edit / save button clicked " + Boolean.toString(isEditing));
+                isEditing = !isEditing;
+                String edit_or_save = isEditing ? "Save" : "Edit";
+                editAndSaveBtn.setText(edit_or_save);
+                dogInfoFrag.changeEditableStatus();
+//                allergyFrag.makeEditable(); //TODO
+            }
+        });
+
+        // set Select Photo button
         btn = (Button) findViewById(R.id.select_photo);
         imageview = (ImageView) findViewById(R.id.photo);
-
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -52,8 +76,6 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
     }
-
-
 
     //TODO consider refactoring this to avoid code repetition
     //Menu - adds settings button from profile menu to app bar
@@ -105,7 +127,6 @@ public class ProfileActivity extends AppCompatActivity {
     public void choosePhotoFromGallery() {
         Intent galleryIntent = new Intent(Intent.ACTION_PICK,
                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-
         startActivityForResult(galleryIntent, GALLERY);
     }
 
@@ -116,7 +137,6 @@ public class ProfileActivity extends AppCompatActivity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == this.RESULT_CANCELED) {
             return;
