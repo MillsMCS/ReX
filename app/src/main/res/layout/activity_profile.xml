@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <!-- TODO investigate correcting image resources for alternative resolutions/sizes for profile settings icon -->
+
+    <RelativeLayout
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        tools:context="com.cs115.rex.ProfileActivity">
+
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/toolbar_main" />
+
+        <ImageView
+            android:id="@+id/photo"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:layout_below="@id/toolbar"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="40dp"
+            android:layout_marginBottom="20dp"
+            android:contentDescription="@string/main_image_desc"
+            android:src="@drawable/rex_goast" />
+
+        <Button
+            android:id="@+id/select_photo"
+            android:layout_below="@id/photo"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="5dp"
+            android:layout_width="130dp"
+            android:layout_height="40dp"
+            android:text="@string/picture_text"/>
+
+        <Button
+            android:id="@+id/edit_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/select_photo"
+            />
+
+        <!-- TODO activate profile layout and add edit option to fragments (per fragment) -->
+        <fragment
+            android:id="@+id/dog_info_frag"
+            android:name="com.cs115.rex.DogInfoFragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/edit_button"
+            android:layout_centerHorizontal="false"
+            android:layout_marginStart="30dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginBottom="40dp" />
+
+        <fragment
+            android:id="@+id/allergy_info_frag"
+            android:name="com.cs115.rex.AllergyInfoFragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/dog_info_frag"
+            android:layout_centerHorizontal="false"
+            android:layout_marginStart="30dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginBottom="40dp" />
+
+
+
+    </RelativeLayout>
+</ScrollView>
