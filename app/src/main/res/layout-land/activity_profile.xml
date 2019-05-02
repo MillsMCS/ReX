@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- TODO investigate correcting image resources for alternative resolutions/sizes for profile settings icon -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:context="com.cs115.rex.ProfileActivity" >
+
+    <include
+        layout="@layout/toolbar_main"
+        android:id="@+id/toolbar" />
+
+    <ImageView
+        android:id="@+id/photo"
+        android:layout_below="@id/toolbar"
+        android:layout_marginTop="40dp"
+        android:layout_marginBottom="20dp"
+        android:layout_width="130dp"
+        android:layout_height="130dp"
+        android:src="@drawable/rex_goast"
+        android:layout_centerHorizontal="true"
+        android:contentDescription="@string/main_image_desc" />
+
+    <Button
+        android:id="@+id/select_photo"
+        android:layout_below="@id/photo"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="5dp"
+        android:layout_width="130dp"
+        android:layout_height="40dp"
+        android:text="@string/picture_text"/>
+
+    <Button
+        android:id="@+id/edit_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/select_photo"
+        />
+
+    <LinearLayout
+        android:id="@+id/formsLayout"
+        android:layout_below="@id/select_photo"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:layout_marginLeft="150dp"
+        android:layout_marginStart="150dp"
+        android:layout_centerHorizontal="true"
+        android:baselineAligned="false">
+        <!-- TODO investigate other ways to get the centering/spacing right -->
+
+        <fragment
+            android:id="@+id/dog_info_frag"
+            android:name="com.cs115.rex.DogInfoFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <fragment
+            android:id="@+id/allergy_info_frag"
+            android:name="com.cs115.rex.AllergyInfoFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+
+    </LinearLayout>
+</RelativeLayout>
