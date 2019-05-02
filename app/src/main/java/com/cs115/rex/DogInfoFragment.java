@@ -2,6 +2,7 @@ package com.cs115.rex;
 
 
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -96,21 +97,24 @@ public class DogInfoFragment extends Fragment {
 
         // if user is Editing, compare their new values to their old values
         if (isEditing){
-            String newName = nameET.getText().toString();
-            String newBreed = breedET.getText().toString();
-            String newWeight = weightET.getText().toString();
+//            String newName = nameET.getText().toString();
+//            String newBreed = breedET.getText().toString();
+//            String newWeight = weightET.getText().toString();
 
-            if (!oldName.equals(newName)) {
-                RexDatabaseUtilities.updateName(getActivity().getApplicationContext(), newName);
-            }
-            if (!oldBreed.equals(newBreed)){
-                RexDatabaseUtilities.updateBreed(getActivity().getApplicationContext(), newBreed);
-            }
-            if (!oldWeight.equals(newWeight)){
-                RexDatabaseUtilities.updateWeight(getActivity().getApplicationContext(), newWeight);
-            }
+            new UpdateDogInfo().execute(nameET.getText().toString(),
+                                        breedET.getText().toString(),
+                                        weightET.getText().toString());
+
+//            if (!oldName.equals(newName)) {
+//                RexDatabaseUtilities.updateName(getActivity().getApplicationContext(), newName);
+//            }
+//            if (!oldBreed.equals(newBreed)){
+//                RexDatabaseUtilities.updateBreed(getActivity().getApplicationContext(), newBreed);
+//            }
+//            if (!oldWeight.equals(newWeight)){
+//                RexDatabaseUtilities.updateWeight(getActivity().getApplicationContext(), newWeight);
+//            }
         }
-
         isEditing = !isEditing;
         nameET.setEnabled(isEditing);
         breedET.setEnabled(isEditing);
@@ -133,6 +137,27 @@ public class DogInfoFragment extends Fragment {
         // save booleans
         savedInstanceState.putBoolean("isRestored", true);
         savedInstanceState.putBoolean("isEditing", true);
+    }
+
+    private class UpdateDogInfo extends AsyncTask<String, Void, Boolean>{
+        @Override
+        protected Boolean doInBackground(String... params) {
+            String newName = params[0];
+            String newBreed = params[1];
+            String newWeight = params[2];
+
+            if (!oldName.equals(newName)) {
+                RexDatabaseUtilities.updateName(getActivity().getApplicationContext(), newName);
+            }
+            if (!oldBreed.equals(newBreed)){
+                RexDatabaseUtilities.updateBreed(getActivity().getApplicationContext(), newBreed);
+            }
+            if (!oldWeight.equals(newWeight)){
+                RexDatabaseUtilities.updateWeight(getActivity().getApplicationContext(), newWeight);
+            }
+
+            return null;
+        }
     }
 }
 
