@@ -28,6 +28,7 @@ public class AllergyInfoFragment extends Fragment implements AdapterView.OnItemS
     List<String> newAllergies;
     Spinner foodsSpinner;
     Boolean isEditing;
+    List<Button> AllergyButtons;
 
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -35,6 +36,7 @@ public class AllergyInfoFragment extends Fragment implements AdapterView.OnItemS
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         isEditing = false;
+        AllergyButtons = new ArrayList<>();
         return inflater.inflate(R.layout.fragment_allergy_info, container, false);
     }
 
@@ -93,9 +95,12 @@ public class AllergyInfoFragment extends Fragment implements AdapterView.OnItemS
     }
 
     private void addItemToAllergiesList(Activity activity, String newAllergy) {
-        // make a new button with this new allergy
+        // make a new button and add it to our list of Buttons
         Button button = new Button(activity);
+        AllergyButtons.add(button);
+
         button.setText(newAllergy);
+        button.setEnabled(isEditing);
 
         // add the button to the Linear Layout that holds them
         LinearLayout allergies_list = activity.findViewById(R.id.allergies_list);
@@ -109,8 +114,14 @@ public class AllergyInfoFragment extends Fragment implements AdapterView.OnItemS
     public void makeEditable(){
         if (isEditing){
             foodsSpinner.setVisibility(View.GONE);
+            for (Button b : AllergyButtons){
+                b.setEnabled(false);
+            }
         } else {
             foodsSpinner.setVisibility(View.VISIBLE);
+            for (Button b : AllergyButtons){
+                b.setEnabled(true);
+            }
         }
         isEditing = !isEditing;
     }
