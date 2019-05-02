@@ -10,11 +10,10 @@
         android:title="@string/home_menu_item"
         app:showAsAction="ifRoom" />
 
-    <item
-        android:id="@+id/action_profile_info"
-        android:enabled="true"
-        android:icon="@drawable/settings_icon"
-        android:orderInCategory="1"
+    <!-- TODO paw icon appears washed out on app -->
+    <item android:id="@+id/action_profile"
         android:title="@string/profile_menu_item"
-        app:showAsAction="always" />
+        android:icon="@drawable/paw_icon"
+        android:orderInCategory="1"
+        app:showAsAction="ifRoom" />
 </menu>

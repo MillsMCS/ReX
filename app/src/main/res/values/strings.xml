@@ -15,15 +15,13 @@
 
     <string name="results_placeholder">Results Test</string>
 
-   //For dog profile
+    //For dog profile
     <string name="name_hint">Enter dogs name</string>
     <string name="breed_hint">Enter your dogs breed</string>
     <string name="weight_hint">Enter your dogs weight</string>
     <string name="picture_text">Pic a picture</string>
 
 
-
-    
     //all the symptoms for the FOOD_TABLE
     <string name="symptom10">Symptoms- vomiting and diarrhea, panting,
         excessive thirst and urination, hyperactivity, abnormal heart rhythm,
