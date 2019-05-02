@@ -46,11 +46,8 @@ public class AllergyInfoFragment extends Fragment implements AdapterView.OnItemS
         super.onStart();
         Activity activity = getActivity();
 
-
         // TODO: Populate with database information. Ask Karena if she wrote getFoods method
-        allFoods = new String[] {
-                "Select a Food", "Alcohol", "Apple", "Apricot", "Coffee", "Marijuana", "Plum", "Watermelon"
-        };
+        allFoods = RexDatabaseUtilities.getAllFoodNames(getActivity());
 
         // populate spinner with foods user can select and set on click listener
         foodsSpinner = activity.findViewById(R.id.all_foods_spinner);
@@ -82,16 +79,19 @@ public class AllergyInfoFragment extends Fragment implements AdapterView.OnItemS
     public void onItemSelected(AdapterView<?> View, View selectedView, int position, long id) {
         String newAllergy = allFoods[position];
         // if not the first item [which is "Select a Food"] and the item is not already displayed as a button
-        if (position != 0
-            && !Arrays.asList(currentAllergies).contains(newAllergy)
-            && !addedAllergies.contains(newAllergy)) {
+        if (position != 0 && ! Arrays.asList(currentAllergies).contains(newAllergy)){
+            if (deletedAllergies.contains(newAllergy)){
+                deletedAllergies.remove(newAllergy);
+            } else {
+                // add Item to new Allergen List
+                displayAllergy(getActivity(), newAllergy);
 
-            // add Item to new Allergen List
-            displayAllergy(getActivity(), newAllergy);
+                // add String to list of new Allergies, to be sent to database on Save
+                addedAllergies.add(newAllergy);
 
-            // add String to list of new Allergies, to be sent to database on Save
-            addedAllergies.add(newAllergy);
+            }
         }
+
     }
 
     @Override
@@ -128,15 +128,13 @@ public class AllergyInfoFragment extends Fragment implements AdapterView.OnItemS
     @Override
     public void onClick(View v) {
         Button btn = (Button) v;
-        Log.d(TAG, "before: " + addedAllergies.toString() + deletedAllergies.toString() + AllergyButtons.toString());
-        addedAllergies.remove(btn.getText().toString());
-        deletedAllergies.add(btn.getText().toString());
-        AllergyButtons.remove(btn);
 
-        Log.d(TAG, "after: " + addedAllergies.toString() + deletedAllergies.toString() + AllergyButtons.toString());
+        String food = btn.getText().toString();
+        addedAllergies.remove(food);
+        deletedAllergies.add(food);
+        AllergyButtons.remove(food);
 
         LinearLayout lv = (LinearLayout) btn.getParent();
         lv.removeView(v);
-
     }
 }
