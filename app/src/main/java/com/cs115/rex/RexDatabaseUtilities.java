@@ -7,8 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import java.sql.Blob;
-
 public class RexDatabaseUtilities {
     RexDatabaseUtilities() {
     }
@@ -44,6 +42,30 @@ public class RexDatabaseUtilities {
                     RexDatabaseHelper.ALLERGY_DOG_ID + " = ?",
                     new String[]{Integer.toString(RexDatabaseHelper.SINGLE_DOG_ID)},
                     null, null, null);
+
+        } catch (SQLiteException e) {
+            return null;
+        }
+    }
+
+    public static String[] getAllFoodNames(Context context) {
+        try {
+            SQLiteOpenHelper rexDatabaseHelper = new RexDatabaseHelper(context);
+            SQLiteDatabase db = rexDatabaseHelper.getReadableDatabase();
+            Cursor cursor = db.query(RexDatabaseHelper.FOOD,
+                    new String[]{
+                            RexDatabaseHelper.NAME,},
+                    null, null, null, null, null
+                    );
+            String[] foodArray = new String[cursor.getCount()];
+            int theCount = 0;
+            while(cursor.moveToNext()) {
+                foodArray[theCount] = cursor.getString(0);
+                theCount += 1;
+
+            }
+            cursor.close();
+            return foodArray;
 
         } catch (SQLiteException e) {
             return null;
