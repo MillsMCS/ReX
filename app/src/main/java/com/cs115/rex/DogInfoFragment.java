@@ -94,7 +94,7 @@ public class DogInfoFragment extends Fragment {
      * Called by ProfileActivity on Edit / Save button press.
      * //TODO write more Javadoc
      */
-    public void changeEditableStatus(){
+    public void makeEditable(){
 
         // if user is Editing, compare their new values to their old values
         if (isEditing){

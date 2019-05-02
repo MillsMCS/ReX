@@ -4,6 +4,7 @@ package com.cs115.rex;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,15 +22,19 @@ import java.util.List;
  *
  */
 public class AllergyInfoFragment extends Fragment implements AdapterView.OnItemSelectedListener{
+    private static final String TAG = "allergy_info_frag";
     String[] allFoods;
     String[] currentAllergies;
     List<String> newAllergies;
+    Spinner foodsSpinner;
+    Boolean isEditing;
 
     @Override
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        isEditing = false;
         return inflater.inflate(R.layout.fragment_allergy_info, container, false);
     }
 
@@ -38,18 +43,20 @@ public class AllergyInfoFragment extends Fragment implements AdapterView.OnItemS
         super.onStart();
         Activity activity = getActivity();
 
+
         // TODO: Populate with database information. Ask Karena if she wrote getFoods method
         allFoods = new String[] {
                 "Select a Food", "Alcohol", "Apple", "Apricot", "Coffee", "Marijuana", "Plum", "Watermelon"
         };
 
         // populate spinner with foods user can select and set on click listener
-        Spinner foodsSpinner = activity.findViewById(R.id.all_foods_spinner);
+        foodsSpinner = activity.findViewById(R.id.all_foods_spinner);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                                                         activity,
                                                         android.R.layout.simple_spinner_item,
                                                         allFoods);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        foodsSpinner.setVisibility(View.GONE);
         foodsSpinner.setAdapter(adapter);
         foodsSpinner.setOnItemSelectedListener(this);
 
@@ -99,4 +106,12 @@ public class AllergyInfoFragment extends Fragment implements AdapterView.OnItemS
     }
 
     // TODO: Method for saving new allergies onClick (called in ProfileActivity)
+    public void makeEditable(){
+        if (isEditing){
+            foodsSpinner.setVisibility(View.GONE);
+        } else {
+            foodsSpinner.setVisibility(View.VISIBLE);
+        }
+        isEditing = !isEditing;
+    }
 }
