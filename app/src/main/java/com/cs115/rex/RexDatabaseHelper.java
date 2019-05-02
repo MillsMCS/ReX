@@ -104,6 +104,7 @@ public class RexDatabaseHelper extends SQLiteOpenHelper {
     private static void insertDog(SQLiteDatabase db, int dogId, String name, String weight, String breed, String photo){
         Log.d(TAG, "inserting Dog....");
         ContentValues dogValues = new ContentValues();
+        //this is to make sure it is the # 1  remove after version 1
         dogValues.put("_id", dogId);
         dogValues.put("NAME", name);
         dogValues.put("WEIGHT", weight);

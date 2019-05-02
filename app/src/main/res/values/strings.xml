@@ -21,9 +21,6 @@
     <string name="weight_hint">Enter your dogs weight</string>
     <string name="picture_text">Pic a picture</string>
 
-
-
-    
     //all the symptoms for the FOOD_TABLE
     <string name="symptom10">Symptoms- vomiting and diarrhea, panting,
         excessive thirst and urination, hyperactivity, abnormal heart rhythm,
