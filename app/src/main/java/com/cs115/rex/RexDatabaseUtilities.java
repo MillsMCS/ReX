@@ -54,7 +54,7 @@ public class RexDatabaseUtilities {
             SQLiteDatabase db = rexDatabaseHelper.getReadableDatabase();
             Cursor cursor = db.query(RexDatabaseHelper.FOOD,
                     new String[]{
-                            RexDatabaseHelper.NAME,},
+                            RexDatabaseHelper.NAME},
                     null, null, null, null, null
                     );
             String[] foodArray = new String[cursor.getCount()];
@@ -71,6 +71,30 @@ public class RexDatabaseUtilities {
             return null;
         }
     }
+
+    public static int[] getAllFoodId(Context context) {
+        try {
+            SQLiteOpenHelper rexDatabasehelper = new RexDatabaseHelper(context);
+            SQLiteDatabase db = rexDatabasehelper.getReadableDatabase();
+            Cursor cursor = db.query(RexDatabaseHelper.FOOD,
+                    new String[] {
+                            RexDatabaseHelper.ID},
+                    null, null, null, null, null
+                    );
+            int[] intArray = new int[cursor.getCount()];
+            int theCount = 0;
+            while(cursor.moveToNext()) {
+                intArray[theCount] = cursor.getInt(0);
+                theCount += 1;
+            }
+            cursor.close();
+            return intArray;
+        } catch (SQLiteException e) {
+            return null;
+        }
+    }
+
+
 
     public static boolean updateName(Context context, String newDogName) {
         try {
@@ -145,7 +169,7 @@ public class RexDatabaseUtilities {
         }
     }
 
-        public static int addAllergy (Context context,int foodId, int dogId){
+        public static int addAllergy(Context context,int foodId, int dogId){
             try {
                 SQLiteOpenHelper rexDatabaseHelper = new RexDatabaseHelper(context);
                 SQLiteDatabase db = rexDatabaseHelper.getReadableDatabase();
@@ -175,7 +199,7 @@ public class RexDatabaseUtilities {
             }
         }
 
-        public static boolean removeAllergy (Context context,int allergyId){
+        public static boolean removeAllergy(Context context,int allergyId){
             try {
                 SQLiteOpenHelper rexDatabaseHelper = new RexDatabaseHelper(context);
                 SQLiteDatabase db = rexDatabaseHelper.getReadableDatabase();
