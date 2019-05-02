@@ -21,11 +21,12 @@ import java.util.List;
 /**
  *
  */
-public class AllergyInfoFragment extends Fragment implements AdapterView.OnItemSelectedListener{
+public class AllergyInfoFragment extends Fragment implements AdapterView.OnItemSelectedListener, View.OnClickListener{
     private static final String TAG = "allergy_info_frag";
     String[] allFoods;
     String[] currentAllergies;
-    List<String> newAllergies;
+    List<String> addedAllergies;
+    List<String> deletedAllergies;
     Spinner foodsSpinner;
     Boolean isEditing;
     List<Button> AllergyButtons;
@@ -68,24 +69,28 @@ public class AllergyInfoFragment extends Fragment implements AdapterView.OnItemS
         };
 
         // will hold allergies the user adds during this session
-        newAllergies = new ArrayList<>();
+        addedAllergies = new ArrayList<>();
+        deletedAllergies = new ArrayList<>();
 
         // create buttons for allergies the dog already has
         for (String allergen : currentAllergies){
-            addItemToAllergiesList(activity, allergen);
+            displayAllergy(activity, allergen);
         }
     }
 
     @Override
     public void onItemSelected(AdapterView<?> View, View selectedView, int position, long id) {
-        String selectedFood = allFoods[position];
+        String newAllergy = allFoods[position];
         // if not the first item [which is "Select a Food"] and the item is not already displayed as a button
         if (position != 0
-            && !Arrays.asList(currentAllergies).contains(selectedFood)
-            && !newAllergies.contains(selectedFood)) {
+            && !Arrays.asList(currentAllergies).contains(newAllergy)
+            && !addedAllergies.contains(newAllergy)) {
 
             // add Item to new Allergen List
-            addItemToAllergiesList(getActivity(), selectedFood);
+            displayAllergy(getActivity(), newAllergy);
+
+            // add String to list of new Allergies, to be sent to database on Save
+            addedAllergies.add(newAllergy);
         }
     }
 
@@ -94,9 +99,10 @@ public class AllergyInfoFragment extends Fragment implements AdapterView.OnItemS
         // TODO Auto-generated method stub. Look into what this does.
     }
 
-    private void addItemToAllergiesList(Activity activity, String newAllergy) {
+    private void displayAllergy(Activity activity, String newAllergy) {
         // make a new button and add it to our list of Buttons
         Button button = new Button(activity);
+        button.setOnClickListener(this);
         AllergyButtons.add(button);
 
         button.setText(newAllergy);
@@ -105,24 +111,32 @@ public class AllergyInfoFragment extends Fragment implements AdapterView.OnItemS
         // add the button to the Linear Layout that holds them
         LinearLayout allergies_list = activity.findViewById(R.id.allergies_list);
         allergies_list.addView(button);
-
-        // add String to list of new Allergies, to be sent to database on Save
-        newAllergies.add(newAllergy);
     }
 
-    // TODO: Method for saving new allergies onClick (called in ProfileActivity)
-    public void makeEditable(){
-        if (isEditing){
-            foodsSpinner.setVisibility(View.GONE);
-            for (Button b : AllergyButtons){
-                b.setEnabled(false);
-            }
-        } else {
-            foodsSpinner.setVisibility(View.VISIBLE);
-            for (Button b : AllergyButtons){
-                b.setEnabled(true);
-            }
-        }
+    // TODO: Method for rendering on Edit click (called in ProfileActivity)
+    public void renderButtons(){
+        foodsSpinner.setVisibility(isEditing ? View.GONE : View.VISIBLE);
         isEditing = !isEditing;
+
+        // change edit-ability of the buttons
+        for (Button b : AllergyButtons){
+            b.setEnabled(isEditing);
+        }
+    }
+
+    // onClick for allergy buttons
+    @Override
+    public void onClick(View v) {
+        Button btn = (Button) v;
+        Log.d(TAG, "before: " + addedAllergies.toString() + deletedAllergies.toString() + AllergyButtons.toString());
+        addedAllergies.remove(btn.getText().toString());
+        deletedAllergies.add(btn.getText().toString());
+        AllergyButtons.remove(btn);
+
+        Log.d(TAG, "after: " + addedAllergies.toString() + deletedAllergies.toString() + AllergyButtons.toString());
+
+        LinearLayout lv = (LinearLayout) btn.getParent();
+        lv.removeView(v);
+
     }
 }

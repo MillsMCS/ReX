@@ -61,7 +61,7 @@ public class ProfileActivity extends AppCompatActivity {
                 String edit_or_save = isEditing ? "Save" : "Edit";
                 editAndSaveBtn.setText(edit_or_save);
                 dogInfoFrag.makeEditable();
-                allergyFrag.makeEditable();
+                allergyFrag.renderButtons();
             }
         });
 
