@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 
 /**
@@ -56,7 +57,7 @@ public class DogInfoFragment extends Fragment {
         super.onStart();
         View view = getView();
 
-        // set up EditText Views
+        // set up EditTexts
         nameET = view.findViewById(R.id.nameView);
         nameET.setEnabled(isEditing);
         breedET = view.findViewById(R.id.breedView);
@@ -64,13 +65,13 @@ public class DogInfoFragment extends Fragment {
         weightET = view.findViewById(R.id.WeightView);
         weightET.setEnabled(isEditing);
 
-        // if we have restored a previous state, put in String values
+        // if we have restored from a previous state, put in String values
         if (isRestored) {
             nameET.setText(name);
             weightET.setText(weight);
             breedET.setText(breed);
 
-        // if this is the first time loading the Activity, load values from database
+        // otherwise, if this is the first time loading the Activity, load values in from database
         } else {
             Cursor cursor = RexDatabaseUtilities.getDog(view.getContext());
             if (cursor.moveToFirst()) {
@@ -97,24 +98,11 @@ public class DogInfoFragment extends Fragment {
 
         // if user is Editing, compare their new values to their old values
         if (isEditing){
-//            String newName = nameET.getText().toString();
-//            String newBreed = breedET.getText().toString();
-//            String newWeight = weightET.getText().toString();
-
             new UpdateDogInfo().execute(nameET.getText().toString(),
                                         breedET.getText().toString(),
                                         weightET.getText().toString());
-
-//            if (!oldName.equals(newName)) {
-//                RexDatabaseUtilities.updateName(getActivity().getApplicationContext(), newName);
-//            }
-//            if (!oldBreed.equals(newBreed)){
-//                RexDatabaseUtilities.updateBreed(getActivity().getApplicationContext(), newBreed);
-//            }
-//            if (!oldWeight.equals(newWeight)){
-//                RexDatabaseUtilities.updateWeight(getActivity().getApplicationContext(), newWeight);
-//            }
         }
+        // change Button and editText states
         isEditing = !isEditing;
         nameET.setEnabled(isEditing);
         breedET.setEnabled(isEditing);
@@ -124,12 +112,12 @@ public class DogInfoFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
 
-        // save original values
+        // save original EditText values
         savedInstanceState.putString("oldName", oldName);
         savedInstanceState.putString("oldBreed", oldBreed);
         savedInstanceState.putString("oldWeight", oldWeight);
 
-        // save current values
+        // save current EditText values
         savedInstanceState.putString("name", nameET.getText().toString());
         savedInstanceState.putString("breed", breedET.getText().toString());
         savedInstanceState.putString("weight", weightET.getText().toString());
@@ -139,9 +127,9 @@ public class DogInfoFragment extends Fragment {
         savedInstanceState.putBoolean("isEditing", true);
     }
 
-    private class UpdateDogInfo extends AsyncTask<String, Void, Boolean>{
+    private class UpdateDogInfo extends AsyncTask<String, Void, Void>{
         @Override
-        protected Boolean doInBackground(String... params) {
+        protected Void doInBackground(String... params) {
             String newName = params[0];
             String newBreed = params[1];
             String newWeight = params[2];
@@ -155,8 +143,13 @@ public class DogInfoFragment extends Fragment {
             if (!oldWeight.equals(newWeight)){
                 RexDatabaseUtilities.updateWeight(getActivity().getApplicationContext(), newWeight);
             }
-
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void v) {
+            Toast toast = Toast.makeText(getActivity(), "Changes saved.", Toast.LENGTH_LONG);
+            toast.show();
         }
     }
 }
