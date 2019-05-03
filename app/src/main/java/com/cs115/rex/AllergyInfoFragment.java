@@ -59,9 +59,7 @@ public class AllergyInfoFragment extends Fragment implements AdapterView.OnItemS
         foodsSpinner.setOnItemSelectedListener(this);
 
         // TODO: POPULATE WITH DATABASE INFORMATION
-        currentAllergies = new String[] {
-                "Banana", "Chicken"
-        };
+        currentAllergies = RexDatabaseUtilities.getAllergyNames(activity);
 
         // will hold allergies the user adds during this session
         addedAllergies = new ArrayList<>();

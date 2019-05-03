@@ -31,6 +31,7 @@ public class RexDatabaseUtilities {
         }
     }
 
+    // get cursor of all allergies
     public static Cursor getAllergies(Context context) {
         try {
             SQLiteOpenHelper rexDatabaseHelper = new RexDatabaseHelper(context);
@@ -42,11 +43,29 @@ public class RexDatabaseUtilities {
                     RexDatabaseHelper.ALLERGY_DOG_ID + " = ?",
                     new String[]{Integer.toString(RexDatabaseHelper.SINGLE_DOG_ID)},
                     null, null, null);
-
         } catch (SQLiteException e) {
             return null;
         }
     }
+
+    // make String[] of allergy names
+    public static String[] getAllergyNames(Context context){
+        Cursor cursor = getAllergies(context);
+        if (cursor != null){
+            String[] names = new String[cursor.getCount()];
+            int theCount = 0;
+            while(cursor.moveToNext()) {
+                names[theCount] = cursor.getString(0);
+                theCount += 1;
+            }
+            cursor.close();
+            return names;
+        } else {
+            String[] names = new String[0];
+            return names;
+        }
+    }
+
 
     public static String[] getAllFoodNames(Context context) {
         try {
