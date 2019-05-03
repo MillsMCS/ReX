@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.media.Image;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
@@ -66,7 +65,7 @@ public class ProfileActivity extends AppCompatActivity {
                 String edit_or_save = isEditing ? "Save" : "Edit";
                 editAndSaveBtn.setText(edit_or_save);
                 dogInfoFrag.makeEditable();
-                allergyFrag.renderButtons();
+                allergyFrag.onEditandSaveAction();
             }
         });
 

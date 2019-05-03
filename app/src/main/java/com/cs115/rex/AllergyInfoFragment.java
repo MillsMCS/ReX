@@ -23,7 +23,8 @@ import java.util.List;
  */
 public class AllergyInfoFragment extends Fragment implements AdapterView.OnItemSelectedListener, View.OnClickListener{
     private static final String TAG = "allergy_info_frag";
-    String[] allFoods;
+    String[] allFoodNames;
+    int[] allFoodIds;
     String[] currentAllergies;
     List<String> addedAllergies;
     List<String> deletedAllergies;
@@ -45,21 +46,23 @@ public class AllergyInfoFragment extends Fragment implements AdapterView.OnItemS
         super.onStart();
 
         activity = getActivity();
-        allFoods = RexDatabaseUtilities.getAllFoodNames(activity);
+        allFoodNames = RexDatabaseUtilities.getAllFoodNames(activity);
+        allFoodIds = RexDatabaseUtilities.getAllFoodId(activity);
 
         // populate spinner with foods user can select and set on click listener
         foodsSpinner = activity.findViewById(R.id.all_foods_spinner);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                                                         activity,
                                                         android.R.layout.simple_spinner_item,
-                                                        allFoods);
+                allFoodNames);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         foodsSpinner.setVisibility(View.GONE);
         foodsSpinner.setAdapter(adapter);
         foodsSpinner.setOnItemSelectedListener(this);
 
         // TODO: POPULATE WITH DATABASE INFORMATION
-        currentAllergies = RexDatabaseUtilities.getAllergyNames(activity);
+        currentAllergies = RexDatabaseUtilities.getAllergiesRawQuery(activity);
+//        Log.d(TAG, currentAllergies.toString());
 
         // will hold allergies the user adds during this session
         addedAllergies = new ArrayList<>();
@@ -77,7 +80,7 @@ public class AllergyInfoFragment extends Fragment implements AdapterView.OnItemS
         // if block statement needed to keep spinner from adding the first food to allergies upon initialization
         // https://stackoverflow.com/questions/13397933/android-spinner-avoid-onitemselected-calls-during-initialization
         if (spinnerCheck){
-            String newAllergy = allFoods[position];
+            String newAllergy = allFoodNames[position];
             // if not the first item [which is "Select a Food"] and the item is not already displayed as a button
 
             // cases:
@@ -124,7 +127,25 @@ public class AllergyInfoFragment extends Fragment implements AdapterView.OnItemS
     }
 
     // TODO: Method for rendering on Edit click (called in ProfileActivity)
-    public void renderButtons(){
+    public void onEditandSaveAction(){
+        if (isEditing){
+            // user wants to save their state
+            // check addAllergy array
+            for (String food : addedAllergies){
+                // find the index that it lives in allFoodNames Array
+                int index = Arrays.asList(allFoodNames).indexOf(food);
+                Log.d(TAG, "index" + String.valueOf(index));
+
+                // get the matching integer from allFoodIds
+                int foodId = allFoodIds[index];
+                Log.d(TAG, "foodId" + String.valueOf(index));
+
+                // call utilities.addAllergy(foodId)
+                RexDatabaseUtilities.addAllergy(activity, foodId, RexDatabaseHelper.SINGLE_DOG_ID);
+            }
+            addedAllergies.clear();
+            deletedAllergies.clear();
+        }
         foodsSpinner.setVisibility(isEditing ? View.INVISIBLE : View.VISIBLE);
         isEditing = !isEditing;
         setButtonEnabledness();
@@ -155,3 +176,13 @@ public class AllergyInfoFragment extends Fragment implements AdapterView.OnItemS
         lv.removeView(v);
     }
 }
+
+
+
+
+// user selects a food
+// java adds food to list of new Allergies
+
+// ON SAVE:
+// java gets food's ID
+// sends foodId to AddAllergy method

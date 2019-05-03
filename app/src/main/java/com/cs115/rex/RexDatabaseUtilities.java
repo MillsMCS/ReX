@@ -3,11 +3,16 @@ package com.cs115.rex;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 public class RexDatabaseUtilities {
+
+    private static String TAG = "databaseUtilities";
+
     RexDatabaseUtilities() {
     }
 
@@ -48,18 +53,56 @@ public class RexDatabaseUtilities {
         }
     }
 
+
+    public static String[] getAllergiesRawQuery(Context context) {
+        try {
+            SQLiteOpenHelper rexDatabaseHelper = new RexDatabaseHelper(context);
+            SQLiteDatabase db = rexDatabaseHelper.getReadableDatabase();
+            String query = "SELECT FOOD._id, NAME FROM FOOD INNER JOIN ALLERGIES ON ALLERGIES.FOOD_ID = FOOD._id WHERE ALLERGIES.DOG_ID=" + String.valueOf(RexDatabaseHelper.SINGLE_DOG_ID);
+            Cursor cursor = db.rawQuery(query, null);
+            if (cursor != null) {
+                DatabaseUtils.dumpCursor(cursor);
+                int indexFoodNames = cursor.getColumnIndex(RexDatabaseHelper.NAME);
+                Log.d(TAG, String.valueOf(indexFoodNames));
+                String[] foodNames = new String[cursor.getCount()];
+                int theCount = 0;
+                while (cursor.moveToNext()) {
+                    Log.d(TAG, cursor.getString(indexFoodNames));
+                    foodNames[theCount] = cursor.getString(indexFoodNames);
+                    theCount += 1;
+                }
+                cursor.close();
+                return foodNames;
+            }
+        } catch (SQLiteException e) {
+            Log.d(TAG, e.toString());
+            return null;
+        }
+        String[] foodNames = new String[0];
+        return foodNames;
+    }
+
+
+    // SELECT * FROM ALLERGIES, FOODS
+    // WHERE ALLERGIES.DOG_ID = SINGLE_DOG_ID
+    // GROUP BY ALLERGIES.FOOD_ID
+
+    // FOOD_NAMES
+
     // make String[] of allergy names
     public static String[] getAllergyNames(Context context){
         Cursor cursor = getAllergies(context);
         if (cursor != null){
-            String[] names = new String[cursor.getCount()];
+            String[] foodIds = new String[cursor.getCount()];
             int theCount = 0;
             while(cursor.moveToNext()) {
-                names[theCount] = cursor.getString(0);
+                foodIds[theCount] = cursor.getString(0);
                 theCount += 1;
             }
             cursor.close();
-            return names;
+            // [9, 3, 4, 6]
+            // query the FOOD table and connect Ids to names
+            return foodIds;
         } else {
             String[] names = new String[0];
             return names;
@@ -112,8 +155,6 @@ public class RexDatabaseUtilities {
             return null;
         }
     }
-
-
 
     public static boolean updateName(Context context, String newDogName) {
         try {
@@ -190,6 +231,8 @@ public class RexDatabaseUtilities {
 
         public static int addAllergy(Context context,int foodId, int dogId){
             try {
+                Log.d(TAG, "adding allergy...");
+
                 SQLiteOpenHelper rexDatabaseHelper = new RexDatabaseHelper(context);
                 SQLiteDatabase db = rexDatabaseHelper.getReadableDatabase();
 
@@ -197,7 +240,10 @@ public class RexDatabaseUtilities {
                 ContentValues foodAllergy = new ContentValues();
                 foodAllergy.put(RexDatabaseHelper.FOOD_ID, foodId);
                 foodAllergy.put(RexDatabaseHelper.DOG_ID, dogId);
+                Log.d(TAG, foodAllergy.toString());
+
                 db.insert("ALLERGIES", null, foodAllergy);
+
                 Cursor cursor = db.query(RexDatabaseHelper.ALLERGIES,
                         new String[]{
                                 RexDatabaseHelper.ID},
@@ -212,6 +258,7 @@ public class RexDatabaseUtilities {
 
                 db.close();
                 cursor.close();
+                Log.d(TAG, String.valueOf(allergyId));
                 return allergyId;
             } catch (SQLiteException e) {
                 return -1;
