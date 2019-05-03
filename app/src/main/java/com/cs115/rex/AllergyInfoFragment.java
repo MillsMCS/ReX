@@ -61,7 +61,7 @@ public class AllergyInfoFragment extends Fragment implements AdapterView.OnItemS
         foodsSpinner.setOnItemSelectedListener(this);
 
         // TODO: POPULATE WITH DATABASE INFORMATION
-        currentAllergies = RexDatabaseUtilities.getAllergiesRawQuery(activity);
+        currentAllergies = RexDatabaseUtilities.getAllergyNames(activity);
 //        Log.d(TAG, currentAllergies.toString());
 
         // will hold allergies the user adds during this session
@@ -134,15 +134,25 @@ public class AllergyInfoFragment extends Fragment implements AdapterView.OnItemS
             for (String food : addedAllergies){
                 // find the index that it lives in allFoodNames Array
                 int index = Arrays.asList(allFoodNames).indexOf(food);
-                Log.d(TAG, "index" + String.valueOf(index));
 
                 // get the matching integer from allFoodIds
                 int foodId = allFoodIds[index];
-                Log.d(TAG, "foodId" + String.valueOf(index));
 
                 // call utilities.addAllergy(foodId)
                 RexDatabaseUtilities.addAllergy(activity, foodId, RexDatabaseHelper.SINGLE_DOG_ID);
             }
+
+            for (String food : deletedAllergies){
+                // find the index that it lives in allFoodNames Array
+                int index = Arrays.asList(allFoodNames).indexOf(food);
+
+                // get the matching integer from allFoodIds
+                int foodId = allFoodIds[index];
+
+                // call utilities.addAllergy(foodId)
+                RexDatabaseUtilities.removeAllergy(activity, String.valueOf(foodId), String.valueOf(RexDatabaseHelper.SINGLE_DOG_ID));
+            }
+
             addedAllergies.clear();
             deletedAllergies.clear();
         }

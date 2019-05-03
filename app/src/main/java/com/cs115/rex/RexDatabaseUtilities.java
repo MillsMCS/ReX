@@ -54,7 +54,7 @@ public class RexDatabaseUtilities {
     }
 
 
-    public static String[] getAllergiesRawQuery(Context context) {
+    public static String[] getAllergyNames(Context context) {
         try {
             SQLiteOpenHelper rexDatabaseHelper = new RexDatabaseHelper(context);
             SQLiteDatabase db = rexDatabaseHelper.getReadableDatabase();
@@ -76,39 +76,10 @@ public class RexDatabaseUtilities {
             }
         } catch (SQLiteException e) {
             Log.d(TAG, e.toString());
-            return null;
+            return new String[0];
         }
-        String[] foodNames = new String[0];
-        return foodNames;
+        return new String[0];
     }
-
-
-    // SELECT * FROM ALLERGIES, FOODS
-    // WHERE ALLERGIES.DOG_ID = SINGLE_DOG_ID
-    // GROUP BY ALLERGIES.FOOD_ID
-
-    // FOOD_NAMES
-
-    // make String[] of allergy names
-    public static String[] getAllergyNames(Context context){
-        Cursor cursor = getAllergies(context);
-        if (cursor != null){
-            String[] foodIds = new String[cursor.getCount()];
-            int theCount = 0;
-            while(cursor.moveToNext()) {
-                foodIds[theCount] = cursor.getString(0);
-                theCount += 1;
-            }
-            cursor.close();
-            // [9, 3, 4, 6]
-            // query the FOOD table and connect Ids to names
-            return foodIds;
-        } else {
-            String[] names = new String[0];
-            return names;
-        }
-    }
-
 
     public static String[] getAllFoodNames(Context context) {
         try {
@@ -229,58 +200,56 @@ public class RexDatabaseUtilities {
         }
     }
 
-        public static int addAllergy(Context context,int foodId, int dogId){
-            try {
-                Log.d(TAG, "adding allergy...");
+    public static int addAllergy(Context context,int foodId, int dogId){
+        try {
+            Log.d(TAG, "adding allergy...");
 
-                SQLiteOpenHelper rexDatabaseHelper = new RexDatabaseHelper(context);
-                SQLiteDatabase db = rexDatabaseHelper.getReadableDatabase();
+            SQLiteOpenHelper rexDatabaseHelper = new RexDatabaseHelper(context);
+            SQLiteDatabase db = rexDatabaseHelper.getReadableDatabase();
 
-                //adding record to allergy table
-                ContentValues foodAllergy = new ContentValues();
-                foodAllergy.put(RexDatabaseHelper.FOOD_ID, foodId);
-                foodAllergy.put(RexDatabaseHelper.DOG_ID, dogId);
-                Log.d(TAG, foodAllergy.toString());
+            //adding record to allergy table
+            ContentValues foodAllergy = new ContentValues();
+            foodAllergy.put(RexDatabaseHelper.FOOD_ID, foodId);
+            foodAllergy.put(RexDatabaseHelper.DOG_ID, dogId);
+            Log.d(TAG, foodAllergy.toString());
 
-                db.insert("ALLERGIES", null, foodAllergy);
+            db.insert("ALLERGIES", null, foodAllergy);
 
-                Cursor cursor = db.query(RexDatabaseHelper.ALLERGIES,
-                        new String[]{
-                                RexDatabaseHelper.ID},
-                        RexDatabaseHelper.ALLERGY_DOG_ID + " = ?"
-                                + " AND " + RexDatabaseHelper.FOOD_ID + " = ?",
-                        new String[]{Integer.toString(dogId), Integer.toString(foodId)},
-                        null, null, null);
-                int allergyId = 0;
-                if (cursor.moveToFirst()) {
-                    allergyId = cursor.getInt(0);
-                }
-
-                db.close();
-                cursor.close();
-                Log.d(TAG, String.valueOf(allergyId));
-                return allergyId;
-            } catch (SQLiteException e) {
-                return -1;
-            }
-        }
-
-        public static boolean removeAllergy(Context context,int allergyId){
-            try {
-                SQLiteOpenHelper rexDatabaseHelper = new RexDatabaseHelper(context);
-                SQLiteDatabase db = rexDatabaseHelper.getReadableDatabase();
-
-                //query where allergy equals allergy id
-                db.delete("ALLERGIES", RexDatabaseHelper.ID + " = ?",
-                        new String[]{Integer.toString(allergyId)});
-                db.close();
-                //delete
-                return true;
-            } catch (SQLiteException e) {
-                return false;
+            Cursor cursor = db.query(RexDatabaseHelper.ALLERGIES,
+                    new String[]{
+                            RexDatabaseHelper.ID},
+                    RexDatabaseHelper.ALLERGY_DOG_ID + " = ?"
+                            + " AND " + RexDatabaseHelper.FOOD_ID + " = ?",
+                    new String[]{Integer.toString(dogId), Integer.toString(foodId)},
+                    null, null, null);
+            int allergyId = 0;
+            if (cursor.moveToFirst()) {
+                allergyId = cursor.getInt(0);
             }
 
+            db.close();
+            cursor.close();
+            Log.d(TAG, String.valueOf(allergyId));
+            return allergyId;
+        } catch (SQLiteException e) {
+            return -1;
         }
+    }
 
+    public static boolean removeAllergy(Context context,String foodId, String dogId){
+        try {
+            SQLiteOpenHelper rexDatabaseHelper = new RexDatabaseHelper(context);
+            SQLiteDatabase db = rexDatabaseHelper.getReadableDatabase();
+
+            //query where allergy equals allergy id
+            db.delete("ALLERGIES", RexDatabaseHelper.FOOD_ID + " = ? AND " +
+                                                     RexDatabaseHelper.DOG_ID + " = ? " ,
+                    new String[]{foodId, dogId});
+            db.close();
+            return true;
+        } catch (SQLiteException e) {
+            return false;
+        }
 
     }
+}
