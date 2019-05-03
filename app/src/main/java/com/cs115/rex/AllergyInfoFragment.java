@@ -28,8 +28,9 @@ public class AllergyInfoFragment extends Fragment implements AdapterView.OnItemS
     List<String> addedAllergies;
     List<String> deletedAllergies;
     Spinner foodsSpinner;
-    Boolean isEditing;
+    boolean isEditing;
     List<Button> AllergyButtons;
+    boolean spinnerCheck;
 
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -77,21 +78,37 @@ public class AllergyInfoFragment extends Fragment implements AdapterView.OnItemS
 
     @Override
     public void onItemSelected(AdapterView<?> View, View selectedView, int position, long id) {
-        String newAllergy = allFoods[position];
-        // if not the first item [which is "Select a Food"] and the item is not already displayed as a button
-        if (position != 0 && ! Arrays.asList(currentAllergies).contains(newAllergy)){
+
+        // https://stackoverflow.com/questions/13397933/android-spinner-avoid-onitemselected-calls-during-initialization
+        if (spinnerCheck){
+            Log.d(TAG, "onItemSelected. isEditing: " + isEditing);
+            String newAllergy = allFoods[position];
+            // if not the first item [which is "Select a Food"] and the item is not already displayed as a button
+
+            // cases:
+            // food is in removeFood:
+                // remove from removeFood and display
+            // food is in currentAllergies:
+                // do nothing
+            // food is not in either:
+                // add to addList and display
+
             if (deletedAllergies.contains(newAllergy)){
                 deletedAllergies.remove(newAllergy);
-            } else {
+
                 // add Item to new Allergen List
+                displayAllergy(getActivity(), newAllergy);
+
+            } else if (!Arrays.asList(currentAllergies).contains(newAllergy)) {
+                // display button
                 displayAllergy(getActivity(), newAllergy);
 
                 // add String to list of new Allergies, to be sent to database on Save
                 addedAllergies.add(newAllergy);
-
             }
+        } else {
+            spinnerCheck = true;
         }
-
     }
 
     @Override
@@ -102,8 +119,8 @@ public class AllergyInfoFragment extends Fragment implements AdapterView.OnItemS
     private void displayAllergy(Activity activity, String newAllergy) {
         // make a new button and add it to our list of Buttons
         Button button = new Button(activity);
-        button.setOnClickListener(this);
         AllergyButtons.add(button);
+        button.setOnClickListener(this);
 
         button.setText(newAllergy);
         button.setEnabled(isEditing);
@@ -115,13 +132,15 @@ public class AllergyInfoFragment extends Fragment implements AdapterView.OnItemS
 
     // TODO: Method for rendering on Edit click (called in ProfileActivity)
     public void renderButtons(){
-        foodsSpinner.setVisibility(isEditing ? View.GONE : View.VISIBLE);
-        isEditing = !isEditing;
+        foodsSpinner.setVisibility(isEditing ? View.INVISIBLE : View.VISIBLE);
 
+        isEditing = !isEditing;
         // change edit-ability of the buttons
         for (Button b : AllergyButtons){
             b.setEnabled(isEditing);
         }
+
+        spinnerCheck = false;
     }
 
     // onClick for allergy buttons
@@ -132,7 +151,7 @@ public class AllergyInfoFragment extends Fragment implements AdapterView.OnItemS
         String food = btn.getText().toString();
         addedAllergies.remove(food);
         deletedAllergies.add(food);
-        AllergyButtons.remove(food);
+        AllergyButtons.remove(v);
 
         LinearLayout lv = (LinearLayout) btn.getParent();
         lv.removeView(v);
