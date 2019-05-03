@@ -4,7 +4,6 @@ package com.cs115.rex;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,9 +59,7 @@ public class AllergyInfoFragment extends Fragment implements AdapterView.OnItemS
         foodsSpinner.setAdapter(adapter);
         foodsSpinner.setOnItemSelectedListener(this);
 
-        // TODO: POPULATE WITH DATABASE INFORMATION
-        currentAllergies = RexDatabaseUtilities.getAllergyNames(activity);
-//        Log.d(TAG, currentAllergies.toString());
+        currentAllergies = RexDatabaseUtilities.getAllergyNames(activity, String.valueOf(RexDatabaseHelper.SINGLE_DOG_ID));
 
         // will hold allergies the user adds during this session
         addedAllergies = new ArrayList<>();
@@ -119,6 +116,7 @@ public class AllergyInfoFragment extends Fragment implements AdapterView.OnItemS
         // make a new button and add it to our list of Buttons
         Button button = new Button(activity);
         button.setOnClickListener(this);
+        button.setEnabled(isEditing);
         button.setText(newAllergy);
 
         // add the button to the Linear Layout that holds them
@@ -159,9 +157,6 @@ public class AllergyInfoFragment extends Fragment implements AdapterView.OnItemS
         foodsSpinner.setVisibility(isEditing ? View.INVISIBLE : View.VISIBLE);
         isEditing = !isEditing;
         setButtonEnabledness();
-
-        // explicitly set spinnerCheck to false in case user edits Allergies twice
-        spinnerCheck = false;
     }
 
     private void setButtonEnabledness(){

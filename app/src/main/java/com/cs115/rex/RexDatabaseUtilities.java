@@ -13,10 +13,13 @@ public class RexDatabaseUtilities {
 
     private static String TAG = "databaseUtilities";
 
-    RexDatabaseUtilities() {
-    }
-
-    //Rex methods
+    /**
+     * Gets elements of dog.
+     *
+     * @param context
+     * @return
+     * @author Karena Huang
+     */
     public static Cursor getDog(Context context) {
         try {
 
@@ -37,6 +40,16 @@ public class RexDatabaseUtilities {
     }
 
     // get cursor of all allergies
+
+    /**
+     * //TODO: See if this is used anywhere before due date.
+     * //TODO: add argument for dogId
+     * Gets a cursor of all the allergies for a specific dog
+     *
+     * @param context
+     * @return
+     * @author Karena Huang
+     */
     public static Cursor getAllergies(Context context) {
         try {
             SQLiteOpenHelper rexDatabaseHelper = new RexDatabaseHelper(context);
@@ -53,21 +66,26 @@ public class RexDatabaseUtilities {
         }
     }
 
-
-    public static String[] getAllergyNames(Context context) {
+    /**
+     * Gets food name of each allergy for a certain dog.
+     *
+     * @param context
+     * @param dogId
+     * @return
+     * @author Karena Huang
+     */
+    public static String[] getAllergyNames(Context context, String dogId) {
         try {
             SQLiteOpenHelper rexDatabaseHelper = new RexDatabaseHelper(context);
             SQLiteDatabase db = rexDatabaseHelper.getReadableDatabase();
-            String query = "SELECT FOOD._id, NAME FROM FOOD INNER JOIN ALLERGIES ON ALLERGIES.FOOD_ID = FOOD._id WHERE ALLERGIES.DOG_ID=" + String.valueOf(RexDatabaseHelper.SINGLE_DOG_ID);
+            String query = "SELECT FOOD._id, NAME FROM FOOD INNER JOIN ALLERGIES ON ALLERGIES.FOOD_ID = FOOD._id WHERE ALLERGIES.DOG_ID=" + dogId;
             Cursor cursor = db.rawQuery(query, null);
             if (cursor != null) {
                 DatabaseUtils.dumpCursor(cursor);
                 int indexFoodNames = cursor.getColumnIndex(RexDatabaseHelper.NAME);
-                Log.d(TAG, String.valueOf(indexFoodNames));
                 String[] foodNames = new String[cursor.getCount()];
                 int theCount = 0;
                 while (cursor.moveToNext()) {
-                    Log.d(TAG, cursor.getString(indexFoodNames));
                     foodNames[theCount] = cursor.getString(indexFoodNames);
                     theCount += 1;
                 }
@@ -75,12 +93,18 @@ public class RexDatabaseUtilities {
                 return foodNames;
             }
         } catch (SQLiteException e) {
-            Log.d(TAG, e.toString());
             return new String[0];
         }
         return new String[0];
     }
 
+    /**
+     * Gets all food names.
+     *
+     * @param context
+     * @return all food names
+     * @author Karena Huang
+     */
     public static String[] getAllFoodNames(Context context) {
         try {
             SQLiteOpenHelper rexDatabaseHelper = new RexDatabaseHelper(context);
@@ -89,13 +113,12 @@ public class RexDatabaseUtilities {
                     new String[]{
                             RexDatabaseHelper.NAME},
                     null, null, null, null, null
-                    );
+            );
             String[] foodArray = new String[cursor.getCount()];
             int theCount = 0;
-            while(cursor.moveToNext()) {
+            while (cursor.moveToNext()) {
                 foodArray[theCount] = cursor.getString(0);
                 theCount += 1;
-
             }
             cursor.close();
             return foodArray;
@@ -105,18 +128,25 @@ public class RexDatabaseUtilities {
         }
     }
 
+    /**
+     * returns all food Ids
+     *
+     * @param context
+     * @return food Ids
+     * @author Karena Huang
+     */
     public static int[] getAllFoodId(Context context) {
         try {
             SQLiteOpenHelper rexDatabasehelper = new RexDatabaseHelper(context);
             SQLiteDatabase db = rexDatabasehelper.getReadableDatabase();
             Cursor cursor = db.query(RexDatabaseHelper.FOOD,
-                    new String[] {
+                    new String[]{
                             RexDatabaseHelper.ID},
                     null, null, null, null, null
-                    );
+            );
             int[] intArray = new int[cursor.getCount()];
             int theCount = 0;
-            while(cursor.moveToNext()) {
+            while (cursor.moveToNext()) {
                 intArray[theCount] = cursor.getInt(0);
                 theCount += 1;
             }
@@ -127,6 +157,14 @@ public class RexDatabaseUtilities {
         }
     }
 
+    /**
+     * updates dog name
+     *
+     * @param context
+     * @param newDogName
+     * @return
+     * @author Karena Huang
+     */
     public static boolean updateName(Context context, String newDogName) {
         try {
             SQLiteOpenHelper rexDatabaseHelper = new RexDatabaseHelper(context);
@@ -200,10 +238,8 @@ public class RexDatabaseUtilities {
         }
     }
 
-    public static int addAllergy(Context context,int foodId, int dogId){
+    public static int addAllergy(Context context, int foodId, int dogId) {
         try {
-            Log.d(TAG, "adding allergy...");
-
             SQLiteOpenHelper rexDatabaseHelper = new RexDatabaseHelper(context);
             SQLiteDatabase db = rexDatabaseHelper.getReadableDatabase();
 
@@ -211,10 +247,7 @@ public class RexDatabaseUtilities {
             ContentValues foodAllergy = new ContentValues();
             foodAllergy.put(RexDatabaseHelper.FOOD_ID, foodId);
             foodAllergy.put(RexDatabaseHelper.DOG_ID, dogId);
-            Log.d(TAG, foodAllergy.toString());
-
             db.insert("ALLERGIES", null, foodAllergy);
-
             Cursor cursor = db.query(RexDatabaseHelper.ALLERGIES,
                     new String[]{
                             RexDatabaseHelper.ID},
@@ -226,24 +259,22 @@ public class RexDatabaseUtilities {
             if (cursor.moveToFirst()) {
                 allergyId = cursor.getInt(0);
             }
-
             db.close();
             cursor.close();
-            Log.d(TAG, String.valueOf(allergyId));
             return allergyId;
         } catch (SQLiteException e) {
             return -1;
         }
     }
 
-    public static boolean removeAllergy(Context context,String foodId, String dogId){
+    public static boolean removeAllergy(Context context, String foodId, String dogId) {
         try {
             SQLiteOpenHelper rexDatabaseHelper = new RexDatabaseHelper(context);
             SQLiteDatabase db = rexDatabaseHelper.getReadableDatabase();
 
             //query where allergy equals allergy id
             db.delete("ALLERGIES", RexDatabaseHelper.FOOD_ID + " = ? AND " +
-                                                     RexDatabaseHelper.DOG_ID + " = ? " ,
+                            RexDatabaseHelper.DOG_ID + " = ? ",
                     new String[]{foodId, dogId});
             db.close();
             return true;
