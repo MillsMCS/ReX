@@ -25,11 +25,12 @@ public class AllergyInfoFragment extends Fragment implements AdapterView.OnItemS
     String[] allFoodNames;
     int[] allFoodIds;
     String[] currentAllergies;
-    List<String> addedAllergies;
-    List<String> deletedAllergies;
-    Spinner foodsSpinner;
+    ArrayList<String> addedAllergies;    // must be ArrayList because List is not serializable for Bundle
+    ArrayList<String> deletedAllergies;  // must be ArrayList because List is not serializable for Bundle
     boolean isEditing;
     boolean spinnerCheck;
+    boolean isRestored;
+    Spinner foodsSpinner;
     Activity activity;
 
     @Override
@@ -37,16 +38,31 @@ public class AllergyInfoFragment extends Fragment implements AdapterView.OnItemS
                              ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        if (savedInstanceState != null){
+            allFoodNames = savedInstanceState.getStringArray("allFoodNames");
+            currentAllergies = savedInstanceState.getStringArray("currentAllergies");
+            allFoodIds = savedInstanceState.getIntArray("allFoodIds");
+            addedAllergies = savedInstanceState.getStringArrayList("addedAllergies");
+            deletedAllergies = savedInstanceState.getStringArrayList("deletedAllergies");
+            isEditing = savedInstanceState.getBoolean("isEditing");
+            isRestored = true;
+        }
         return inflater.inflate(R.layout.fragment_allergy_info, container, false);
     }
 
     @Override
     public void onStart() {
         super.onStart();
-
         activity = getActivity();
-        allFoodNames = RexDatabaseUtilities.getAllFoodNames(activity);
-        allFoodIds = RexDatabaseUtilities.getAllFoodId(activity);
+        if (!isRestored){
+            allFoodNames = RexDatabaseUtilities.getAllFoodNames(activity);
+            allFoodIds = RexDatabaseUtilities.getAllFoodId(activity);
+            currentAllergies = RexDatabaseUtilities.getAllergyNames(activity, String.valueOf(RexDatabaseHelper.SINGLE_DOG_ID));
+
+            // will hold allergies the user adds during this session
+            addedAllergies = new ArrayList<>();
+            deletedAllergies = new ArrayList<>();
+        }
 
         // populate spinner with foods user can select and set on click listener
         foodsSpinner = activity.findViewById(R.id.all_foods_spinner);
@@ -54,19 +70,17 @@ public class AllergyInfoFragment extends Fragment implements AdapterView.OnItemS
                                                         activity,
                                                         R.layout.spinner,
                                                         allFoodNames);
-//        adapter.setDropDownViewResource(R.layout.spinner);
-        foodsSpinner.setVisibility(View.GONE);
         foodsSpinner.setAdapter(adapter);
         foodsSpinner.setOnItemSelectedListener(this);
-
-        currentAllergies = RexDatabaseUtilities.getAllergyNames(activity, String.valueOf(RexDatabaseHelper.SINGLE_DOG_ID));
-
-        // will hold allergies the user adds during this session
-        addedAllergies = new ArrayList<>();
-        deletedAllergies = new ArrayList<>();
+        foodsSpinner.setVisibility(isEditing ? View.VISIBLE : View.GONE);
 
         // create buttons for allergies the dog already has
         for (String allergen : currentAllergies){
+            if (!deletedAllergies.contains(allergen)) {
+                displayAllergy(activity, allergen);
+            }
+        }
+        for (String allergen : addedAllergies){
             displayAllergy(activity, allergen);
         }
     }
@@ -78,22 +92,10 @@ public class AllergyInfoFragment extends Fragment implements AdapterView.OnItemS
         // https://stackoverflow.com/questions/13397933/android-spinner-avoid-onitemselected-calls-during-initialization
         if (spinnerCheck){
             String newAllergy = allFoodNames[position];
-            // if not the first item [which is "Select a Food"] and the item is not already displayed as a button
-
-            // cases:
-            // food is in removeFood:
-                // remove from removeFood and display
-            // food is in currentAllergies:
-                // do nothing
-            // food is not in either:
-                // add to addList and display
-
             if (deletedAllergies.contains(newAllergy)){
                 deletedAllergies.remove(newAllergy);
-
                 // restore food to list of allergens
                 displayAllergy(activity, newAllergy);
-
             } else if (!Arrays.asList(currentAllergies).contains(newAllergy) &&
                        !addedAllergies.contains(newAllergy)) {
                 // display button
@@ -172,22 +174,21 @@ public class AllergyInfoFragment extends Fragment implements AdapterView.OnItemS
     @Override
     public void onClick(View v) {
         Button btn = (Button) v;
-
         String food = btn.getText().toString();
         addedAllergies.remove(food);
         deletedAllergies.add(food);
-
         LinearLayout lv = (LinearLayout) btn.getParent();
         lv.removeView(v);
     }
+
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putStringArray("allFoodNames", allFoodNames);
+        savedInstanceState.putStringArray("currentAllergies", currentAllergies);
+        savedInstanceState.putIntArray("allFoodIds", allFoodIds);
+        savedInstanceState.putStringArrayList("addedAllergies", addedAllergies);
+        savedInstanceState.putStringArrayList("deletedAllergies", deletedAllergies);
+        savedInstanceState.putBoolean("isEditing", isEditing);
+    }
 }
-
-
-
-
-// user selects a food
-// java adds food to list of new Allergies
-
-// ON SAVE:
-// java gets food's ID
-// sends foodId to AddAllergy method

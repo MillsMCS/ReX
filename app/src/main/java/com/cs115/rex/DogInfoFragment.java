@@ -59,11 +59,8 @@ public class DogInfoFragment extends Fragment {
 
         // set up EditTexts
         nameET = view.findViewById(R.id.nameView);
-        nameET.setEnabled(isEditing);
         breedET = view.findViewById(R.id.breedView);
-        breedET.setEnabled(isEditing);
         weightET = view.findViewById(R.id.WeightView);
-        weightET.setEnabled(isEditing);
 
         // if we have restored from a previous state, put in String values
         if (isRestored) {
@@ -88,6 +85,9 @@ public class DogInfoFragment extends Fragment {
                 cursor.close();
             }
         }
+        nameET.setEnabled(isEditing);
+        breedET.setEnabled(isEditing);
+        weightET.setEnabled(isEditing);
     }
 
     /**
@@ -124,7 +124,7 @@ public class DogInfoFragment extends Fragment {
 
         // save booleans
         savedInstanceState.putBoolean("isRestored", true);
-        savedInstanceState.putBoolean("isEditing", true);
+        savedInstanceState.putBoolean("isEditing", isEditing);
     }
 
     private class UpdateDogInfo extends AsyncTask<String, Void, Void>{
