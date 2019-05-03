@@ -47,7 +47,6 @@ public class AllergyInfoFragment extends Fragment implements AdapterView.OnItemS
         super.onStart();
         Activity activity = getActivity();
 
-        // TODO: Populate with database information. Ask Karena if she wrote getFoods method
         allFoods = RexDatabaseUtilities.getAllFoodNames(getActivity());
 
         // populate spinner with foods user can select and set on click listener
@@ -96,10 +95,11 @@ public class AllergyInfoFragment extends Fragment implements AdapterView.OnItemS
             if (deletedAllergies.contains(newAllergy)){
                 deletedAllergies.remove(newAllergy);
 
-                // add Item to new Allergen List
+                // restore food to list of allergens
                 displayAllergy(getActivity(), newAllergy);
 
-            } else if (!Arrays.asList(currentAllergies).contains(newAllergy)) {
+            } else if (!Arrays.asList(currentAllergies).contains(newAllergy) &&
+                       !addedAllergies.contains(newAllergy)) {
                 // display button
                 displayAllergy(getActivity(), newAllergy);
 
