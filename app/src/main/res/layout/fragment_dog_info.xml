@@ -11,23 +11,30 @@
 
     <TextView
         android:id="@+id/nameLabel"
+        android:textSize="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
         android:text="Name"/>
 
     <EditText
         android:id="@+id/nameView"
-        android:layout_below="@+id/nameLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/nameLabel"
         android:layout_marginBottom="20dp"
-        android:hint="@string/name_hint"/>
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+
+        android:hint="@string/name_hint" />
 
     <TextView
         android:id="@+id/breedLabel"
+        android:textSize="20dp"
         android:layout_below="@+id/nameView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
         android:text="Breed"/>
 
     <EditText
@@ -36,13 +43,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+
         android:hint="@string/breed_hint"/>
 
     <TextView
         android:id="@+id/WeightLabel"
+        android:textSize="20dp"
         android:layout_below="@+id/breedView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+
         android:text="Weight"/>
 
     <EditText
@@ -50,6 +63,9 @@
         android:layout_below="@+id/WeightLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+
         android:hint="@string/weight_hint"/>
 
 </RelativeLayout>

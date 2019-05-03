@@ -52,9 +52,9 @@ public class AllergyInfoFragment extends Fragment implements AdapterView.OnItemS
         foodsSpinner = activity.findViewById(R.id.all_foods_spinner);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                                                         activity,
-                                                        android.R.layout.simple_spinner_item,
-                allFoodNames);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                                        R.layout.spinner,
+                                                        allFoodNames);
+//        adapter.setDropDownViewResource(R.layout.spinner);
         foodsSpinner.setVisibility(View.GONE);
         foodsSpinner.setAdapter(adapter);
         foodsSpinner.setOnItemSelectedListener(this);

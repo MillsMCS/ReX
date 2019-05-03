@@ -13,6 +13,7 @@
         android:id="@+id/AllergyLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
         android:text="Allergies"/>
 
     <!--TODO add entries via database and remove hardcoded examples-->
@@ -22,19 +23,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:layout_centerHorizontal="true"
         android:layout_below="@id/AllergyLabel">
     </LinearLayout>
 
     <Spinner
         android:id="@+id/all_foods_spinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/allergies_list"
-        />
-    <ListView
-        android:id="@+id/AllergyListView"
-        android:layout_below="@+id/all_foods_spinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/allergies_list"
+        android:textAlignment="center"
+        android:layout_centerHorizontal="true"
         />
+
 </RelativeLayout>
