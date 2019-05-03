@@ -4,11 +4,13 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.media.Image;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -27,24 +29,58 @@ import java.io.IOException;
 import java.util.Calendar;
 
 public class ProfileActivity extends AppCompatActivity {
-
-    //For the add photo Blob functionality
     private Button btn;
+    private String TAG = "profileActivity";
+    private ImageView imageViewSave;
     private ImageView imageview;
+    private String image;
     private static final String IMAGE_DIRECTORY = " /directory";
     private int GALLERY = 1, CAMERA = 2;
+    private boolean isEditing;
+    private boolean isRestored;
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
+        // set toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        // set Save / Edit Button
+        final Button editAndSaveBtn = findViewById(R.id.edit_button);
+        String edit_or_save = isEditing ? "Save" : "Edit";
+        editAndSaveBtn.setText(edit_or_save);
+
+        // get Fragments so we can set onclick listeners
+        FragmentManager fm = getSupportFragmentManager();
+        final DogInfoFragment dogInfoFrag = (DogInfoFragment) fm.findFragmentById(R.id.dog_info_frag);
+        final AllergyInfoFragment allergyFrag = (AllergyInfoFragment) fm.findFragmentById(R.id.allergy_info_frag);
+        editAndSaveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "edit / save button clicked " + Boolean.toString(isEditing));
+                isEditing = !isEditing;
+                String edit_or_save = isEditing ? "Save" : "Edit";
+                editAndSaveBtn.setText(edit_or_save);
+                dogInfoFrag.makeEditable();
+                allergyFrag.renderButtons();
+            }
+        });
+
+//        if(savedInstanceState != null){
+//            image = savedInstanceState.getString("image");
+//            isRestored = savedInstanceState.getBoolean("isRestored");
+//            isEditing = savedInstanceState.getBoolean("isEditing");
+//
+//        }
+
+
+        // set Select Photo button
         btn = (Button) findViewById(R.id.select_photo);
         imageview = (ImageView) findViewById(R.id.photo);
-
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -52,6 +88,34 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
     }
+
+//
+//    @Override
+//    public void onStart() {
+//        super.onStart();
+//
+//
+//
+//
+//    }
+//
+//    public void changeEditableStatus(){
+//        isEditing = !isEditing;
+//        imageViewSave.setEnabled(isEditing);
+//    }
+//
+//    @Override
+//    public void onSaveInstanceState(Bundle savedInstanceState) {
+//        savedInstanceState.putString("image", imageViewSave.toString());
+//        savedInstanceState.putBoolean("isRestored", true);
+//        savedInstanceState.putBoolean("isEditing", true);
+//    }
+//
+//    @Override
+//    public void onStop() {
+//        super.onStop();
+//    }
+
 
 
 
@@ -62,16 +126,17 @@ public class ProfileActivity extends AppCompatActivity {
         // Inflate the menu to add items to the app bar.
         getMenuInflater().inflate(R.menu.menu_profile, menu);
         return super.onCreateOptionsMenu(menu);
+
     }
 
     //Menu - activates app bar menu settings button
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_profile_info:
-                //TODO code to activate edit profile functionality
+            case R.id.action_home:
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
                 return true;
-
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -102,7 +167,6 @@ public class ProfileActivity extends AppCompatActivity {
     public void choosePhotoFromGallery() {
         Intent galleryIntent = new Intent(Intent.ACTION_PICK,
                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-
         startActivityForResult(galleryIntent, GALLERY);
     }
 
@@ -113,7 +177,6 @@ public class ProfileActivity extends AppCompatActivity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == this.RESULT_CANCELED) {
             return;
@@ -129,6 +192,10 @@ public class ProfileActivity extends AppCompatActivity {
                     String path = saveImage(bitmap);
                     Toast.makeText(ProfileActivity.this, "Image Saved!", Toast.LENGTH_SHORT).show();
                     imageview.setImageURI(Uri.parse(contentURI.toString()));
+                    //updates the DOG database to include the path to the picture when chosen from the gallery
+                    RexDatabaseUtilities util = new RexDatabaseUtilities();
+                    util.updatePhoto(this, contentURI.toString());
+                    Log.d(TAG, "Saving picture from gallery");
 
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -140,13 +207,17 @@ public class ProfileActivity extends AppCompatActivity {
             Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
             imageview.setImageBitmap(thumbnail);
             saveImage(thumbnail);
-
+            //updates the DOG database to include the path to the picture when chosen from the camera
+            RexDatabaseUtilities util = new RexDatabaseUtilities();
+            util.updatePhoto(this, thumbnail.toString());
+            Log.d(TAG, "Saving picture from camera");
 
             Toast.makeText(ProfileActivity.this, "Image Saved!", Toast.LENGTH_SHORT).show();
         }
     }
 
     public String saveImage(Bitmap myBitmap) {
+
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
         File wallpaperDirectory = new File(
@@ -166,11 +237,7 @@ public class ProfileActivity extends AppCompatActivity {
                     new String[]{f.getPath()},
                     new String[]{"image/jpeg"}, null);
             fo.close();
-            Log.d("TAG", "File Saved::---&gt;" + f.getAbsolutePath());
-
-            RexDatabaseUtilities util = new RexDatabaseUtilities();
-            util.updatePhoto(this, f.getAbsolutePath());
-
+            Log.d(TAG, "File Saved::---&gt;" + f.getAbsolutePath());
             return f.getAbsolutePath();
         } catch (IOException e1) {
             e1.printStackTrace();

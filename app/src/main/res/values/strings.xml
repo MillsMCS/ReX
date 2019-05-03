@@ -6,6 +6,9 @@
     <string name="search_string">Search</string>
     <string name="search_hint">Type search text</string>
 
+    <string name="home_menu_item">Search</string>
+    <string name="profile_menu_item">Update Profile</string>
+
     <string name="profile_name">Profile</string>
     <string name="profile_update_name">Profile Update</string>
     <string name="results_name">Results</string>
@@ -18,9 +21,6 @@
     <string name="weight_hint">Enter your dogs weight</string>
     <string name="picture_text">Pic a picture</string>
 
-
-
-    
     //all the symptoms for the FOOD_TABLE
     <string name="symptom10">Symptoms- vomiting and diarrhea, panting,
         excessive thirst and urination, hyperactivity, abnormal heart rhythm,
@@ -47,10 +47,5 @@
         vomiting, in-coordination, sleepiness or excitation,
         hypersalivation, dilated pupils, low blood pressure,
         low body temperature, seizure, coma, death (rare)</string>
-
-    <array name="sampleAllergies">
-        <item>allergy1</item>
-        <item>allergy2</item>
-    </array>
 
 </resources>

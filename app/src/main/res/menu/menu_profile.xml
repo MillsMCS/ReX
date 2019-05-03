@@ -3,10 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_profile_info"
+        android:id="@+id/action_home"
         android:enabled="true"
-        android:icon="@drawable/settings_icon"
+        android:icon="@drawable/dog_house_icon"
         android:orderInCategory="1"
-        android:title="@string/profile_name"
-        app:showAsAction="ifRoom" />
+        android:title="@string/home_menu_item"
+        app:showAsAction="always" />
+
 </menu>
