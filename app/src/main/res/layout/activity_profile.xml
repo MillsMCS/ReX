@@ -38,7 +38,6 @@
             android:layout_height="40dp"
             android:text="@string/picture_text"/>
 
-
         <Button
             android:id="@+id/edit_button"
             android:layout_width="wrap_content"
@@ -67,19 +66,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/dog_info_frag"
-            android:layout_centerHorizontal="false"
-            android:layout_marginStart="30dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginEnd="30dp"
-            android:layout_marginRight="30dp"
-            android:layout_marginBottom="40dp" />
-
-        <fragment
-            android:id="@+id/vet_info_frag"
-            android:name="com.cs115.rex.VetInfoFragment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/allergy_info_frag"
             android:layout_centerHorizontal="false"
             android:layout_marginStart="30dp"
             android:layout_marginLeft="30dp"

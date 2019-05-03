@@ -13,15 +13,28 @@
         android:id="@+id/AllergyLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Allergy"/>
+        android:text="Allergies"/>
 
     <!--TODO add entries via database and remove hardcoded examples-->
     <!-- TODO consider formatting and the label implementation, as in the design doc -->
-    <ListView
-        android:id="@+id/AllergyListView"
-        android:layout_below="@+id/AllergyLabel"
+    <LinearLayout
+        android:id="@+id/allergies_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:entries="@array/sampleAllergies" />
+        android:orientation="vertical"
+        android:layout_below="@id/AllergyLabel">
+    </LinearLayout>
 
+    <Spinner
+        android:id="@+id/all_foods_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/allergies_list"
+        />
+    <ListView
+        android:id="@+id/AllergyListView"
+        android:layout_below="@+id/all_foods_spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        />
 </RelativeLayout>
