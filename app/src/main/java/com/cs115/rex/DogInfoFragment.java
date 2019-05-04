@@ -1,15 +1,14 @@
 package com.cs115.rex;
 
 
+import android.app.Activity;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -99,8 +98,12 @@ public class DogInfoFragment extends Fragment {
         // if user is Editing, compare their new values to their old values
         if (isEditing){
             new UpdateDogInfo().execute(nameET.getText().toString(),
-                                        breedET.getText().toString(),
-                                        weightET.getText().toString());
+                                  breedET.getText().toString(),
+                                  weightET.getText().toString(),
+                                  oldName,
+                                  oldBreed,
+                                  oldWeight,
+                                  getActivity());
         }
         // change Button and editText states
         isEditing = !isEditing;
@@ -127,28 +130,32 @@ public class DogInfoFragment extends Fragment {
         savedInstanceState.putBoolean("isEditing", isEditing);
     }
 
-    private class UpdateDogInfo extends AsyncTask<String, Void, Void>{
+    private class UpdateDogInfo extends AsyncTask<Object, Void, Activity>{
         @Override
-        protected Void doInBackground(String... params) {
-            String newName = params[0];
-            String newBreed = params[1];
-            String newWeight = params[2];
+        protected Activity doInBackground(Object... params) {
+            String newName = (String) params[0];
+            String newBreed = (String) params[1];
+            String newWeight = (String) params[2];
+            String oldName = (String) params[3];
+            String oldBreed = (String) params[4];
+            String oldWeight = (String) params[5];
+            Activity activity = (Activity) params[6];
 
             if (!oldName.equals(newName)) {
-                RexDatabaseUtilities.updateName(getActivity().getApplicationContext(), newName);
+                RexDatabaseUtilities.updateName(activity, newName);
             }
             if (!oldBreed.equals(newBreed)){
-                RexDatabaseUtilities.updateBreed(getActivity().getApplicationContext(), newBreed);
+                RexDatabaseUtilities.updateBreed(activity, newBreed);
             }
             if (!oldWeight.equals(newWeight)){
-                RexDatabaseUtilities.updateWeight(getActivity().getApplicationContext(), newWeight);
+                RexDatabaseUtilities.updateWeight(activity, newWeight);
             }
-            return null;
+            return activity;
         }
 
         @Override
-        protected void onPostExecute(Void v) {
-            Toast toast = Toast.makeText(getActivity(), "Changes saved.", Toast.LENGTH_LONG);
+        protected void onPostExecute(Activity activity) {
+            Toast toast = Toast.makeText(activity, "Changes saved.", Toast.LENGTH_LONG);
             toast.show();
         }
     }
