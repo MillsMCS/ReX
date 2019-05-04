@@ -81,7 +81,6 @@ public class RexDatabaseUtilities {
             String query = "SELECT FOOD._id, NAME FROM FOOD INNER JOIN ALLERGIES ON ALLERGIES.FOOD_ID = FOOD._id WHERE ALLERGIES.DOG_ID=" + dogId;
             Cursor cursor = db.rawQuery(query, null);
             if (cursor != null) {
-                DatabaseUtils.dumpCursor(cursor);
                 int indexFoodNames = cursor.getColumnIndex(RexDatabaseHelper.NAME);
                 String[] foodNames = new String[cursor.getCount()];
                 int theCount = 0;
