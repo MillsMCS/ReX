@@ -2,6 +2,7 @@ package com.cs115.rex;
 
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -112,7 +113,13 @@ public class AllergyInfoFragment extends Fragment implements AdapterView.OnItemS
         button.setOnClickListener(this);
         button.setEnabled(isEditing);
         button.setText(allergen);
-
+        if (!isEditing){
+            button.setBackgroundColor(Color.TRANSPARENT);
+            button.setTextColor(Color.parseColor("#000000"));
+        } else {
+            button.setBackgroundResource(android.R.drawable.btn_default_small);
+            button.setTextColor(Color.parseColor("#000000"));
+        }
         // TODO: https://guides.codepath.com/android/Drawables
 //        button.setBackgroundResource(R.drawable.png_test);
 
@@ -134,8 +141,17 @@ public class AllergyInfoFragment extends Fragment implements AdapterView.OnItemS
         LinearLayout buttonHolder = activity.findViewById(R.id.allergies_list);
         int numOfButtons = buttonHolder.getChildCount();
         for (int i = 0; i < numOfButtons; i++) {
-            Button b = (Button) buttonHolder.getChildAt(i);
-            b.setEnabled(isEditing);
+            Button button = (Button) buttonHolder.getChildAt(i);
+            button.setEnabled(isEditing);
+            if (isEditing){
+                button.setBackgroundResource(android.R.drawable.btn_default);
+                button.setTextColor(Color.parseColor("#000000"));
+            } else {
+                button.setBackgroundColor(Color.TRANSPARENT);
+                button.setTextColor(Color.parseColor("#000000"));
+            }
+//            b.setBackgroundColor(isEditing ? Color.parseColor("#d1d1d1") : Color.TRANSPARENT);
+//            b.setTextColor(Color.parseColor(isEditing ? "#000000" : "#8e8e8e"));
         }
     }
 
