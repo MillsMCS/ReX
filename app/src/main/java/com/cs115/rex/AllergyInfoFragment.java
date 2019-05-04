@@ -2,9 +2,9 @@ package com.cs115.rex;
 
 
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,6 +33,7 @@ public class AllergyInfoFragment extends Fragment implements AdapterView.OnItemS
     private boolean isRestored;
     private Spinner foodsSpinner;
     private Activity activity;
+    private TextView addAnAllergyTV;
 
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -45,7 +47,7 @@ public class AllergyInfoFragment extends Fragment implements AdapterView.OnItemS
         return inflater.inflate(R.layout.fragment_allergy_info, container, false);
     }
 
-    private void parseBundle(Bundle savedInstanceState){
+    private void parseBundle(Bundle savedInstanceState) {
         allFoodNames = savedInstanceState.getStringArray("allFoodNames");
         currentAllergies = savedInstanceState.getStringArray("currentAllergies");
         allFoodIds = savedInstanceState.getIntArray("allFoodIds");
@@ -65,7 +67,7 @@ public class AllergyInfoFragment extends Fragment implements AdapterView.OnItemS
         createButtons();
     }
 
-    private void setInstanceVariables(){
+    private void setInstanceVariables() {
         allFoodNames = RexDatabaseUtilities.getAllFoodNames(activity);
         allFoodIds = RexDatabaseUtilities.getAllFoodId(activity);
         currentAllergies = RexDatabaseUtilities.getAllergyNames(activity, String.valueOf(RexDatabaseHelper.SINGLE_DOG_ID));
@@ -73,17 +75,20 @@ public class AllergyInfoFragment extends Fragment implements AdapterView.OnItemS
         deletedAllergies = new ArrayList<>();
     }
 
-    private void makeSpinner(){
+    private void makeSpinner() {
         foodsSpinner = activity.findViewById(R.id.all_foods_spinner);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(activity,
-                                                          R.layout.spinner,
-                                                          allFoodNames);
+                R.layout.spinner,
+                allFoodNames);
         foodsSpinner.setAdapter(adapter);
         foodsSpinner.setOnItemSelectedListener(this);
         foodsSpinner.setVisibility(isEditing ? View.VISIBLE : View.GONE);
+
+        addAnAllergyTV = activity.findViewById(R.id.add_an_allergy);
+        addAnAllergyTV.setVisibility(isEditing ? View.VISIBLE : View.GONE);
     }
 
-    private void createButtons(){
+    private void createButtons() {
         for (String allergen : currentAllergies) {
             if (!deletedAllergies.contains(allergen)) {
                 displayAllergy(activity, allergen);
@@ -96,7 +101,7 @@ public class AllergyInfoFragment extends Fragment implements AdapterView.OnItemS
 
     @Override
     public void onItemSelected(AdapterView<?> View, View selectedView, int position, long id) {
-        // if block needed to keep spinner from adding the first food to allergies upon initialization
+        // if block and Boolean needed to keep spinner from adding the first food to allergies upon initialization
         // https://stackoverflow.com/questions/13397933/android-spinner-avoid-onitemselected-calls-during-initialization
         if (spinnerCheck) {
             String newAllergy = allFoodNames[position];
@@ -115,7 +120,6 @@ public class AllergyInfoFragment extends Fragment implements AdapterView.OnItemS
     @Override
     public void onNothingSelected(AdapterView<?> arg0) {
         // Auto-generated method stub.
-        Log.d(TAG, "nothingSelected");
     }
 
     private void displayAllergy(Activity activity, String allergen) {
@@ -133,20 +137,10 @@ public class AllergyInfoFragment extends Fragment implements AdapterView.OnItemS
     // TODO: Method for rendering on Edit click (called in ProfileActivity)
     public void onEditandSaveAction() {
         if (isEditing) {
-            for (String food : addedAllergies) {
-                int index = Arrays.asList(allFoodNames).indexOf(food);
-                int foodId = allFoodIds[index];
-                RexDatabaseUtilities.addAllergy(activity, foodId, RexDatabaseHelper.SINGLE_DOG_ID);
-            }
-            for (String food : deletedAllergies) {
-                int index = Arrays.asList(allFoodNames).indexOf(food);
-                int foodId = allFoodIds[index];
-                RexDatabaseUtilities.removeAllergy(activity, String.valueOf(foodId), String.valueOf(RexDatabaseHelper.SINGLE_DOG_ID));
-            }
-            addedAllergies.clear();
-            deletedAllergies.clear();
+            new UpdateAllergies().execute(activity, addedAllergies, deletedAllergies, allFoodNames, allFoodIds);
         }
         foodsSpinner.setVisibility(isEditing ? View.INVISIBLE : View.VISIBLE);
+        addAnAllergyTV.setVisibility(isEditing ? View.INVISIBLE : View.VISIBLE);
         isEditing = !isEditing;
         toggleButtonEnabledStatus();
     }
@@ -182,5 +176,35 @@ public class AllergyInfoFragment extends Fragment implements AdapterView.OnItemS
         savedInstanceState.putStringArrayList("addedAllergies", addedAllergies);
         savedInstanceState.putStringArrayList("deletedAllergies", deletedAllergies);
         savedInstanceState.putBoolean("isEditing", isEditing);
+    }
+
+    private class UpdateAllergies extends AsyncTask<Object, Void, Void> {
+        @Override
+        protected Void doInBackground(Object... objects) {
+            Activity activity = (Activity) objects[0];
+            ArrayList<String> addedAllergies = (ArrayList<String>) objects[1];
+            ArrayList<String> deletedAllergies = (ArrayList<String>) objects[2];
+            String[] allFoodNames = (String[]) objects[3];
+            int[] allFoodIds = (int[]) objects[4];
+
+            for (String food : addedAllergies) {
+                int index = Arrays.asList(allFoodNames).indexOf(food);
+                int foodId = allFoodIds[index];
+                RexDatabaseUtilities.addAllergy(activity, foodId, RexDatabaseHelper.SINGLE_DOG_ID);
+            }
+            for (String food : deletedAllergies) {
+                int index = Arrays.asList(allFoodNames).indexOf(food);
+                int foodId = allFoodIds[index];
+                RexDatabaseUtilities.removeAllergy(activity, String.valueOf(foodId), String.valueOf(RexDatabaseHelper.SINGLE_DOG_ID));
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void v){
+            // TODO: where to put this for thread safety?
+            addedAllergies.clear();
+            deletedAllergies.clear();
+        }
     }
 }
