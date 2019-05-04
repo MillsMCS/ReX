@@ -114,10 +114,10 @@ public class RexDatabaseUtilities {
                     null, null, null, null, null
             );
             String[] foodArray = new String[cursor.getCount()];
-            int theCount = 0;
+            int index = 0;
             while (cursor.moveToNext()) {
-                foodArray[theCount] = cursor.getString(0);
-                theCount += 1;
+                foodArray[index] = cursor.getString(0);
+                index += 1;
             }
             cursor.close();
             return foodArray;
@@ -144,10 +144,10 @@ public class RexDatabaseUtilities {
                     null, null, null, null, null
             );
             int[] intArray = new int[cursor.getCount()];
-            int theCount = 0;
+            int index = 0;
             while (cursor.moveToNext()) {
-                intArray[theCount] = cursor.getInt(0);
-                theCount += 1;
+                intArray[index] = cursor.getInt(0);
+                index += 1;
             }
             cursor.close();
             return intArray;
@@ -173,11 +173,6 @@ public class RexDatabaseUtilities {
             db.update(RexDatabaseHelper.DOG, dogNameValues,
                     RexDatabaseHelper.ID + " = ?",
                     new String[]{Integer.toString(RexDatabaseHelper.SINGLE_DOG_ID)});
-            //make new content values
-            //put new values with the contentvalues.put() method...
-            //database update(table name, content vlaues, RexDatabaseHelper.ID + " = ?",
-            //new String[]{Integer.toString(RexDatabaseHelper.SINGLE_DOG_ID)
-
             db.close();
             return true;
         } catch (SQLiteException e) {
