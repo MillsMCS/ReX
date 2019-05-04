@@ -34,20 +34,20 @@ public class AllergyInfoFragment extends Fragment implements AdapterView.OnItemS
     private Spinner foodsSpinner;
     private Activity activity;
     private TextView addAnAllergyTV;
+    private ViewGroup allergiesHolder;
 
     @Override
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         if (savedInstanceState != null) {
-            parseBundle(savedInstanceState);
+            unpackBundle(savedInstanceState);
             isRestored = true;
         }
         return inflater.inflate(R.layout.fragment_allergy_info, container, false);
     }
 
-    private void parseBundle(Bundle savedInstanceState) {
+    private void unpackBundle(Bundle savedInstanceState) {
         allFoodNames = savedInstanceState.getStringArray("allFoodNames");
         currentAllergies = savedInstanceState.getStringArray("currentAllergies");
         allFoodIds = savedInstanceState.getIntArray("allFoodIds");
@@ -63,7 +63,9 @@ public class AllergyInfoFragment extends Fragment implements AdapterView.OnItemS
         if (!isRestored) {
             setInstanceVariables();
         }
-        makeSpinner();
+        createSpinner();
+        createSpinnerTitle();
+        createAllergyButtonsHolder();
         createButtons();
     }
 
@@ -75,7 +77,7 @@ public class AllergyInfoFragment extends Fragment implements AdapterView.OnItemS
         deletedAllergies = new ArrayList<>();
     }
 
-    private void makeSpinner() {
+    private void createSpinner() {
         foodsSpinner = activity.findViewById(R.id.all_foods_spinner);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(activity,
                 R.layout.spinner,
@@ -83,9 +85,15 @@ public class AllergyInfoFragment extends Fragment implements AdapterView.OnItemS
         foodsSpinner.setAdapter(adapter);
         foodsSpinner.setOnItemSelectedListener(this);
         foodsSpinner.setVisibility(isEditing ? View.VISIBLE : View.GONE);
+    }
 
+    private void createSpinnerTitle(){
         addAnAllergyTV = activity.findViewById(R.id.add_an_allergy);
         addAnAllergyTV.setVisibility(isEditing ? View.VISIBLE : View.GONE);
+    }
+
+    private void createAllergyButtonsHolder(){
+        allergiesHolder = activity.findViewById(R.id.allergies_list);
     }
 
     private void createButtons() {
@@ -97,6 +105,61 @@ public class AllergyInfoFragment extends Fragment implements AdapterView.OnItemS
         for (String allergen : addedAllergies) {
             displayAllergy(activity, allergen);
         }
+    }
+
+    private void displayAllergy(Activity activity, String allergen) {
+        Button button = new Button(activity);
+        button.setOnClickListener(this);
+        button.setEnabled(isEditing);
+        button.setText(allergen);
+
+        // TODO: https://guides.codepath.com/android/Drawables
+//        button.setBackgroundResource(R.drawable.png_test);
+
+        // display the allergy
+        allergiesHolder.addView(button);
+    }
+
+    public void onEditandSaveAction() {
+        if (isEditing) {
+            new UpdateAllergies().execute(activity, addedAllergies, deletedAllergies, allFoodNames, allFoodIds);
+        }
+        foodsSpinner.setVisibility(isEditing ? View.INVISIBLE : View.VISIBLE);
+        addAnAllergyTV.setVisibility(isEditing ? View.INVISIBLE : View.VISIBLE);
+        isEditing = !isEditing;
+        toggleButtonEnabledStatus();
+    }
+
+    private void toggleButtonEnabledStatus() {
+        LinearLayout buttonHolder = activity.findViewById(R.id.allergies_list);
+        int numOfButtons = buttonHolder.getChildCount();
+        for (int i = 0; i < numOfButtons; i++) {
+            Button b = (Button) buttonHolder.getChildAt(i);
+            b.setEnabled(isEditing);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putStringArray("allFoodNames", allFoodNames);
+        savedInstanceState.putStringArray("currentAllergies", currentAllergies);
+        savedInstanceState.putIntArray("allFoodIds", allFoodIds);
+        savedInstanceState.putStringArrayList("addedAllergies", addedAllergies);
+        savedInstanceState.putStringArrayList("deletedAllergies", deletedAllergies);
+        savedInstanceState.putBoolean("isEditing", isEditing);
+    }
+
+    @Override
+    public void onClick(View v) {
+        // get which allergy the user wants to remove
+        String allergySelected = ((Button) v).getText().toString();
+
+        // store that the allergy was removed
+        deletedAllergies.add(allergySelected);
+        addedAllergies.remove(allergySelected);
+
+        // remove button from display
+        allergiesHolder.removeView(v);
     }
 
     @Override
@@ -119,63 +182,7 @@ public class AllergyInfoFragment extends Fragment implements AdapterView.OnItemS
 
     @Override
     public void onNothingSelected(AdapterView<?> arg0) {
-        // Auto-generated method stub.
-    }
-
-    private void displayAllergy(Activity activity, String allergen) {
-        // make a new button
-        Button button = new Button(activity);
-        button.setOnClickListener(this);
-        button.setEnabled(isEditing);
-        button.setText(allergen);
-
-        // add the button to the Linear Layout that holds them
-        LinearLayout allergies_list = activity.findViewById(R.id.allergies_list);
-        allergies_list.addView(button);
-    }
-
-    // TODO: Method for rendering on Edit click (called in ProfileActivity)
-    public void onEditandSaveAction() {
-        if (isEditing) {
-            new UpdateAllergies().execute(activity, addedAllergies, deletedAllergies, allFoodNames, allFoodIds);
-        }
-        foodsSpinner.setVisibility(isEditing ? View.INVISIBLE : View.VISIBLE);
-        addAnAllergyTV.setVisibility(isEditing ? View.INVISIBLE : View.VISIBLE);
-        isEditing = !isEditing;
-        toggleButtonEnabledStatus();
-    }
-
-    private void toggleButtonEnabledStatus() {
-        LinearLayout buttonHolder = activity.findViewById(R.id.allergies_list);
-        int numOfButtons = buttonHolder.getChildCount();
-        for (int i = 0; i < numOfButtons; i++) {
-            Button b = (Button) buttonHolder.getChildAt(i);
-            b.setEnabled(isEditing);
-        }
-    }
-
-    @Override
-    public void onClick(View v) {
-        // get which allergy the user wants to remove
-        String allergySelected = ((Button) v).getText().toString();
-
-        // store that the allergy was removed
-        deletedAllergies.add(allergySelected);
-        addedAllergies.remove(allergySelected);
-
-        // delete button from list
-        LinearLayout container = (LinearLayout) v.getParent();
-        container.removeView(v);
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
-        savedInstanceState.putStringArray("allFoodNames", allFoodNames);
-        savedInstanceState.putStringArray("currentAllergies", currentAllergies);
-        savedInstanceState.putIntArray("allFoodIds", allFoodIds);
-        savedInstanceState.putStringArrayList("addedAllergies", addedAllergies);
-        savedInstanceState.putStringArrayList("deletedAllergies", deletedAllergies);
-        savedInstanceState.putBoolean("isEditing", isEditing);
+        // Auto-generated method stub
     }
 
     private class UpdateAllergies extends AsyncTask<Object, Void, Void> {
