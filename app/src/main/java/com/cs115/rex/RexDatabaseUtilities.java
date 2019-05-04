@@ -94,6 +94,55 @@ public class RexDatabaseUtilities {
         }
     }
 
+    public static String[] getSelectedFoodNames(Context context, String searchName){
+        try {
+            SQLiteOpenHelper rexDatabaseHelper = new RexDatabaseHelper(context);
+            SQLiteDatabase db = rexDatabaseHelper.getReadableDatabase();
+            Cursor cursor = db.query(RexDatabaseHelper.FOOD,
+                    new String[]{
+                            RexDatabaseHelper.NAME},
+                    "NAME = ?", new String[]{searchName}, null, null, null
+            );
+            String[] foodArray = new String[cursor.getCount()];
+            int theCount = 0;
+            while(cursor.moveToNext()) {
+                foodArray[theCount] = cursor.getString(0);
+                theCount += 1;
+            }
+            cursor.close();
+            return foodArray;
+
+        } catch (SQLiteException e) {
+            return null;
+        }
+    }
+
+    public static String[] getFoodByName(Context context, String searchName){
+        try {
+            SQLiteOpenHelper rexDatabaseHelper = new RexDatabaseHelper(context);
+            SQLiteDatabase db = rexDatabaseHelper.getReadableDatabase();
+            Cursor cursor = db.query(RexDatabaseHelper.FOOD,
+                    new String[]{
+                            RexDatabaseHelper.NAME, RexDatabaseHelper.TOXICITY, RexDatabaseHelper.IMAGE_RESOURCE_ID,
+                            RexDatabaseHelper.QUOTE},
+                    "NAME = ?", new String[]{searchName}, null, null, null
+            );
+            String[] thisFood = new String[4];
+            int theCount = 0;
+            if(cursor.moveToFirst()) {
+                thisFood[0] = cursor.getString(0);
+                thisFood[1] = cursor.getString(1);
+                thisFood[2] = cursor.getString(2);
+                thisFood[3] = cursor.getString(3);
+            }
+            cursor.close();
+            return thisFood;
+
+        } catch (SQLiteException e) {
+            //TODO Add toast - food not available
+            return null;
+        }
+    }
 
 
     public static boolean updateName(Context context, String newDogName) {

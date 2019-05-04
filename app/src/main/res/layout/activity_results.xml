@@ -5,15 +5,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.cs115.rex.ResultsActivity" >
+    tools:context="com.cs115.rex.ResultsActivity">
 
     <include
-        layout="@layout/toolbar_main"
-        android:id="@+id/toolbar" />
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar_main" />
 
-<fragment
-    android:name="com.cs115.rex.ResultsFragment"
-    android:id="@+id/results_frag"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" />
+    <!--
+    <fragment
+        android:id="@+id/results_frag"
+        android:name="com.cs115.rex.ResultsFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+    -->
+
+    <FrameLayout
+        android:id="@+id/results_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </LinearLayout>
