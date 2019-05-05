@@ -23,6 +23,7 @@ public class ResultsActivity extends MenuHomeActivity implements ResultsFragment
 
         Bundle bundle = getIntent().getExtras();
         String[] searchResults = bundle.getStringArray(ResultsFragment.SEARCH_RESULTS);
+        String searchName = bundle.getString(ResultsFragment.SEARCH_NAME);
         Log.d("DebugLog: ", "ResultsActivity - Value: " + searchResults[0]);
 
         ResultsFragment results = new ResultsFragment();
@@ -31,8 +32,9 @@ public class ResultsActivity extends MenuHomeActivity implements ResultsFragment
         Log.d("DebugLog: ", "ResultsActivity - Value: " + results.getArguments().getStringArray(ResultsFragment.SEARCH_RESULTS)[0]);
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ResultsFragment resultsFrag = ResultsFragment.newInstance(searchResults);
+        ResultsFragment resultsFrag = ResultsFragment.newInstance(searchResults, searchName);
         ft.replace(R.id.results_container, resultsFrag);
+        //ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         ft.commit();
 
         setContentView(R.layout.activity_results);

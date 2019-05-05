@@ -1,8 +1,8 @@
 package com.cs115.rex;
 
-
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
@@ -10,7 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CursorAdapter;
 import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
 /**
@@ -18,6 +20,8 @@ import android.widget.Toast;
  */
 public class ResultsFragment extends ListFragment {
     public static final String SEARCH_RESULTS = "search_results";
+    public static final String SEARCH_NAME = "search_name";
+    private String searchName;
     private String[] searchResults;
 
     interface Listener {
@@ -25,7 +29,6 @@ public class ResultsFragment extends ListFragment {
     }
 
     private Listener listener;
-    //private static String[] searchResults = new String[0];
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -33,8 +36,7 @@ public class ResultsFragment extends ListFragment {
         if (getArguments() != null) {
             Log.d("DebugLog: ", "ResultsFragment - Value: " + getArguments().getStringArray(SEARCH_RESULTS)[0]);
             searchResults = getArguments().getStringArray(SEARCH_RESULTS);
-        } else {
-            getActivity().finish();
+            searchName = getArguments().getString(SEARCH_NAME);
         }
     }
 
@@ -44,27 +46,33 @@ public class ResultsFragment extends ListFragment {
 
         String[] results = searchResults;
 
-        //String[] results = {"Egg"};
+        Cursor cursor = RexDatabaseUtilities.getSelectedFoodList(getActivity(), searchName);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                inflater.getContext(), android.R.layout.simple_list_item_1,
-                results);
+        SimpleCursorAdapter adapter = new SimpleCursorAdapter(getActivity(),
+                android.R.layout.simple_list_item_1,
+                cursor,
+                new String[]{"NAME"},
+                new int[]{android.R.id.text1},
+                0);
         setListAdapter(adapter);
+
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
-    public static ResultsFragment newInstance(String[] searchResults){
+    public static ResultsFragment newInstance(String[] searchResults, String searchName){
         ResultsFragment resultsFragment = new ResultsFragment();
 
         Bundle bundle = new Bundle();
-        bundle.putStringArray("search_results", searchResults);
+        bundle.putStringArray(SEARCH_RESULTS, searchResults);
+        bundle.putString(SEARCH_NAME, searchName);
         resultsFragment.setArguments(bundle);
 
         return resultsFragment;
     }
 
-    public void setDataFromActivity(String[] searchResults){
+    public void setDataFromActivity(String[] searchResults, String searchName){
         this.searchResults = searchResults;
+        this.searchName = searchName;
     }
 
     @Override

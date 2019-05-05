@@ -7,8 +7,10 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class MainActivity extends MenuActivity implements ResultsFragment.Listener  {
 
@@ -27,18 +29,56 @@ public class MainActivity extends MenuActivity implements ResultsFragment.Listen
 
     //Activates search button, sending user to results
     public void onClickSearch(View view) {
-        EditText searchBar = (EditText)findViewById(R.id.search_bar);
-        String searchName = searchBar.getText().toString();
+        String searchName = null;
+        String[] searchResults = null;
 
-        //Capitalize the first letter of the search term so it will match the inputs in the database
-        searchName = searchName.substring(0,1).toUpperCase() + searchName.substring(1);
-        String[] searchResults = setResultList(this,searchName);
+        EditText searchBar = (EditText)findViewById(R.id.search_bar);
+
+        try {
+            //Capitalize the first letter of the search term so it will match the inputs in the database
+            searchName = searchBar.getText().toString();
+            if(searchName.length() == 0) { throw new Exception(); }
+            searchName = searchName.substring(0, 1).toUpperCase() + searchName.substring(1);
+            //Log.d("DebugLog: ", "MainActivity - Value: " + searchName);
+
+        //a more specific exception would be nice - looking to account for empty search input
+        } catch (Exception e) {
+            //show error toast if no input
+            Toast toast = Toast.makeText(this, "Please enter a search term", Toast.LENGTH_SHORT);
+            toast.show();
+
+            //the following was an attempt to avoid the flash when the activity recreates (recreate() shows the flash)
+            //does not work,  tested on fire
+            /*
+            finish();
+            overridePendingTransition(0, 0);
+            startActivity(getIntent());
+            overridePendingTransition(0, 0);
+             */
+            //TODO delay recreate() with a runnable, attempt to suppress animations (screen flash)
+            recreate();
+        }
+
+        try {
+            searchResults = setResultList(this, searchName);
+            Log.d("DebugLog: ", "MainActivity - Value: " + searchResults.length);
+            if(searchResults.length == 0) { throw new Exception(); }
+
+        //a more specific exception would be nice - looking to account for no search results found
+        } catch (Exception e) {
+            //show error toast if no results
+            Toast toast = Toast.makeText(this, "No results found. Please try a different search.", Toast.LENGTH_SHORT);
+            toast.show();
+
+            //TODO delay recreate() with a runnable, attempt to suppress animations (screen flash)
+            recreate();
+        }
 
         View resultsContainer = findViewById(R.id.results_container);
         if (resultsContainer != null) {
             ResultsFragment results = new ResultsFragment();
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            results.setDataFromActivity(searchResults);
+            results.setDataFromActivity(searchResults, searchName);
             ft.replace(R.id.results_container, results);
             ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
             ft.addToBackStack(null);
@@ -46,15 +86,30 @@ public class MainActivity extends MenuActivity implements ResultsFragment.Listen
 
         } else {
 
-            Intent intent = new Intent(this, ResultsActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putStringArray("search_results",searchResults);
-            intent.putExtras(bundle);
-            Log.d("DebugLog: ", "MainActivity - Value: " + intent.getExtras().getStringArray("search_results")[0]);
+            Log.d("DebugLog: ", "MainActivity - name: " + searchName + "; " + "results: " + searchResults);
+            if(searchName.equals("") || searchResults == null) {
 
-            ResultsFragment results = new ResultsFragment();
+                //clumsy, but restarts mainActivity with toast - recreate() does not have the desired effect here
+                //recreate shows a search result with all of the available search items
+                //TODO delay recreate() with a runnable, attempt to suppress animations (screen flash)
+                Intent intent = new Intent(this, MainActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("search_name",searchName);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            } else {
 
-            startActivity(intent);
+                Intent intent = new Intent(this, ResultsActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putStringArray("search_results", searchResults);
+                bundle.putString("search_name", searchName);
+                intent.putExtras(bundle);
+                //Log.d("DebugLog: ", "MainActivity - Value: " + intent.getExtras().getStringArray("search_results")[0]);
+
+                ResultsFragment results = new ResultsFragment();
+
+                startActivity(intent);
+            }
         }
     }
 

@@ -11,16 +11,9 @@
         android:id="@+id/toolbar"
         layout="@layout/toolbar_main" />
 
-    <!--
-    <fragment
-        android:id="@+id/results_frag"
-        android:name="com.cs115.rex.ResultsFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-    -->
-
     <FrameLayout
         android:id="@+id/results_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
 </LinearLayout>

@@ -16,6 +16,7 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
 
+        <!-- windowSoftInputMode hides the soft keyboard until the user selects an appropriate control - the search bar -->
         <activity
             android:name=".MainActivity"
             android:windowSoftInputMode="stateHidden">
@@ -27,7 +28,7 @@
 
         <activity android:name=".MenuActivity" />
         <activity android:name=".MenuHomeActivity"/>
-        <activity android:name=".DetailActivity" /> <!-- windowSoftInputMode hides the soft keyboard until the user selects an appropriate control - the search bar -->
+        <activity android:name=".DetailActivity" />
         <activity android:name=".ResultsActivity" />
 
         <activity

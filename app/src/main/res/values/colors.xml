@@ -8,5 +8,7 @@
     <color name="colorAllergic">#1149a5</color>
     <color name="colorNonToxic">#337647</color>
 
+    <!--
     <color name="default_background_color">#EEEEEE</color>
+    -->
 </resources>
