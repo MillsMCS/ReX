@@ -12,6 +12,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 
+
+
 public class RexDatabaseUtilitiesTest {
 
     private static final int DOG1_ID = 0;
@@ -22,17 +24,22 @@ public class RexDatabaseUtilitiesTest {
     private static final String NEW1_PHOTO = "new photo";
     private static final int FOOD1_ID = 1;
     private static final String FOOD1_NAME = "Alcohol";
+    private static final String FOOD2_NAME = "Ch";
+    private static final String FOOD3_NAME = "Chamomile";
+    private static final String FOOD4_NAME = "Cherry";
+    private static final String FOOD5_NAME = "Chicken";
+    private static final String FOOD6_NAME = "Chive";
+    private static final String FOOD7_NAME = "Chocolate";
     private static final String NEW_NAME = "Benji";
     private static final String NEW_BREED = "Labrador";
     private static final String NEW_WEIGHT = "220";
 
     // This creates a temporary context so database accesses in the tests are isolated.
+
     private Context context = InstrumentationRegistry.getTargetContext();
 
-
-
 //Running the updateDog() test will switch the old dog info to the new dog info. The next time
-    //the getDog() test is run, the new info will be expected
+    //the getDog() test is run, the new info will be expected--close db?
     @Test
     public void getDog() throws Exception {
         Cursor dogCursor = RexDatabaseUtilities.getDog(context);
@@ -47,6 +54,22 @@ public class RexDatabaseUtilitiesTest {
         }
     }
 
+    @Test
+    public void getSelectedFoodList() throws Exception {
+        Cursor foodCursor = RexDatabaseUtilities.getSelectedFoodList(context, FOOD2_NAME);
+        if (foodCursor != null) {
+            foodCursor.moveToFirst();
+                assertEquals(FOOD3_NAME, foodCursor.getString(1));
+            foodCursor.moveToNext();
+                assertEquals(FOOD4_NAME, foodCursor.getString(1));
+            foodCursor.moveToNext();
+                assertEquals(FOOD5_NAME, foodCursor.getString(1));
+            foodCursor.moveToNext();
+                assertEquals(FOOD6_NAME, foodCursor.getString(1));
+            foodCursor.moveToNext();
+                assertEquals(FOOD7_NAME, foodCursor.getString(1));
+        }
+    }
 
     @Test
     public void getAllFoodNames() throws Exception {
