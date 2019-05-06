@@ -1,6 +1,8 @@
 package com.cs115.rex;
 
 import android.app.AlertDialog;
+import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -12,6 +14,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -97,15 +100,9 @@ public class ProfileActivity extends AppCompatActivity {
 
 
     @Override
-
     public void onStart() {
         Log.d(TAG, "in onStart");
-
         super.onStart();
-
-        //imageview = findViewById(R.id.photo);
-//        imageview.setImageURI(Uri.parse(contentURI));
-
         // if we have restored from a previous state, put in URI values
         if (isRestored && contentURI != null) {
             imageview.setImageURI(Uri.parse(contentURI));
@@ -158,19 +155,20 @@ public class ProfileActivity extends AppCompatActivity {
             case R.id.action_home:
                 Intent intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
-//                overridePendingTransition(R.anim.fade_in,R.anim.slide_in_top_right);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
+    /**
+     *
+     */
     private void showPictureDialog(){
         AlertDialog.Builder pictureDialog = new AlertDialog.Builder(this);
         pictureDialog.setTitle("Select Action");
         String[] pictureDialogItems = {
-                "Select photo from gallery",
-                "Capture photo from camera" };
+                "Select photo from gallery"};//       add this to later version when camera functionality is working "Capture photo from camera"
         pictureDialog.setItems(pictureDialogItems,
                 new DialogInterface.OnClickListener() {
                     @Override
@@ -188,16 +186,21 @@ public class ProfileActivity extends AppCompatActivity {
         pictureDialog.show();
     }
 
-
+    /**
+     *
+     */
     public void choosePhotoFromGallery() {
         Intent galleryIntent = new Intent(Intent.ACTION_PICK,
                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(galleryIntent, GALLERY);
     }
 
+    /**
+     *
+     */
     private void takePhotoFromCamera() {
         Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(intent, CAMERA);
+            startActivityForResult(intent, CAMERA);
     }
 
     @Override
@@ -214,28 +217,17 @@ public class ProfileActivity extends AppCompatActivity {
                 Uri uri = data.getData();
                 contentURI = uri.toString();
                 Log.d("onActivityResult", contentURI);
-//                try {
-//                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), contentURI);
-//                    String path = saveImage(bitmap);
                     imageview.setImageURI(Uri.parse(contentURI));
                     Toast.makeText(this, "Image Saved!", Toast.LENGTH_SHORT).show();
 
                     RexDatabaseUtilities.updatePhoto(this, contentURI);
                     Log.d(TAG, "Saving picture from gallery");
-
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                    Toast.makeText(this, "Failed!", Toast.LENGTH_SHORT).show();
-//                }
             }
 
         } else if (requestCode == CAMERA && hasFetureCamera) {
             Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
             imageview.setImageBitmap(thumbnail);
             String newImage = saveImage(thumbnail);
-//            imageview.setImageURI(Uri.parse(newImage));
-//            imageview.setImageBitmap(thumbnail);
-            //TODO
             contentURI = newImage;
             RexDatabaseUtilities.updatePhoto(this, contentURI);
             Log.d(TAG, "Saving picture from camera");
@@ -244,6 +236,11 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     *
+     * @param myBitmap
+     * @return path of the image Uri
+     */
     public String saveImage(Bitmap myBitmap) {
 
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -263,13 +260,24 @@ public class ProfileActivity extends AppCompatActivity {
             MediaScannerConnection.scanFile(this,
                     new String[]{f.getPath()},
                     new String[]{"image/jpeg"}, null);
-            fo.close();
+
             Log.d(TAG, "File Saved::---&gt;" + f.getAbsolutePath());
+            galleryAddPic(Uri.parse(f.getAbsolutePath()));
+            fo.close();
             return f.getAbsolutePath();
+
         } catch (IOException e1) {
             e1.printStackTrace();
         }
         return "";
     }
 
+    private void galleryAddPic(Uri contentUri) {
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        File f = new File(contentURI);
+        contentUri = Uri.fromFile(f);
+        mediaScanIntent.setData(contentUri);
+        this.sendBroadcast(mediaScanIntent);
+    }
 }
+

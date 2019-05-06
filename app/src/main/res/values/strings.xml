@@ -19,7 +19,7 @@
     <string name="name_hint">Enter dog\'s name</string>
     <string name="breed_hint">Enter your dog\'s breed</string>
     <string name="weight_hint">Enter your dog\'s weight</string>
-    <string name="picture_text">Pic a picture</string>
+    <string name="picture_text">Pick a picture</string>
 
     <!--all the symptoms for the FOOD_TABLE-->
     <string name="symptom10">Symptoms- vomiting and diarrhea, panting,
