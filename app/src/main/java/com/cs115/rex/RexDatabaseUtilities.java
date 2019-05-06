@@ -155,6 +155,104 @@ public class RexDatabaseUtilities {
             return null;
         }
     }
+    public static Cursor getFood(Context context) {
+        try {
+            SQLiteOpenHelper rexDatabaseHelper = new RexDatabaseHelper(context);
+            SQLiteDatabase db = rexDatabaseHelper.getReadableDatabase();
+            return db.query(RexDatabaseHelper.ALLERGIES,
+                    new String[]{
+                            RexDatabaseHelper.FOOD_ID,
+                            RexDatabaseHelper.DOG_ID},
+                    RexDatabaseHelper.ALLERGY_DOG_ID + " = ?",
+                    new String[]{Integer.toString(RexDatabaseHelper.SINGLE_DOG_ID)},
+                    null, null, null);
+
+        } catch (SQLiteException e) {
+            return null;
+        }
+    }
+
+    //get a cursor with all of the foods that match the given query
+    public static Cursor getSelectedFoodList(Context context, String searchName){
+        try {
+            SQLiteOpenHelper rexDatabaseHelper = new RexDatabaseHelper(context);
+            SQLiteDatabase db = rexDatabaseHelper.getReadableDatabase();
+
+            //Finds anything that includes the search String input by the user
+            return db.query(RexDatabaseHelper.FOOD,
+                    new String[]{
+                            "_id", RexDatabaseHelper.NAME},
+                    "NAME" + " LIKE ?", new String[]{searchName + "%"}, null, null, null
+            );
+
+        } catch (SQLiteException e) {
+            Log.d("DebugLog: ", "MainActivity - Value: " + "Database exception");
+            return null;
+        }
+    }
+
+    //get all of the foods that match the given query
+    public static String[] getSelectedFoodNames(Context context, String searchName){
+        try {
+            SQLiteOpenHelper rexDatabaseHelper = new RexDatabaseHelper(context);
+            SQLiteDatabase db = rexDatabaseHelper.getReadableDatabase();
+
+            //Finds anything that includes the search String input by the user
+            Cursor cursor = db.query(RexDatabaseHelper.FOOD,
+                    new String[]{
+                            "_id", RexDatabaseHelper.NAME},
+                    "NAME" + " LIKE ?", new String[]{searchName + "%"}, null, null, null
+            );
+
+
+            String[] foodArray = new String[cursor.getCount()];
+            int theCount = 0;
+            while(cursor.moveToNext()) {
+                foodArray[theCount] = cursor.getString(1);
+                theCount += 1;
+            }
+
+
+            //return cursor;
+            cursor.close();
+            db.close();
+            Log.d("DebugLog: ", "DatabaseUtils - Value: " + foodArray[foodArray.length-1]);
+            return foodArray;
+
+        } catch (SQLiteException e) {
+            Log.d("DebugLog: ", "MainActivity - Value: " + "Database exception");
+            return null;
+        }
+    }
+
+    //get all of the database data for a particular food given that food's name
+    public static String[] getFoodByName(Context context, String searchName){
+        try {
+            SQLiteOpenHelper rexDatabaseHelper = new RexDatabaseHelper(context);
+            SQLiteDatabase db = rexDatabaseHelper.getReadableDatabase();
+            Cursor cursor = db.query(RexDatabaseHelper.FOOD,
+                    new String[]{
+                            RexDatabaseHelper.NAME, RexDatabaseHelper.TOXICITY, RexDatabaseHelper.IMAGE_RESOURCE_ID,
+                            RexDatabaseHelper.QUOTE},
+                    "NAME = ?", new String[]{searchName}, null, null, null
+            );
+            String[] thisFood = new String[4];
+            int theCount = 0;
+            if(cursor.moveToFirst()) {
+                thisFood[0] = cursor.getString(0);
+                thisFood[1] = cursor.getString(1);
+                thisFood[2] = cursor.getString(2);
+                thisFood[3] = cursor.getString(3);
+            }
+            cursor.close();
+            db.close();
+            return thisFood;
+
+        } catch (SQLiteException e) {
+            //TODO Add toast - food not available
+            return null;
+        }
+    }
 
     /**
      * updates dog name
