@@ -88,9 +88,7 @@ public class ProfileActivity extends AppCompatActivity {
             contentURI = savedInstanceState.getString("image");
             isRestored = savedInstanceState.getBoolean("isRestored");
             Log.d(TAG, "image: " + contentURI + " isRestored" + String.valueOf(isRestored));
-
         }
-
         Log.d(TAG, "in onCreate");
     }
 
@@ -111,15 +109,16 @@ public class ProfileActivity extends AppCompatActivity {
             // otherwise, if this is the first time loading the Activity, load values in from database
         }
         else {
-            Cursor cursor = RexDatabaseUtilities.getDog(imageview.getContext());
+            Cursor cursor = RexDatabaseUtilities.getDog(this);
             if (cursor.moveToFirst()) {
                 DatabaseUtils.dumpCursor(cursor);
                 // put values in String variables so we can close cursor
                 contentURI = cursor.getString(3);
-
-                // set URI from the string to be able to pass it to the imageView
-                imageview.setImageURI(Uri.parse(contentURI));
-                cursor.close();
+                if (contentURI != null){
+                    // set URI from the string to be able to pass it to the imageView
+                    imageview.setImageURI(Uri.parse(contentURI));
+                    cursor.close();
+                }
             }
         }
     }

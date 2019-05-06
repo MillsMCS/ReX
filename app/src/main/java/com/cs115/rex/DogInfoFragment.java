@@ -160,7 +160,3 @@ public class DogInfoFragment extends Fragment {
         }
     }
 }
-
-
-
-
