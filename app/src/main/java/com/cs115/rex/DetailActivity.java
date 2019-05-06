@@ -14,4 +14,5 @@ public class DetailActivity extends MenuHomeActivity {
     }
 
     //TODO add toxicity and vet bar (calls contact) when the result calls for them
+
 }

@@ -16,9 +16,7 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
 
-        <activity android:name=".MenuHomeActivity"/>
-        <activity android:name=".DetailActivity" /> <!-- windowSoftInputMode hides the soft keyboard until the user selects an appropriate control - the search bar -->
-
+        <!-- windowSoftInputMode hides the soft keyboard until the user selects an appropriate control - the search bar -->
         <activity
             android:name=".MainActivity"
             android:windowSoftInputMode="stateHidden">
@@ -27,13 +25,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity android:name=".MenuActivity" />
+        <activity android:name=".MenuHomeActivity"/>
+        <activity android:name=".DetailActivity" />
         <activity android:name=".ResultsActivity" />
+
         <activity
             android:name=".ProfileActivity"
             android:label="@string/profile_name"
             android:windowSoftInputMode="stateHidden"/>
-
     </application>
 
 </manifest>
