@@ -41,12 +41,21 @@ public class ProfileActivity extends AppCompatActivity {
     private int GALLERY = 1, CAMERA = 2;
     private boolean isRestored, isEditing;
     private String contentURI;
+    private DogInfoFragment dogInfoFrag;
+    private AllergyInfoFragment allergyFrag;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+
+        // check if we are restoring from a previous state
+        if(savedInstanceState != null){
+            contentURI = savedInstanceState.getString("image");
+            isRestored = savedInstanceState.getBoolean("isRestored");
+            isEditing = savedInstanceState.getBoolean("isEditing");
+        }
 
         // set toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -60,8 +69,8 @@ public class ProfileActivity extends AppCompatActivity {
 
         // get Fragments so we can set onclick listeners
         FragmentManager fm = getSupportFragmentManager();
-        final DogInfoFragment dogInfoFrag = (DogInfoFragment) fm.findFragmentById(R.id.dog_info_frag);
-        final AllergyInfoFragment allergyFrag = (AllergyInfoFragment) fm.findFragmentById(R.id.allergy_info_frag);
+        dogInfoFrag = (DogInfoFragment) fm.findFragmentById(R.id.dog_info_frag);
+        allergyFrag = (AllergyInfoFragment) fm.findFragmentById(R.id.allergy_info_frag);
         editAndSaveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -84,11 +93,6 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
-        if(savedInstanceState != null){
-            contentURI = savedInstanceState.getString("image");
-            isRestored = savedInstanceState.getBoolean("isRestored");
-            Log.d(TAG, "image: " + contentURI + " isRestored" + String.valueOf(isRestored));
-        }
         Log.d(TAG, "in onCreate");
     }
 
@@ -104,7 +108,7 @@ public class ProfileActivity extends AppCompatActivity {
 //        imageview.setImageURI(Uri.parse(contentURI));
 
         // if we have restored from a previous state, put in URI values
-        if (isRestored) {
+        if (isRestored && contentURI != null) {
             imageview.setImageURI(Uri.parse(contentURI));
             // otherwise, if this is the first time loading the Activity, load values in from database
         }
@@ -125,12 +129,17 @@ public class ProfileActivity extends AppCompatActivity {
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
 
         //set updated imageView value
         savedInstanceState.putString("image", contentURI);
 
+        // save editing state
+        savedInstanceState.putBoolean("isEditing", isEditing);
+
         //save booleans
         savedInstanceState.putBoolean("isRestored", true);
+
     }
 
     //TODO consider refactoring this to avoid code repetition
@@ -197,7 +206,7 @@ public class ProfileActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         PackageManager pm = getApplicationContext().getPackageManager();
         boolean hasFetureCamera = pm.hasSystemFeature(PackageManager.FEATURE_CAMERA);
-        if (resultCode == this.RESULT_CANCELED) {
+        if (resultCode == RESULT_CANCELED) {
             return;
         }
         Log.d(TAG, String.valueOf(requestCode) + " | " + String.valueOf(resultCode) + " | " + data.toString());

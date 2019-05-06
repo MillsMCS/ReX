@@ -5,7 +5,9 @@ import android.app.Activity;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +39,9 @@ public class DogInfoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container,
                              Bundle savedInstanceState) {
+
+        super.onCreateView(inflater, container, savedInstanceState);
+        Log.d(TAG, "inOnCreateView");
         if (savedInstanceState != null) {
             name = savedInstanceState.getString("name");
             breed = savedInstanceState.getString("breed");
@@ -52,8 +57,18 @@ public class DogInfoFragment extends Fragment {
     }
 
     @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        Log.d(TAG, "in onViewStateRestored");
+        if (savedInstanceState != null){
+            Log.d(TAG, "saved instance state is not null");
+        }
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
+
         View view = getView();
 
         // set up EditTexts
@@ -94,7 +109,6 @@ public class DogInfoFragment extends Fragment {
      * //TODO write more Javadoc
      */
     public void makeEditable(){
-
         // if user is Editing, compare their new values to their old values
         if (isEditing){
             new UpdateDogInfo().execute(nameET.getText().toString(),
@@ -114,7 +128,9 @@ public class DogInfoFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
 
+        Log.d(TAG, "in onSaveInstanceState");
         // save original EditText values
         savedInstanceState.putString("oldName", oldName);
         savedInstanceState.putString("oldBreed", oldBreed);
