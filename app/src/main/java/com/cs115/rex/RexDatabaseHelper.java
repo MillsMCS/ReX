@@ -21,7 +21,7 @@ public class RexDatabaseHelper extends SQLiteOpenHelper {
     static String PHOTO = "PHOTO";
     static int SINGLE_DOG_ID = 1;
     static String FOOD_ID = "FOOD_ID";
-    static String DOG_ID = "SINGLE_DOG_ID";
+    static String DOG_ID = "DOG_ID";
     static String ALLERGY_DOG_ID = "DOG_ID";
     static String ALLERGIES = "ALLERGIES";
     static String FOOD = "FOOD";
