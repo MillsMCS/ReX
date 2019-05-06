@@ -13,28 +13,40 @@
         android:id="@+id/AllergyLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Allergies"/>
+        android:layout_centerHorizontal="true"
+        android:text="Allergies"
+        android:textSize="20sp"/>
 
-    <!--TODO add entries via database and remove hardcoded examples-->
-    <!-- TODO consider formatting and the label implementation, as in the design doc -->
     <LinearLayout
         android:id="@+id/allergies_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:layout_centerHorizontal="true"
         android:layout_below="@id/AllergyLabel">
     </LinearLayout>
 
-    <Spinner
-        android:id="@+id/all_foods_spinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/allergies_list"
-        />
-    <ListView
-        android:id="@+id/AllergyListView"
-        android:layout_below="@+id/all_foods_spinner"
+    <TextView
+        android:id="@+id/add_an_allergy"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/allergies_list"
+        android:paddingTop="10sp"
+        android:paddingBottom="5sp"
+
+        android:text="Choose foods to add"
+        android:layout_centerHorizontal="true"
+        android:textSize="18sp"/>
+
+    <Spinner
+        android:id="@+id/all_foods_spinner"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/add_an_allergy"
+        android:textAlignment="center"
+        android:paddingLeft="50sp"
+        android:layout_centerHorizontal="true"
+        android:paddingBottom="30dp"
         />
+
 </RelativeLayout>

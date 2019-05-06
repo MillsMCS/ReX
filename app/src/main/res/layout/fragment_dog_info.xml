@@ -1,33 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!--TODO programmatically generate text and remove hardcoded examples-->
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:paddingTop="20dp"
     tools:context="com.cs115.rex.ProfileActivity" >
 
     <TextView
-        android:id="@+id/nameLabel"
+        android:id="@+id/label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Information"
+        android:textColor="@android:color/black"
+        android:layout_centerHorizontal="true"
+        android:paddingTop="10dp"
+        android:paddingBottom="20dp"
+        android:textSize="20sp"
+        />
+
+    <TextView
+        android:id="@+id/nameLabel"
+        android:layout_below="@id/label"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
         android:text="Name"/>
 
     <EditText
         android:id="@+id/nameView"
-        android:layout_below="@+id/nameLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/nameLabel"
         android:layout_marginBottom="20dp"
-        android:hint="@string/name_hint"/>
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:textColor="@color/dog_info_edittext_colors"
+        android:hint="@string/name_hint" />
 
     <TextView
         android:id="@+id/breedLabel"
+        android:textSize="18sp"
+        android:textColor="@android:color/black"
         android:layout_below="@+id/nameView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
         android:text="Breed"/>
 
     <EditText
@@ -36,13 +57,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:textColor="@color/dog_info_edittext_colors"
         android:hint="@string/breed_hint"/>
 
     <TextView
         android:id="@+id/WeightLabel"
+        android:textSize="18sp"
+        android:textColor="@android:color/black"
         android:layout_below="@+id/breedView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
         android:text="Weight"/>
 
     <EditText
@@ -50,6 +77,9 @@
         android:layout_below="@+id/WeightLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:textColor="@color/dog_info_edittext_colors"
         android:hint="@string/weight_hint"/>
 
 </RelativeLayout>
