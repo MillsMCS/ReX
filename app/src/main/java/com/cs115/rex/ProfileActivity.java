@@ -3,8 +3,10 @@ package com.cs115.rex;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.graphics.Bitmap;
-import android.media.Image;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
@@ -29,15 +31,16 @@ import java.io.IOException;
 import java.util.Calendar;
 
 public class ProfileActivity extends AppCompatActivity {
-    private Button btn;
+
+
+    private Button button;
     private String TAG = "profileActivity";
-    private ImageView imageViewSave;
-    private ImageView imageview;
-    private String image;
+    private ImageView imageview, imageEV;
+    private String image ,oldImage;
     private static final String IMAGE_DIRECTORY = " /directory";
     private int GALLERY = 1, CAMERA = 2;
-    private boolean isEditing;
-    private boolean isRestored;
+    private boolean isRestored, isEditing;
+    private String contentURI;
 
 
     @Override
@@ -53,6 +56,7 @@ public class ProfileActivity extends AppCompatActivity {
         final Button editAndSaveBtn = findViewById(R.id.edit_button);
         String edit_or_save = isEditing ? "Save" : "Edit";
         editAndSaveBtn.setText(edit_or_save);
+
 
         // get Fragments so we can set onclick listeners
         FragmentManager fm = getSupportFragmentManager();
@@ -70,54 +74,65 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
-//        if(savedInstanceState != null){
-//            image = savedInstanceState.getString("image");
-//            isRestored = savedInstanceState.getBoolean("isRestored");
-//            isEditing = savedInstanceState.getBoolean("isEditing");
-//
-//        }
-
-
         // set Select Photo button
-        btn = (Button) findViewById(R.id.select_photo);
+        button = (Button) findViewById(R.id.select_photo);
         imageview = (ImageView) findViewById(R.id.photo);
-        btn.setOnClickListener(new View.OnClickListener() {
+        button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showPictureDialog();
             }
         });
+
+        if(savedInstanceState != null){
+            contentURI = savedInstanceState.getString("image");
+            isRestored = savedInstanceState.getBoolean("isRestored");
+            Log.d(TAG, "image: " + contentURI + " isRestored" + String.valueOf(isRestored));
+
+        }
+
+        Log.d(TAG, "in onCreate");
     }
 
-//
-//    @Override
-//    public void onStart() {
-//        super.onStart();
-//
-//
-//
-//
-//    }
-//
-//    public void changeEditableStatus(){
-//        isEditing = !isEditing;
-//        imageViewSave.setEnabled(isEditing);
-//    }
-//
-//    @Override
-//    public void onSaveInstanceState(Bundle savedInstanceState) {
-//        savedInstanceState.putString("image", imageViewSave.toString());
-//        savedInstanceState.putBoolean("isRestored", true);
-//        savedInstanceState.putBoolean("isEditing", true);
-//    }
-//
-//    @Override
-//    public void onStop() {
-//        super.onStop();
-//    }
 
+    @Override
 
+    public void onStart() {
+        Log.d(TAG, "in onStart");
 
+        super.onStart();
+
+        //imageview = findViewById(R.id.photo);
+//        imageview.setImageURI(Uri.parse(contentURI));
+
+        // if we have restored from a previous state, put in URI values
+        if (isRestored) {
+            imageview.setImageURI(Uri.parse(contentURI));
+            // otherwise, if this is the first time loading the Activity, load values in from database
+        }
+        else {
+            Cursor cursor = RexDatabaseUtilities.getDog(imageview.getContext());
+            if (cursor.moveToFirst()) {
+                DatabaseUtils.dumpCursor(cursor);
+                // put values in String variables so we can close cursor
+                contentURI = cursor.getString(3);
+
+                // set URI from the string to be able to pass it to the imageView
+                imageview.setImageURI(Uri.parse(contentURI));
+                cursor.close();
+            }
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+
+        //set updated imageView value
+        savedInstanceState.putString("image", contentURI);
+
+        //save booleans
+        savedInstanceState.putBoolean("isRestored", true);
+    }
 
     //TODO consider refactoring this to avoid code repetition
     //Menu - adds settings button from profile menu to app bar
@@ -136,6 +151,7 @@ public class ProfileActivity extends AppCompatActivity {
             case R.id.action_home:
                 Intent intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
+//                overridePendingTransition(R.anim.fade_in,R.anim.slide_in_top_right);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -164,6 +180,7 @@ public class ProfileActivity extends AppCompatActivity {
         pictureDialog.show();
     }
 
+
     public void choosePhotoFromGallery() {
         Intent galleryIntent = new Intent(Intent.ACTION_PICK,
                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -178,38 +195,41 @@ public class ProfileActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        PackageManager pm = getApplicationContext().getPackageManager();
+        boolean hasFetureCamera = pm.hasSystemFeature(PackageManager.FEATURE_CAMERA);
         if (resultCode == this.RESULT_CANCELED) {
             return;
         }
+        Log.d(TAG, String.valueOf(requestCode) + " | " + String.valueOf(resultCode) + " | " + data.toString());
         if (requestCode == GALLERY) {
-
             if (data != null) {
-                Uri contentURI = data.getData();
-                Log.d("onActivityResult", contentURI.toString());
+                Uri uri = data.getData();
+                contentURI = uri.toString();
+                Log.d("onActivityResult", contentURI);
+//                try {
+//                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), contentURI);
+//                    String path = saveImage(bitmap);
+                    imageview.setImageURI(Uri.parse(contentURI));
+                    Toast.makeText(this, "Image Saved!", Toast.LENGTH_SHORT).show();
 
-                try {
-                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), contentURI);
-                    String path = saveImage(bitmap);
-                    Toast.makeText(ProfileActivity.this, "Image Saved!", Toast.LENGTH_SHORT).show();
-                    imageview.setImageURI(Uri.parse(contentURI.toString()));
-                    //updates the DOG database to include the path to the picture when chosen from the gallery
-                    RexDatabaseUtilities util = new RexDatabaseUtilities();
-                    util.updatePhoto(this, contentURI.toString());
+                    RexDatabaseUtilities.updatePhoto(this, contentURI);
                     Log.d(TAG, "Saving picture from gallery");
 
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Toast.makeText(ProfileActivity.this, "Failed!", Toast.LENGTH_SHORT).show();
-                }
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                    Toast.makeText(this, "Failed!", Toast.LENGTH_SHORT).show();
+//                }
             }
 
-        } else if (requestCode == CAMERA) {
+        } else if (requestCode == CAMERA && hasFetureCamera) {
             Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
             imageview.setImageBitmap(thumbnail);
-            saveImage(thumbnail);
-            //updates the DOG database to include the path to the picture when chosen from the camera
-            RexDatabaseUtilities util = new RexDatabaseUtilities();
-            util.updatePhoto(this, thumbnail.toString());
+            String newImage = saveImage(thumbnail);
+//            imageview.setImageURI(Uri.parse(newImage));
+//            imageview.setImageBitmap(thumbnail);
+            //TODO
+            contentURI = newImage;
+            RexDatabaseUtilities.updatePhoto(this, contentURI);
             Log.d(TAG, "Saving picture from camera");
 
             Toast.makeText(ProfileActivity.this, "Image Saved!", Toast.LENGTH_SHORT).show();
@@ -228,8 +248,7 @@ public class ProfileActivity extends AppCompatActivity {
         }
 
         try {
-            File f = new File(wallpaperDirectory, Calendar.getInstance()
-                    .getTimeInMillis() + ".jpg");
+            File f = new File(wallpaperDirectory, Calendar.getInstance().getTimeInMillis() + ".jpg");
             f.createNewFile();
             FileOutputStream fo = new FileOutputStream(f);
             fo.write(bytes.toByteArray());
