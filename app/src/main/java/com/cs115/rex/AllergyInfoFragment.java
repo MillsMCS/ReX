@@ -115,13 +115,11 @@ public class AllergyInfoFragment extends Fragment implements AdapterView.OnItemS
         button.setText(allergen);
         if (!isEditing){
             button.setBackgroundColor(Color.TRANSPARENT);
-            button.setTextColor(Color.parseColor("#000000"));
         } else {
             button.setBackgroundResource(android.R.drawable.btn_default_small);
-            button.setTextColor(Color.parseColor("#000000"));
         }
-        // TODO: https://guides.codepath.com/android/Drawables
-//        button.setBackgroundResource(R.drawable.png_test);
+        button.setTextColor(Color.BLACK);
+
 
         // display the allergy
         allergiesHolder.addView(button);
@@ -145,13 +143,9 @@ public class AllergyInfoFragment extends Fragment implements AdapterView.OnItemS
             button.setEnabled(isEditing);
             if (isEditing){
                 button.setBackgroundResource(android.R.drawable.btn_default);
-                button.setTextColor(Color.parseColor("#000000"));
             } else {
                 button.setBackgroundColor(Color.TRANSPARENT);
-                button.setTextColor(Color.parseColor("#000000"));
             }
-//            b.setBackgroundColor(isEditing ? Color.parseColor("#d1d1d1") : Color.TRANSPARENT);
-//            b.setTextColor(Color.parseColor(isEditing ? "#000000" : "#8e8e8e"));
         }
     }
 

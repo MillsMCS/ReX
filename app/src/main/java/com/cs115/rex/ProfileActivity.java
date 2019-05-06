@@ -11,7 +11,6 @@ import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -78,7 +77,7 @@ public class ProfileActivity extends AppCompatActivity {
                 isEditing = !isEditing;
                 String edit_or_save = isEditing ? "Save" : "Edit";
                 editAndSaveBtn.setText(edit_or_save);
-                dogInfoFrag.makeEditable();
+                dogInfoFrag.activityButtonPress();
                 allergyFrag.onEditandSaveAction();
             }
         });
