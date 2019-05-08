@@ -3,6 +3,7 @@ package com.cs115.rex;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -10,12 +11,13 @@ import android.util.Log;
 
 public class RexDatabaseUtilities {
 
+    private static String TAG = "databaseUtilities";
 
     /**
-     * Gets all elements of dog from dog table.
+     * Gets elements of dog.
      *
-     * @param context the context
-     * @return cursor with all the different elements of the dog from dog table or null if there's an error
+     * @param context
+     * @return
      * @author Karena Huang
      */
     public static Cursor getDog(Context context) {
@@ -42,10 +44,10 @@ public class RexDatabaseUtilities {
     /**
      * //TODO: See if this is used anywhere before due date.
      * //TODO: add argument for dogId
-     * Gets all the allergies for a specific dog
+     * Gets a cursor of all the allergies for a specific dog
      *
-     * @param context the context
-     * @return all the allergies tied to a specific dog or null if there's an error
+     * @param context
+     * @return
      * @author Karena Huang
      */
     public static Cursor getAllergies(Context context) {
@@ -65,11 +67,11 @@ public class RexDatabaseUtilities {
     }
 
     /**
-     * Gets name of each allergy for a certain dog.
+     * Gets food name of each allergy for a certain dog.
      *
-     * @param context the context
-     * @param dogId the dog ID shared with allergy table and dog table
-     * @return string array with all allergies associated with a specific dog
+     * @param context
+     * @param dogId
+     * @return
      * @author Karena Huang
      */
     public static String[] getAllergyNames(Context context, String dogId) {
@@ -86,7 +88,6 @@ public class RexDatabaseUtilities {
                     foodNames[theCount] = cursor.getString(indexFoodNames);
                     theCount += 1;
                 }
-                db.close();
                 cursor.close();
                 return foodNames;
             }
@@ -97,10 +98,10 @@ public class RexDatabaseUtilities {
     }
 
     /**
-     * Gets all food names from food table.
+     * Gets all food names.
      *
-     * @param context the context
-     * @return food Array containing all food names
+     * @param context
+     * @return all food names
      * @author Karena Huang
      */
     public static String[] getAllFoodNames(Context context) {
@@ -118,7 +119,6 @@ public class RexDatabaseUtilities {
                 foodArray[index] = cursor.getString(0);
                 index += 1;
             }
-            db.close();
             cursor.close();
             return foodArray;
 
@@ -128,10 +128,10 @@ public class RexDatabaseUtilities {
     }
 
     /**
-     * Gets all food Ids from food table.
+     * returns all food Ids
      *
-     * @param context the context
-     * @return array of ints containing food IDs
+     * @param context
+     * @return food Ids
      * @author Karena Huang
      */
     public static int[] getAllFoodId(Context context) {
@@ -149,20 +149,12 @@ public class RexDatabaseUtilities {
                 intArray[index] = cursor.getInt(0);
                 index += 1;
             }
-            db.close();
             cursor.close();
             return intArray;
         } catch (SQLiteException e) {
             return null;
         }
     }
-
-    /**
-     *
-     * @param context
-     * @return
-     * @author Zoe
-     */
     public static Cursor getFood(Context context) {
         try {
             SQLiteOpenHelper rexDatabaseHelper = new RexDatabaseHelper(context);
@@ -180,13 +172,6 @@ public class RexDatabaseUtilities {
         }
     }
 
-    /**
-     *
-     * @param context
-     * @param searchName
-     * @return
-     * @author Zoe
-     */
     //get a cursor with all of the foods that match the given query
     public static Cursor getSelectedFoodList(Context context, String searchName){
         try {
@@ -206,13 +191,6 @@ public class RexDatabaseUtilities {
         }
     }
 
-    /**
-     *
-     * @param context
-     * @param searchName
-     * @return
-     * @author Zoe
-     */
     //get all of the foods that match the given query
     public static String[] getSelectedFoodNames(Context context, String searchName){
         try {
@@ -247,13 +225,6 @@ public class RexDatabaseUtilities {
         }
     }
 
-    /**
-     *
-     * @param context
-     * @param searchName
-     * @return
-     * @author Zoe
-     */
     //get all of the database data for a particular food given that food's name
     public static String[] getFoodByName(Context context, String searchName){
         try {
@@ -284,11 +255,11 @@ public class RexDatabaseUtilities {
     }
 
     /**
-     * Updates dog name in dog profile.
+     * updates dog name
      *
-     * @param context the context
-     * @param newDogName new dog name to be updated to in dog profile and in dog table
-     * @return true if successful, false otherwise
+     * @param context
+     * @param newDogName
+     * @return
      * @author Karena Huang
      */
     public static boolean updateName(Context context, String newDogName) {
@@ -307,13 +278,6 @@ public class RexDatabaseUtilities {
         }
     }
 
-    /**
-     * Updates breed in dog profile.
-     *
-     * @param context the context
-     * @param newBreed new breed to be updated to in dog profile and in dog table
-     * @return true if successful, false otherwise
-     */
     public static boolean updateBreed(Context context, String newBreed) {
         try {
             SQLiteOpenHelper rexDatabaseHelper = new RexDatabaseHelper(context);
@@ -331,13 +295,6 @@ public class RexDatabaseUtilities {
         }
     }
 
-    /**
-     * Updates weight of dog in dog profile.
-     *
-     * @param context the context
-     * @param newWeight new weight to be updated to in dog profile and in dog table
-     * @return true if successful, false otherwise
-     */
     public static boolean updateWeight(Context context, String newWeight) {
         try {
             SQLiteOpenHelper rexDatabaseHelper = new RexDatabaseHelper(context);
@@ -355,13 +312,6 @@ public class RexDatabaseUtilities {
         }
     }
 
-    /**
-     * Updates photo of dog in dog profile.
-     *
-     * @param context the context
-     * @param theImage image to be uploaded in dog profile and updated to in dog table
-     * @return true if successful, false otherwise
-     */
     public static boolean updatePhoto(Context context, String theImage) {
         try {
             SQLiteOpenHelper rexDatabaseHelper = new RexDatabaseHelper(context);
@@ -380,14 +330,6 @@ public class RexDatabaseUtilities {
         }
     }
 
-    /**
-     * Adds specified allergy with associated dog to allergy table.
-     *
-     * @param context the context
-     * @param foodId specifies what food to add to allergy table in association with specific dog
-     * @param dogId specifying what food with what specific dog to add to allergy table
-     * @return ID of allergy that was added
-     */
     public static int addAllergy(Context context, int foodId, int dogId) {
         try {
             SQLiteOpenHelper rexDatabaseHelper = new RexDatabaseHelper(context);
@@ -417,14 +359,6 @@ public class RexDatabaseUtilities {
         }
     }
 
-    /**
-     * Removes specified allergy with associated dog from allergy table.
-     *
-     * @param context the context
-     * @param foodId specifies what food to remove from allergy table in association with a specific dog
-     * @param dogId specifying what food with what specific dog to remove from allergy table
-     * @return true if successful, false otherwise
-     */
     public static boolean removeAllergy(Context context, String foodId, String dogId) {
         try {
             SQLiteOpenHelper rexDatabaseHelper = new RexDatabaseHelper(context);
