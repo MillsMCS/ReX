@@ -138,7 +138,8 @@ public class ProfileActivity extends AppCompatActivity {
         AlertDialog.Builder pictureDialog = new AlertDialog.Builder(this);
         pictureDialog.setTitle("Select Action");
         String[] pictureDialogItems = {
-                "Select photo from gallery", "Capture photo from camera"};
+                "Select photo from gallery"};
+        // add when camera works "Capture photo from camera"
         pictureDialog.setItems(pictureDialogItems,
                 new DialogInterface.OnClickListener() {
                     @Override
@@ -147,9 +148,9 @@ public class ProfileActivity extends AppCompatActivity {
                             case 0:
                                 choosePhotoFromGallery();
                                 break;
-                            case 1:
-                                takePhotoFromCamera();
-                                break;
+//                            case 1:
+//                                takePhotoFromCamera();
+//                                break;
                         }
                     }
                 });
@@ -168,10 +169,10 @@ public class ProfileActivity extends AppCompatActivity {
      * Starts the activity to choose camera to shoot photo
      * @author Gavin Erezuma
      */
-    private void takePhotoFromCamera() {
-        Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(intent, CAMERA);
-    }
+//    private void takePhotoFromCamera() {
+//        Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+//        startActivityForResult(intent, CAMERA);
+//    }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -190,15 +191,15 @@ public class ProfileActivity extends AppCompatActivity {
                 Log.d(TAG, "Saving picture from gallery to database");
             }
 
-        } else if (requestCode == CAMERA) {
-            Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
-            imageview.setImageBitmap(thumbnail);
-            String newImage = saveImage(thumbnail);
-            contentURI = newImage;
-            RexDatabaseUtilities.updatePhoto(this, contentURI);
-            Log.d(TAG, "Saving picture from camera to database");
-
-            Toast.makeText(ProfileActivity.this, "Image Saved!", Toast.LENGTH_SHORT).show();
+//        } else if (requestCode == CAMERA) {
+//            Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
+//            imageview.setImageBitmap(thumbnail);
+//            String newImage = saveImage(thumbnail);
+//            contentURI = newImage;
+//            RexDatabaseUtilities.updatePhoto(this, contentURI);
+//            Log.d(TAG, "Saving picture from camera to database");
+//
+//            Toast.makeText(ProfileActivity.this, "Image Saved!", Toast.LENGTH_SHORT).show();
         }
     }
     /**
@@ -207,33 +208,33 @@ public class ProfileActivity extends AppCompatActivity {
      * @return path of the image Uri
      * @author Gavin Erezuma
      */
-    public String saveImage(Bitmap myBitmap) {
-
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-        File wallpaperDirectory = new File(
-                Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY);
-        // have the object build the directory structure, if needed.
-        if (!wallpaperDirectory.exists()) {
-            wallpaperDirectory.mkdirs();
-        }
-
-        try {
-            File f = new File(wallpaperDirectory, Calendar.getInstance().getTimeInMillis() + ".jpg");
-            f.createNewFile();
-            FileOutputStream fo = new FileOutputStream(f);
-            fo.write(bytes.toByteArray());
-            MediaScannerConnection.scanFile(this,
-                    new String[]{f.getPath()},
-                    new String[]{"image/jpeg"}, null);
-
-            Log.d(TAG, "File Saved::---&gt;" + f.getAbsolutePath());
-            fo.close();
-            return f.getAbsolutePath();
-
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
-        return "";
-    }
+//    public String saveImage(Bitmap myBitmap) {
+//
+//        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+//        myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+//        File wallpaperDirectory = new File(
+//                Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY);
+//        // have the object build the directory structure, if needed.
+//        if (!wallpaperDirectory.exists()) {
+//            wallpaperDirectory.mkdirs();
+//        }
+//
+//        try {
+//            File f = new File(wallpaperDirectory, Calendar.getInstance().getTimeInMillis() + ".jpg");
+//            f.createNewFile();
+//            FileOutputStream fo = new FileOutputStream(f);
+//            fo.write(bytes.toByteArray());
+//            MediaScannerConnection.scanFile(this,
+//                    new String[]{f.getPath()},
+//                    new String[]{"image/jpeg"}, null);
+//
+//            Log.d(TAG, "File Saved::---&gt;" + f.getAbsolutePath());
+//            fo.close();
+//            return f.getAbsolutePath();
+//
+//        } catch (IOException e1) {
+//            e1.printStackTrace();
+//        }
+//        return "";
+//    }
 }
