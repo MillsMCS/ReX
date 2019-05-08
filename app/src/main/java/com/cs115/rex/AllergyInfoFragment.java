@@ -218,7 +218,7 @@ public class AllergyInfoFragment extends Fragment implements AdapterView.OnItemS
             for (String food : deletedAllergies) {
                 int index = Arrays.asList(allFoodNames).indexOf(food);
                 int foodId = allFoodIds[index];
-                RexDatabaseUtilities.removeAllergy(activity, String.valueOf(foodId), String.valueOf(RexDatabaseHelper.SINGLE_DOG_ID));
+                RexDatabaseUtilities.removeAllergy(activity, foodId, RexDatabaseHelper.SINGLE_DOG_ID);
             }
             return null;
         }
