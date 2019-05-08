@@ -68,7 +68,7 @@ public class ProfileActivity extends AppCompatActivity {
                 isEditing = !isEditing;
                 String edit_or_save = isEditing ? "Save" : "Edit";
                 editAndSaveBtn.setText(edit_or_save);
-                dogInfoFrag.makeEditable();
+                dogInfoFrag.activityButtonPress();
                 allergyFrag.onEditandSaveAction();
             }
         });
@@ -169,7 +169,7 @@ public class ProfileActivity extends AppCompatActivity {
      * @author Gavin Erezuma
      */
     private void takePhotoFromCamera() {
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(intent, CAMERA);
     }
     @Override
