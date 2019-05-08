@@ -16,7 +16,7 @@ import android.widget.Toast;
 
 
 /**
- *
+ * Fragment attached to ProfileActivity which shows - and allows user to edit - their dog's name, weight, and breed.
  */
 public class DogInfoFragment extends Fragment {
     private static final String TAG = "DOGFRAGMENT";
@@ -39,9 +39,7 @@ public class DogInfoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container,
                              Bundle savedInstanceState) {
-
         super.onCreateView(inflater, container, savedInstanceState);
-        Log.d(TAG, "inOnCreateView");
         if (savedInstanceState != null) {
             name = savedInstanceState.getString("name");
             breed = savedInstanceState.getString("breed");
@@ -57,18 +55,10 @@ public class DogInfoFragment extends Fragment {
     }
 
     @Override
-    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-        super.onViewStateRestored(savedInstanceState);
-        Log.d(TAG, "in onViewStateRestored");
-        if (savedInstanceState != null){
-            Log.d(TAG, "saved instance state is not null");
-        }
-    }
-
-    @Override
     public void onStart() {
         super.onStart();
 
+        // get parent View
         View view = getView();
 
         // set up EditTexts
@@ -82,10 +72,11 @@ public class DogInfoFragment extends Fragment {
             weightET.setText(weight);
             breedET.setText(breed);
 
-        // otherwise, if this is the first time loading the Activity, load values in from database
+        // if Fragment is not restored, load values from database
         } else {
             Cursor cursor = RexDatabaseUtilities.getDog(view.getContext());
-            if (cursor.moveToFirst()) {
+            if (cursor != null && cursor.moveToFirst()) {
+
                 // put values in String variables so we can close cursor
                 oldName = cursor.getString(0);
                 oldWeight = cursor.getString(1);
@@ -105,19 +96,23 @@ public class DogInfoFragment extends Fragment {
     }
 
     /**
-     * Called by ProfileActivity on Edit / Save button press.
-     * //TODO write more Javadoc
+     * Called when the user presses the Activity's Edit/Save button.
+     *
+     * Toggles whether TextEdits are editable.
+     * When the user presses 'Save', changes are pushed to the database.
+     *
+     * @author: Maygan Lightstone
      */
-    public void makeEditable(){
+    protected void onEditandSaveClick() {
         // if user is Editing, compare their new values to their old values
-        if (isEditing){
+        if (isEditing) {
             new UpdateDogInfo().execute(nameET.getText().toString(),
-                                  breedET.getText().toString(),
-                                  weightET.getText().toString(),
-                                  oldName,
-                                  oldBreed,
-                                  oldWeight,
-                                  getActivity());
+                    breedET.getText().toString(),
+                    weightET.getText().toString(),
+                    oldName,
+                    oldBreed,
+                    oldWeight,
+                    getActivity());
         }
         // change Button and editText states
         isEditing = !isEditing;
@@ -130,7 +125,6 @@ public class DogInfoFragment extends Fragment {
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
 
-        Log.d(TAG, "in onSaveInstanceState");
         // save original EditText values
         savedInstanceState.putString("oldName", oldName);
         savedInstanceState.putString("oldBreed", oldBreed);
@@ -146,7 +140,8 @@ public class DogInfoFragment extends Fragment {
         savedInstanceState.putBoolean("isEditing", isEditing);
     }
 
-    private class UpdateDogInfo extends AsyncTask<Object, Void, Activity>{
+    private class UpdateDogInfo extends AsyncTask<Object, Void, Activity> {
+
         @Override
         protected Activity doInBackground(Object... params) {
             String newName = (String) params[0];
@@ -160,10 +155,10 @@ public class DogInfoFragment extends Fragment {
             if (!oldName.equals(newName)) {
                 RexDatabaseUtilities.updateName(activity, newName);
             }
-            if (!oldBreed.equals(newBreed)){
+            if (!oldBreed.equals(newBreed)) {
                 RexDatabaseUtilities.updateBreed(activity, newBreed);
             }
-            if (!oldWeight.equals(newWeight)){
+            if (!oldWeight.equals(newWeight)) {
                 RexDatabaseUtilities.updateWeight(activity, newWeight);
             }
             return activity;

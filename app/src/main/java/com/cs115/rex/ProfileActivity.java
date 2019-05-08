@@ -5,12 +5,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
-import android.graphics.Bitmap;
-import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -21,14 +17,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.Calendar;
 
 public class ProfileActivity extends AppCompatActivity {
-
 
     private Button button;
     private String TAG = "profileActivity";
@@ -50,13 +40,16 @@ public class ProfileActivity extends AppCompatActivity {
             isRestored = savedInstanceState.getBoolean("isRestored");
             isEditing = savedInstanceState.getBoolean("isEditing");
         }
+
         // set toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         // set Save / Edit Button
         final Button editAndSaveBtn = findViewById(R.id.edit_button);
         String edit_or_save = isEditing ? "Save" : "Edit";
         editAndSaveBtn.setText(edit_or_save);
+
         // get Fragments so we can set onclick listeners
         FragmentManager fm = getSupportFragmentManager();
         dogInfoFrag = (DogInfoFragment) fm.findFragmentById(R.id.dog_info_frag);
@@ -68,8 +61,8 @@ public class ProfileActivity extends AppCompatActivity {
                 isEditing = !isEditing;
                 String edit_or_save = isEditing ? "Save" : "Edit";
                 editAndSaveBtn.setText(edit_or_save);
-                dogInfoFrag.activityButtonPress();
-                allergyFrag.onEditandSaveAction();
+                dogInfoFrag.onEditandSaveClick();
+                allergyFrag.onEditandSaveClick();
             }
         });
         // set Select Photo button
@@ -110,14 +103,15 @@ public class ProfileActivity extends AppCompatActivity {
         savedInstanceState.putBoolean("isEditing", isEditing);
         savedInstanceState.putBoolean("isRestored", true);
     }
+
     //Menu - adds settings button from profile menu to app bar
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu to add items to the app bar.
         getMenuInflater().inflate(R.menu.menu_profile, menu);
         return super.onCreateOptionsMenu(menu);
-
     }
+
     //Menu - activates app bar menu settings button
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
