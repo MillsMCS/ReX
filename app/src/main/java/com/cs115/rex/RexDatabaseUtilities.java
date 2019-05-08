@@ -359,7 +359,7 @@ public class RexDatabaseUtilities {
         }
     }
 
-    public static boolean removeAllergy(Context context, String foodId, String dogId) {
+    public static boolean removeAllergy(Context context, int foodId, int dogId) {
         try {
             SQLiteOpenHelper rexDatabaseHelper = new RexDatabaseHelper(context);
             SQLiteDatabase db = rexDatabaseHelper.getReadableDatabase();
@@ -367,7 +367,7 @@ public class RexDatabaseUtilities {
             //query where allergy equals allergy id
             db.delete("ALLERGIES", RexDatabaseHelper.FOOD_ID + " = ? AND " +
                             RexDatabaseHelper.DOG_ID + " = ? ",
-                    new String[]{foodId, dogId});
+                    new String[]{String.valueOf(foodId), String.valueOf(dogId)});
             db.close();
             return true;
         } catch (SQLiteException e) {

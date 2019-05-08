@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
- *
+ * Fragment attached to ProfileActivity which shows - and allows user to edit - their dog's allergies.
  */
 public class AllergyInfoFragment extends Fragment implements AdapterView.OnItemSelectedListener, View.OnClickListener {
     private static final String TAG = "allergy_info_frag";
@@ -81,8 +81,8 @@ public class AllergyInfoFragment extends Fragment implements AdapterView.OnItemS
     private void createSpinner() {
         foodsSpinner = activity.findViewById(R.id.all_foods_spinner);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(activity,
-                R.layout.spinner,
-                allFoodNames);
+                                                        R.layout.spinner,
+                                                        allFoodNames);
         foodsSpinner.setAdapter(adapter);
         foodsSpinner.setOnItemSelectedListener(this);
         foodsSpinner.setVisibility(isEditing ? View.VISIBLE : View.GONE);
@@ -120,14 +120,21 @@ public class AllergyInfoFragment extends Fragment implements AdapterView.OnItemS
             button.setBackgroundResource(android.R.drawable.btn_default_small);
             button.setTextColor(Color.parseColor("#000000"));
         }
-        // TODO: https://guides.codepath.com/android/Drawables
-//        button.setBackgroundResource(R.drawable.png_test);
 
         // display the allergy
         allergiesHolder.addView(button);
     }
 
-    public void onEditandSaveAction() {
+    /**
+     * Called when the user presses the Activity's Edit/Save button.
+     *
+     * Toggles visibility of Spinner, visibility of Spinner label, and whether buttons are enabled.
+     * When the user presses 'Save', changes are pushed to the database.
+     *
+     * @author: Maygan Lightstone
+     */
+    protected void onEditandSaveClick() {
+        // if the user is saving their
         if (isEditing) {
             new UpdateAllergies().execute(activity, addedAllergies, deletedAllergies, allFoodNames, allFoodIds);
         }
@@ -150,8 +157,6 @@ public class AllergyInfoFragment extends Fragment implements AdapterView.OnItemS
                 button.setBackgroundColor(Color.TRANSPARENT);
                 button.setTextColor(Color.parseColor("#000000"));
             }
-//            b.setBackgroundColor(isEditing ? Color.parseColor("#d1d1d1") : Color.TRANSPARENT);
-//            b.setTextColor(Color.parseColor(isEditing ? "#000000" : "#8e8e8e"));
         }
     }
 
@@ -218,14 +223,15 @@ public class AllergyInfoFragment extends Fragment implements AdapterView.OnItemS
             for (String food : deletedAllergies) {
                 int index = Arrays.asList(allFoodNames).indexOf(food);
                 int foodId = allFoodIds[index];
-                RexDatabaseUtilities.removeAllergy(activity, String.valueOf(foodId), String.valueOf(RexDatabaseHelper.SINGLE_DOG_ID));
+                RexDatabaseUtilities.removeAllergy(activity, foodId, RexDatabaseHelper.SINGLE_DOG_ID);
             }
             return null;
         }
 
         @Override
         protected void onPostExecute(Void v){
-            // TODO: where to put this for thread safety?
+            // TODO more research about where to clear these.
+            // Unsure if the ArrayLists would be safe to clear outside of the AsyncTask (are they passed to doInBackground as copies or by reference?)
             addedAllergies.clear();
             deletedAllergies.clear();
         }
