@@ -5,12 +5,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
-import android.graphics.Bitmap;
-import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -21,11 +17,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.Calendar;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -33,8 +24,7 @@ public class ProfileActivity extends AppCompatActivity {
     private Button button;
     private String TAG = "profileActivity";
     private ImageView imageview;
-    private static final String IMAGE_DIRECTORY = " //media/external/images/media";
-    private int GALLERY = 1, CAMERA = 2;
+    private int GALLERY = 1;
     private boolean isRestored, isEditing;
     private String contentURI;
     private DogInfoFragment dogInfoFrag;
@@ -131,7 +121,7 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
     /**
-     * Displays dialog for choosing camera or photo from gallery
+     * Displays dialog for choosing photo from gallery
      * @author Gavin Erezuma
      */
     private void showPictureDialog() {
@@ -142,15 +132,12 @@ public class ProfileActivity extends AppCompatActivity {
         // add when camera works "Capture photo from camera"
         pictureDialog.setItems(pictureDialogItems,
                 new DialogInterface.OnClickListener() {
+            // left switch statement for future iteration that includes camera
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which) {
                             case 0:
                                 choosePhotoFromGallery();
-                                break;
-//                            case 1:
-//                                takePhotoFromCamera();
-//                                break;
                         }
                     }
                 });
@@ -165,14 +152,6 @@ public class ProfileActivity extends AppCompatActivity {
                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(galleryIntent, GALLERY);
     }
-    /**
-     * Starts the activity to choose camera to shoot photo
-     * @author Gavin Erezuma
-     */
-//    private void takePhotoFromCamera() {
-//        Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-//        startActivityForResult(intent, CAMERA);
-//    }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -190,51 +169,6 @@ public class ProfileActivity extends AppCompatActivity {
                 RexDatabaseUtilities.updatePhoto(this, contentURI);
                 Log.d(TAG, "Saving picture from gallery to database");
             }
-
-//        } else if (requestCode == CAMERA) {
-//            Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
-//            imageview.setImageBitmap(thumbnail);
-//            String newImage = saveImage(thumbnail);
-//            contentURI = newImage;
-//            RexDatabaseUtilities.updatePhoto(this, contentURI);
-//            Log.d(TAG, "Saving picture from camera to database");
-//
-//            Toast.makeText(ProfileActivity.this, "Image Saved!", Toast.LENGTH_SHORT).show();
         }
     }
-    /**
-     * Saves image to directory if it exists, if not it creates a directory and then saves
-     * @param myBitmap
-     * @return path of the image Uri
-     * @author Gavin Erezuma
-     */
-//    public String saveImage(Bitmap myBitmap) {
-//
-//        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-//        myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-//        File wallpaperDirectory = new File(
-//                Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY);
-//        // have the object build the directory structure, if needed.
-//        if (!wallpaperDirectory.exists()) {
-//            wallpaperDirectory.mkdirs();
-//        }
-//
-//        try {
-//            File f = new File(wallpaperDirectory, Calendar.getInstance().getTimeInMillis() + ".jpg");
-//            f.createNewFile();
-//            FileOutputStream fo = new FileOutputStream(f);
-//            fo.write(bytes.toByteArray());
-//            MediaScannerConnection.scanFile(this,
-//                    new String[]{f.getPath()},
-//                    new String[]{"image/jpeg"}, null);
-//
-//            Log.d(TAG, "File Saved::---&gt;" + f.getAbsolutePath());
-//            fo.close();
-//            return f.getAbsolutePath();
-//
-//        } catch (IOException e1) {
-//            e1.printStackTrace();
-//        }
-//        return "";
-//    }
 }
