@@ -17,7 +17,7 @@
         android:layout_marginTop="20dp"
         android:layout_centerHorizontal="true"
         android:background="@color/colorToxic"
-        android:text="Chocolate"
+        android:text="CHOCOLATE"
         android:textAlignment="center"
         android:textColor="@color/colorAccent"
         android:textSize="40sp"
@@ -29,10 +29,11 @@
     <ImageView
         android:id="@+id/detail_photo"
         android:layout_below="@+id/header"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
-        android:layout_marginTop="30dp"
-        android:src="@drawable/chocolate"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginBottom="20dp"
+        android:src="@drawable/rex_icon_scottish_nobg"
         android:layout_centerHorizontal="true"
         android:contentDescription="@string/main_image_desc" />
 
@@ -43,11 +44,12 @@
         android:layout_below="@id/detail_photo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:layout_centerHorizontal="true"
         android:layout_marginStart="30dp"
         android:layout_marginEnd="30dp"
-        android:textSize="20dp"
-        android:text="@string/symptom10"
+        android:text="Lorem ipsum chocolate is tasty, but not for dogs. Lorem ipsum chocolate is tasty, but not for dogs.
+        Lorem ipsum chocolate is tasty, but not for dogs. Lorem ipsum chocolate is tasty, but not for dogs."
          />
 
 </RelativeLayout>

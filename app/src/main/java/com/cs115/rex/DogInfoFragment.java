@@ -16,7 +16,7 @@ import android.widget.Toast;
 
 
 /**
- *
+ * Fragment attached to ProfileActivity which shows - and allows user to edit - their dog's name, weight, and breed.
  */
 public class DogInfoFragment extends Fragment {
     private static final String TAG = "DOGFRAGMENT";
@@ -40,30 +40,25 @@ public class DogInfoFragment extends Fragment {
                              ViewGroup container,
                              Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-
-        // if we are restoring from Bundle, set instance variables from Bundle
         if (savedInstanceState != null) {
-            unpackBundle(savedInstanceState);
-            isRestored = true;
+            name = savedInstanceState.getString("name");
+            breed = savedInstanceState.getString("breed");
+            weight = savedInstanceState.getString("weight");
+            isRestored = savedInstanceState.getBoolean("isRestored");
+            isEditing = savedInstanceState.getBoolean("isEditing");
+            oldName = savedInstanceState.getString("oldName");
+            oldBreed = savedInstanceState.getString("oldBreed");
+            oldWeight = savedInstanceState.getString("oldWeight");
         }
+        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_dog_info, container, false);
-    }
-
-    private void unpackBundle(Bundle savedInstanceState) {
-        name = savedInstanceState.getString("name");
-        breed = savedInstanceState.getString("breed");
-        weight = savedInstanceState.getString("weight");
-        isEditing = savedInstanceState.getBoolean("isEditing");
-        oldName = savedInstanceState.getString("oldName");
-        oldBreed = savedInstanceState.getString("oldBreed");
-        oldWeight = savedInstanceState.getString("oldWeight");
     }
 
     @Override
     public void onStart() {
         super.onStart();
 
-        // get Activity's view
+        // get parent View
         View view = getView();
 
         // set up EditTexts
@@ -77,17 +72,17 @@ public class DogInfoFragment extends Fragment {
             weightET.setText(weight);
             breedET.setText(breed);
 
-        // otherwise load values in from database
+        // if Fragment is not restored, load values from database
         } else {
             Cursor cursor = RexDatabaseUtilities.getDog(view.getContext());
-
             if (cursor != null && cursor.moveToFirst()) {
-                // get values
+
+                // put values in String variables so we can close cursor
                 oldName = cursor.getString(0);
                 oldWeight = cursor.getString(1);
                 oldBreed = cursor.getString(2);
 
-                // set EditTexts
+                // set Edit Texts to values
                 nameET.setText(oldName);
                 weightET.setText(oldWeight);
                 breedET.setText(oldBreed);
@@ -101,19 +96,23 @@ public class DogInfoFragment extends Fragment {
     }
 
     /**
-     * Called by ProfileActivity on Edit / Save button press.
-     * //TODO write more Javadoc
+     * Called when the user presses the Activity's Edit/Save button.
+     *
+     * Toggles whether TextEdits are editable.
+     * When the user presses 'Save', changes are pushed to the database.
+     *
+     * @author: Maygan Lightstone
      */
-    public void activityButtonPress(){
-        // if user pressed save, send data to thread for possible addition to db
-        if (isEditing){
+    protected void onEditandSaveClick() {
+        // if user is Editing, compare their new values to their old values
+        if (isEditing) {
             new UpdateDogInfo().execute(nameET.getText().toString(),
-                                  breedET.getText().toString(),
-                                  weightET.getText().toString(),
-                                  oldName,
-                                  oldBreed,
-                                  oldWeight,
-                                  getActivity());
+                    breedET.getText().toString(),
+                    weightET.getText().toString(),
+                    oldName,
+                    oldBreed,
+                    oldWeight,
+                    getActivity());
         }
         // change Button and editText states
         isEditing = !isEditing;
@@ -137,10 +136,12 @@ public class DogInfoFragment extends Fragment {
         savedInstanceState.putString("weight", weightET.getText().toString());
 
         // save booleans
+        savedInstanceState.putBoolean("isRestored", true);
         savedInstanceState.putBoolean("isEditing", isEditing);
     }
 
-    private class UpdateDogInfo extends AsyncTask<Object, Void, Activity>{
+    private class UpdateDogInfo extends AsyncTask<Object, Void, Activity> {
+
         @Override
         protected Activity doInBackground(Object... params) {
             String newName = (String) params[0];
@@ -151,14 +152,13 @@ public class DogInfoFragment extends Fragment {
             String oldWeight = (String) params[5];
             Activity activity = (Activity) params[6];
 
-            // only update columns where the user has changed the value
             if (!oldName.equals(newName)) {
                 RexDatabaseUtilities.updateName(activity, newName);
             }
-            if (!oldBreed.equals(newBreed)){
+            if (!oldBreed.equals(newBreed)) {
                 RexDatabaseUtilities.updateBreed(activity, newBreed);
             }
-            if (!oldWeight.equals(newWeight)){
+            if (!oldWeight.equals(newWeight)) {
                 RexDatabaseUtilities.updateWeight(activity, newWeight);
             }
             return activity;
