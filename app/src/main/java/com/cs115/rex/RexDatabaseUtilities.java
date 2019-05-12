@@ -225,8 +225,8 @@ public class RexDatabaseUtilities {
         }
     }
 
-    //get all of the database data for a particular food given that food's name
-    public static String[] getFoodByName(Context context, String searchName){
+    //get all of the database data for a particular food given that food's id
+    public static String[] getFoodByID(Context context, int itemId){
         try {
             SQLiteOpenHelper rexDatabaseHelper = new RexDatabaseHelper(context);
             SQLiteDatabase db = rexDatabaseHelper.getReadableDatabase();
@@ -234,7 +234,7 @@ public class RexDatabaseUtilities {
                     new String[]{
                             RexDatabaseHelper.NAME, RexDatabaseHelper.TOXICITY, RexDatabaseHelper.IMAGE_RESOURCE_ID,
                             RexDatabaseHelper.QUOTE},
-                    "NAME = ?", new String[]{searchName}, null, null, null
+                    "_id = ?", new String[]{Integer.toString(itemId)}, null, null, null
             );
             String[] thisFood = new String[4];
             int theCount = 0;

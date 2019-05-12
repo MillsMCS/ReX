@@ -15,8 +15,6 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 public class ResultsActivity extends MenuHomeActivity implements ResultsFragment.Listener {
-    public static final String RESULT_ID = "result_id";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,16 +41,11 @@ public class ResultsActivity extends MenuHomeActivity implements ResultsFragment
         setSupportActionBar(toolbar);
     }
 
-    //TODO add selective toxicity info
-    protected void checkToxicity() {
-
-    }
-
     //sends user to appropriate details when user clicks a result
     public void onClickResult(long id) {
         //TODO activate detail properly (via database) on a phone screen
         Intent intent = new Intent(this, DetailActivity.class);
-        intent.putExtra(ResultsActivity.RESULT_ID, (int)id);
+        intent.putExtra(DetailFragment.RESULT_ID, (int)id);
         startActivity(intent);
 
     }

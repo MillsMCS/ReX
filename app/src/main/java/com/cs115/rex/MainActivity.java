@@ -128,7 +128,7 @@ public class MainActivity extends MenuActivity implements ResultsFragment.Listen
         } else {
             //TODO activate detail properly (via database) on a phone screen
             Intent intent = new Intent(this, DetailActivity.class);
-            intent.putExtra(ResultsActivity.RESULT_ID, (int)id);
+            intent.putExtra(DetailFragment.RESULT_ID, (int)id);
             startActivity(intent);
         }
     }
