@@ -36,9 +36,5 @@ public class DetailActivity extends MenuHomeActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
     }
-
-    //TODO add toxicity and vet bar (calls contact) when the result calls for them
-
 }

@@ -5,8 +5,6 @@
     android:layout_height="match_parent"
     android:orientation="horizontal" >
 
-    <!-- TODO consider that App Bar doesn't extend across the full width of the screen -->
-
     <fragment
         android:name="com.cs115.rex.SearchFragment"
         android:id="@+id/search_frag"

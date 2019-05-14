@@ -1,7 +1,6 @@
 package com.cs115.rex;
 
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -78,16 +77,10 @@ public class ResultsFragment extends ListFragment {
 
     }
 
-    //TODO add database functionality to get id of result and add that
     //@Override
-    //TODO remove hardcoded example id
     public void onListItemClick(ListView listView, View itemView, int position, long id) {
         if (listener != null) {
             listener.onClickResult(id);
-
-            //Intent intent = new Intent(getActivity(), DetailActivity.class);
-            //intent.putExtra(DetailFragment.RESULT_ID, id);
-            //startActivity(intent);
         }
     }
 }

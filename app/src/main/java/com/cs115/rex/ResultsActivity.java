@@ -38,8 +38,6 @@ public class ResultsActivity extends MenuHomeActivity implements ResultsFragment
 
     //sends user to appropriate details when user clicks a result
     public void onClickResult(long id) {
-
-        //TODO activate detail properly (via database) on a tablet screen with database
         View detailContainer = findViewById(R.id.detail_container);
         if (detailContainer != null) {
             DetailFragment detail = new DetailFragment();
@@ -51,10 +49,11 @@ public class ResultsActivity extends MenuHomeActivity implements ResultsFragment
             ft.commit();
 
         } else {
-            //TODO activate detail properly (via database) on a phone screen
             Intent intent = new Intent(this, DetailActivity.class);
             intent.putExtra(DetailFragment.RESULT_ID, id);
+            overridePendingTransition(0, 0);
             startActivity(intent);
+            overridePendingTransition(0, 0);
         }
     }
 }

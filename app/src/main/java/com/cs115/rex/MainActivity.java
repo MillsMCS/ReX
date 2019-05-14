@@ -47,15 +47,6 @@ public class MainActivity extends MenuActivity implements ResultsFragment.Listen
             Toast toast = Toast.makeText(this, "Please enter a search term", Toast.LENGTH_SHORT);
             toast.show();
 
-            //the following was an attempt to avoid the flash when the activity recreates (recreate() shows the flash)
-            //does not work,  tested on fire
-            /*
-            finish();
-            overridePendingTransition(0, 0);
-            startActivity(getIntent());
-            overridePendingTransition(0, 0);
-             */
-            //TODO delay recreate() with a runnable, attempt to suppress animations (screen flash)
             recreate();
         }
 
@@ -70,7 +61,6 @@ public class MainActivity extends MenuActivity implements ResultsFragment.Listen
             Toast toast = Toast.makeText(this, "No results found. Please try a different search.", Toast.LENGTH_SHORT);
             toast.show();
 
-            //TODO delay recreate() with a runnable, attempt to suppress animations (screen flash)
             recreate();
         }
 
@@ -89,14 +79,13 @@ public class MainActivity extends MenuActivity implements ResultsFragment.Listen
             //Log.d("DebugLog: ", "MainActivity - name: " + searchName + "; " + "results: " + searchResults);
             if(searchName.equals("") || searchResults == null) {
 
-                //clumsy, but restarts mainActivity with toast - recreate() does not have the desired effect here
-                //recreate shows a search result with all of the available search items
-                //TODO delay recreate() with a runnable, attempt to suppress animations (screen flash)
                 Intent intent = new Intent(this, MainActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("search_name",searchName);
                 intent.putExtras(bundle);
+                overridePendingTransition(0, 0);
                 startActivity(intent);
+                overridePendingTransition(0, 0);
             } else {
 
                 Intent intent = new Intent(this, ResultsActivity.class);
@@ -108,14 +97,15 @@ public class MainActivity extends MenuActivity implements ResultsFragment.Listen
 
                 ResultsFragment results = new ResultsFragment();
 
+                overridePendingTransition(0, 0);
                 startActivity(intent);
+                overridePendingTransition(0, 0);
             }
         }
     }
 
     //sends user to appropriate details when user clicks a result
     public void onClickResult(long id) {
-        //TODO activate detail properly (via database) on a tablet screen with database
         View resultsContainer = findViewById(R.id.detail_container);
         if (resultsContainer != null) {
             DetailFragment detail = new DetailFragment();
@@ -127,7 +117,6 @@ public class MainActivity extends MenuActivity implements ResultsFragment.Listen
             ft.commit();
 
         } else {
-            //TODO activate detail properly (via database) on a phone screen
             Intent intent = new Intent(this, DetailActivity.class);
             intent.putExtra(DetailFragment.RESULT_ID, id);
             startActivity(intent);

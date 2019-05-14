@@ -2,6 +2,7 @@ package com.cs115.rex;
 
 
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -47,7 +48,7 @@ public class DetailFragment extends Fragment {
         if(items.moveToFirst()) {
 
             Log.d("DebugLog: ", "DetailFragment - cursor: " + items.getString(0) + ", " + items.getInt(1)
-                    + ", " + items.getInt(2) + ", " + items.getInt(3));
+                    + ", " + items.getString(2) + ", " + items.getString(3));
 
             //set name of selected food
             String nameText = items.getString(0);
@@ -59,21 +60,19 @@ public class DetailFragment extends Fragment {
             int bgColor = (tox > 1) ? R.color.colorToxic : R.color.colorNonToxic;
             name.setBackgroundColor(getResources().getColor(bgColor));
 
-            //Evaluate for allergy given particular dog and add blue to background if dog is allergic
-
+            //TODO Evaluate for allergy given particular dog and add blue to background if dog is allergic
 
             //set appropriate img
-            int img = items.getInt(2);
+            String imgStr = items.getString(2);
+            int imgId = getResources().getIdentifier(imgStr, "drawable", getActivity().getPackageName());
             ImageView photo = (ImageView) view.getRootView().findViewById(R.id.detail_photo);
-            photo.setImageResource(img);
+            photo.setImageResource(imgId);
 
-            /*
-            int quoteId = items.getInt(3);
-            Integer quoteId = Integer.parseInt(quote);
+
+            String quoteStr = items.getString(3);
+            int stringId = getResources().getIdentifier(quoteStr, "string", getActivity().getPackageName());
             TextView desc = (TextView) view.getRootView().findViewById(R.id.detail_text);
-            String descText = getString(quoteId);
-            desc.setText(quote);
-            */
+            desc.setText(stringId);
         }
     }
 
@@ -89,10 +88,5 @@ public class DetailFragment extends Fragment {
 
     public void setDataFromActivity(long itemId){
         this.itemId = itemId;
-    }
-
-    //TODO add selective toxicity info
-    protected void checkToxicity() {
-
     }
 }
