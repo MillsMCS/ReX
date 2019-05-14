@@ -61,7 +61,7 @@ public class MainActivity extends MenuActivity implements ResultsFragment.Listen
 
         try {
             searchResults = setResultList(this, searchName);
-            Log.d("DebugLog: ", "MainActivity - Value: " + searchResults.length);
+            //Log.d("DebugLog: ", "MainActivity - Value: " + searchResults.length);
             if(searchResults.length == 0) { throw new Exception(); }
 
         //a more specific exception would be nice - looking to account for no search results found
@@ -86,7 +86,7 @@ public class MainActivity extends MenuActivity implements ResultsFragment.Listen
 
         } else {
 
-            Log.d("DebugLog: ", "MainActivity - name: " + searchName + "; " + "results: " + searchResults);
+            //Log.d("DebugLog: ", "MainActivity - name: " + searchName + "; " + "results: " + searchResults);
             if(searchName.equals("") || searchResults == null) {
 
                 //clumsy, but restarts mainActivity with toast - recreate() does not have the desired effect here
@@ -120,6 +120,7 @@ public class MainActivity extends MenuActivity implements ResultsFragment.Listen
         if (resultsContainer != null) {
             DetailFragment detail = new DetailFragment();
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            detail.setDataFromActivity(id);
             ft.replace(R.id.detail_container, detail);
             ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
             ft.addToBackStack(null);
@@ -128,7 +129,7 @@ public class MainActivity extends MenuActivity implements ResultsFragment.Listen
         } else {
             //TODO activate detail properly (via database) on a phone screen
             Intent intent = new Intent(this, DetailActivity.class);
-            intent.putExtra(DetailFragment.RESULT_ID, (int)id);
+            intent.putExtra(DetailFragment.RESULT_ID, id);
             startActivity(intent);
         }
     }

@@ -9,11 +9,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
-import android.widget.Toast;
 
 /**
  *
@@ -34,7 +31,7 @@ public class ResultsFragment extends ListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            Log.d("DebugLog: ", "ResultsFragment - Value: " + getArguments().getStringArray(SEARCH_RESULTS)[0]);
+            //Log.d("DebugLog: ", "ResultsFragment - Value: " + getArguments().getStringArray(SEARCH_RESULTS)[0]);
             searchResults = getArguments().getStringArray(SEARCH_RESULTS);
             searchName = getArguments().getString(SEARCH_NAME);
         }
@@ -66,7 +63,6 @@ public class ResultsFragment extends ListFragment {
         bundle.putStringArray(SEARCH_RESULTS, searchResults);
         bundle.putString(SEARCH_NAME, searchName);
         resultsFragment.setArguments(bundle);
-
         return resultsFragment;
     }
 
@@ -88,6 +84,10 @@ public class ResultsFragment extends ListFragment {
     public void onListItemClick(ListView listView, View itemView, int position, long id) {
         if (listener != null) {
             listener.onClickResult(id);
+
+            //Intent intent = new Intent(getActivity(), DetailActivity.class);
+            //intent.putExtra(DetailFragment.RESULT_ID, id);
+            //startActivity(intent);
         }
     }
 }

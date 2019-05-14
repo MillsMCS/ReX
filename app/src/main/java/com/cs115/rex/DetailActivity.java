@@ -14,35 +14,21 @@ public class DetailActivity extends MenuHomeActivity {
         super.onCreate(savedInstanceState);
 
         Bundle bundle = getIntent().getExtras();
-        int itemId = (Integer) bundle.get(DetailFragment.RESULT_ID);
 
-        //
-        String[] itemArray = RexDatabaseUtilities.getFoodByID(this,itemId);
+        Log.d("DebugLog: ", "DetailActivity - id from bundle: " +
+                (Long) bundle.get(DetailFragment.RESULT_ID));
 
-        Log.d("DebugLog: ", "DetailActivity - Value: " + itemArray[0]);
-
-        String nameText = itemArray[0];
-        TextView name = findViewById(R.id.header);
-        name.setText(nameText);
-
-        String tox = itemArray[1];
-        //DetailFragment.checkTox;
-
-        String img = itemArray[2];
-        ImageView photo = findViewById(R.id.detail_photo);
-        photo.setImageResource(getResources().getIdentifier("ImageName","drawable",getPackageName()));
-
-        String quote = itemArray[3];
-        TextView desc = findViewById(R.id.detail_text);
-        //
-
-        //Log.d("DebugLog: ", "DetailActivity - Value: " + itemArray[0]);
+        long itemId = (Long) bundle.get(DetailFragment.RESULT_ID);
 
         DetailFragment details = new DetailFragment();
         details.setArguments(bundle);
 
+        Log.d("DebugLog: ", "DetailActivity - id from arguments: " +
+                details.getArguments().getLong(DetailFragment.RESULT_ID));
+
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         DetailFragment detailFrag = DetailFragment.newInstance(itemId);
+        detailFrag.setDataFromActivity(itemId);
         ft.replace(R.id.detail_container, detailFrag);
         ft.commit();
 

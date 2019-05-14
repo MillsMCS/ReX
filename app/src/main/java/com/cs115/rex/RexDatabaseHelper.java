@@ -50,7 +50,7 @@ public class RexDatabaseHelper extends SQLiteOpenHelper {
                     + "IMAGE_RESOURCE_ID INTEGER, "
                     + "QUOTE INTEGER);");
 
-            insertFood(db,"Alcohol", 9, R.drawable.alcohol,R.string.symptom9);
+            insertFood(db,"Alcohol", 9, R.drawable.alcohol, R.string.symptom9);
             insertFood(db,"Apple", 8, R.drawable.apple,R.string.symptom8);
             insertFood(db,"Apricot", 8, R.drawable.apricot,R.string.symptom8);
             insertFood(db,"Avocado", 1, R.drawable.avocado,R.string.symptom1);
