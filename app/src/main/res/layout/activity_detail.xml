@@ -11,9 +11,8 @@
         layout="@layout/toolbar_main"
         android:id="@+id/toolbar" />
 
-    <fragment
-        android:name="com.cs115.rex.DetailFragment"
-        android:id="@+id/detail_frag"
+    <FrameLayout
+        android:id="@+id/detail_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </LinearLayout>

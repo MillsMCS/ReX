@@ -37,8 +37,6 @@
         android:autofillHints=""
         -->
 
-    <!-- TODO add button functionality -->
-
     <Button
         android:id="@+id/search_button"
         android:layout_below="@id/search_bar"
@@ -52,7 +50,6 @@
         android:onClick="onClickSearch" />
 
     <!-- holds results ListFragment -->
-    <!-- TODO consider formatting for results ListFragment -->
     <FrameLayout
         android:id="@+id/results_container"
         android:layout_below="@id/search_button"

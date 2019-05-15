@@ -2,7 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <!-- TODO paw icon appears washed out on app -->
     <item android:id="@+id/action_profile"
         android:title="@string/profile_menu_item"
         android:icon="@drawable/paw_icon"

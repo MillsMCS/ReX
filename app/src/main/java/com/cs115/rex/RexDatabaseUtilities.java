@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import android.view.LayoutInflater;
 
 public class RexDatabaseUtilities {
 
@@ -243,24 +244,27 @@ public class RexDatabaseUtilities {
         }
     }
 
+
     /**
      *
      * @param context
-     * @param searchName
+     * @param itemId
      * @return
      * @author Zoe
      */
     //get all of the database data for a particular food given that food's name
-    public static String[] getFoodByName(Context context, String searchName){
+    public static Cursor getFoodById(Context context, long itemId){
+
         try {
             SQLiteOpenHelper rexDatabaseHelper = new RexDatabaseHelper(context);
             SQLiteDatabase db = rexDatabaseHelper.getReadableDatabase();
-            Cursor cursor = db.query(RexDatabaseHelper.FOOD,
+            return db.query(RexDatabaseHelper.FOOD,
                     new String[]{
                             RexDatabaseHelper.NAME, RexDatabaseHelper.TOXICITY, RexDatabaseHelper.IMAGE_RESOURCE_ID,
                             RexDatabaseHelper.QUOTE},
-                    "NAME = ?", new String[]{searchName}, null, null, null
+                    "_id = ?", new String[] {Long.toString(itemId)}, null, null, null
             );
+            /*
             String[] thisFood = new String[4];
             int theCount = 0;
             if(cursor.moveToFirst()) {
@@ -272,12 +276,13 @@ public class RexDatabaseUtilities {
             cursor.close();
             db.close();
             return thisFood;
-
+            */
         } catch (SQLiteException e) {
             //TODO Add toast - food not available
             return null;
         }
     }
+
 
     /**
      * Updates dog name in dog profile.
