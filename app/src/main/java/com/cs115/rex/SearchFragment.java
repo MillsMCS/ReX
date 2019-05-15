@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 
 
 /**
- *
+ * The supporting fragment for the top level activity, whose accompanying view generates the search interface.
  */
 public class SearchFragment extends Fragment {
 

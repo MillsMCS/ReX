@@ -16,7 +16,7 @@ import android.widget.Toast;
 
 
 /**
- * Fragment attached to ProfileActivity which shows - and allows user to edit - their dog's name, weight, and breed.
+ * Fragment attached to {@link ProfileActivity} which shows - and allows user to edit - their dog's name, weight, and breed.
  */
 public class DogInfoFragment extends Fragment {
     private static final String TAG = "DOGFRAGMENT";

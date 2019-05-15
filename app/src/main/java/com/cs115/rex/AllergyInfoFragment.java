@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
- * Fragment attached to ProfileActivity which shows - and allows user to edit - their dog's allergies.
+ * Fragment attached to {@link ProfileActivity} which shows - and allows user to edit - their dog's allergies.
  */
 public class AllergyInfoFragment extends Fragment implements AdapterView.OnItemSelectedListener, View.OnClickListener {
     private static final String TAG = "allergy_info_frag";

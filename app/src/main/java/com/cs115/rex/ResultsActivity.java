@@ -7,6 +7,10 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 
+/**
+ * The activity that allows users to view the list of results. The associated fragment's {@link ResultsFragment} view
+ * displays the list of search results.
+ */
 public class ResultsActivity extends MenuHomeActivity implements ResultsFragment.Listener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,10 +37,12 @@ public class ResultsActivity extends MenuHomeActivity implements ResultsFragment
         setSupportActionBar(toolbar);
     }
 
-    //gets the name of the chosen food based on the list id
 
-
-    //sends user to appropriate details when user clicks a result
+    /**
+     * Sends user to appropriate details {@link DetailActivity}, {@link DetailFragment} when user clicks a result
+     * @param id Food table item id corresponding to list item that user has clicked
+     * @return void
+     */
     public void onClickResult(long id) {
         View detailContainer = findViewById(R.id.detail_container);
         if (detailContainer != null) {

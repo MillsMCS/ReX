@@ -5,6 +5,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+/**
+ * Displays a paw button menu item that links to {@link ProfileActivity} and a dog house menu item
+ * that links to {@link MainActivity}
+ * Every activity except {@link ProfileActivity} that displays a home button extends this activity
+ * so that the menu code is shared.
+ */
 public class MenuHomeActivity extends AppCompatActivity {
     // DetailActivity and ResultsActivity extend this activity so that they display a home button
     // on phones and on tablets in portrait orientation
@@ -17,7 +23,7 @@ public class MenuHomeActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    //Menu - activates menu paw button to open profile interface
+    //Menu - activates dog house button to open search interface
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -26,6 +32,7 @@ public class MenuHomeActivity extends AppCompatActivity {
                 startActivity(mIntent);
                 return true;
 
+            //Menu - activates menu paw button to open profile interface
             case R.id.action_profile:
                 Intent pIntent = new Intent(this, ProfileActivity.class);
                 startActivity(pIntent);

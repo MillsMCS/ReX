@@ -18,6 +18,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+/**
+ * Top-level category for the application's profile function. Displays and allows editing of dog profile.
+ */
 public class ProfileActivity extends AppCompatActivity {
 
     private Button button;
@@ -74,6 +77,7 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
     }
+
     @Override
     public void onStart() {
         super.onStart();
@@ -95,6 +99,7 @@ public class ProfileActivity extends AppCompatActivity {
             }
         }
     }
+
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
@@ -123,6 +128,7 @@ public class ProfileActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
     /**
      * Displays dialog for choosing photo from gallery
      * @author Gavin Erezuma
@@ -146,6 +152,7 @@ public class ProfileActivity extends AppCompatActivity {
                 });
         pictureDialog.show();
     }
+
     /**
      * Starts the activity to choose photo from gallery
      * @author Gavin Erezuma
@@ -155,6 +162,7 @@ public class ProfileActivity extends AppCompatActivity {
                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(galleryIntent, GALLERY);
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

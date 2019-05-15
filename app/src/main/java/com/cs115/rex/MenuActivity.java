@@ -5,9 +5,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+/**
+ * Displays a paw button menu item that links to {@link ProfileActivity}
+ * Every activity that does not display a home button except ProfileActivity extends this activity
+ * so that the menu code is shared.
+ * ProfileActivity has its own specific local menu code.
+ */
 public class MenuActivity extends AppCompatActivity {
-    // Every activity except ProfileActivity extends this activity so that the menu code is shared.
-    // ProfileActivity has specific menu code
 
     //Menu - adds paw button from main menu
     @Override
