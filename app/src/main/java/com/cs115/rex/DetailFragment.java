@@ -2,7 +2,6 @@ package com.cs115.rex;
 
 
 import android.database.Cursor;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -63,31 +62,31 @@ public class DetailFragment extends Fragment {
             int bgColor = (tox > 1) ? R.color.colorToxic : R.color.colorNonToxic;
             name.setBackgroundColor(getResources().getColor(bgColor));
 
-            //TODO Evaluate for allergy given particular dog and add blue to background if dog is allergic
-            //get dog's allergies
-            String[] allergyFoods = RexDatabaseUtilities.getAllergyNames(this.getActivity(), "1");
-            ArrayList<String> allergyList = new ArrayList<String> (Arrays.asList(allergyFoods));
-
-
-            //if food is in dog's allergies array, add border
-            if(allergyList.contains(nameText)){
-                View allergyIndicator = (View) view.getRootView().findViewById(R.id.allergyIndicator);
-                allergyIndicator.setBackgroundColor(getResources().getColor(R.color.colorAllergic));
-            }
-
-
-
             //set appropriate img
             String imgStr = items.getString(2);
             int imgId = getResources().getIdentifier(imgStr, "drawable", getActivity().getPackageName());
             ImageView photo = (ImageView) view.getRootView().findViewById(R.id.detail_photo);
             photo.setImageResource(imgId);
 
-
+            //add symptom text
             String quoteStr = items.getString(3);
             int stringId = getResources().getIdentifier(quoteStr, "string", getActivity().getPackageName());
             TextView desc = (TextView) view.getRootView().findViewById(R.id.detail_text);
             desc.setText(stringId);
+
+            //modify detail page to show colored band if dog is allergic to current food
+            //get dog's allergies
+            String[] allergyFoods = RexDatabaseUtilities.getAllergyNames(this.getActivity(), "1");
+            ArrayList<String> allergyList = new ArrayList<String> (Arrays.asList(allergyFoods));
+
+            //if food is in dog's allergies array, add border
+            if(allergyList.contains(nameText)){
+                View allergyIndicator = (View) view.getRootView().findViewById(R.id.allergyIndicator);
+                allergyIndicator.setBackgroundColor(getResources().getColor(R.color.colorAllergic));
+
+                String symptom = getResources().getString(stringId);
+                desc.setText(String.format(getResources().getString(R.string.allergy_notice), symptom));
+            }
         }
     }
 

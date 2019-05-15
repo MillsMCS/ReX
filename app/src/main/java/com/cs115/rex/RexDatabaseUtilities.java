@@ -157,36 +157,12 @@ public class RexDatabaseUtilities {
     }
 
     /**
-     *
-     * @param context
-     * @return
-     * @author Zoe
+     * get a cursor with the ids and names of the foods whose names start with the user input search string to populate the results list fragment
+     * @param context this context
+     * @param searchName the user input search string
+     * @return a Cursor containing the ids and names of all of the food table items that start with the search string
+     * @author Zoe Abrams
      */
-    public static Cursor getFood(Context context) {
-        try {
-            SQLiteOpenHelper rexDatabaseHelper = new RexDatabaseHelper(context);
-            SQLiteDatabase db = rexDatabaseHelper.getReadableDatabase();
-            return db.query(RexDatabaseHelper.ALLERGIES,
-                    new String[]{
-                            RexDatabaseHelper.FOOD_ID,
-                            RexDatabaseHelper.DOG_ID},
-                    RexDatabaseHelper.ALLERGY_DOG_ID + " = ?",
-                    new String[]{Integer.toString(RexDatabaseHelper.SINGLE_DOG_ID)},
-                    null, null, null);
-
-        } catch (SQLiteException e) {
-            return null;
-        }
-    }
-
-    /**
-     *
-     * @param context
-     * @param searchName
-     * @return
-     * @author Zoe
-     */
-    //get a cursor with all of the foods that match the given query
     public static Cursor getSelectedFoodList(Context context, String searchName){
         try {
             SQLiteOpenHelper rexDatabaseHelper = new RexDatabaseHelper(context);
@@ -206,13 +182,12 @@ public class RexDatabaseUtilities {
     }
 
     /**
-     *
-     * @param context
-     * @param searchName
-     * @return
-     * @author Zoe
+     * get a string array of all of the foods that match the given query to check for the presence of search results
+     * @param context this context
+     * @param searchName the user-inputted search string
+     * @return String array containing the ids and names of all of the database items that start with the search string
+     * @author Zoe Abrams
      */
-    //get all of the foods that match the given query
     public static String[] getSelectedFoodNames(Context context, String searchName){
         try {
             SQLiteOpenHelper rexDatabaseHelper = new RexDatabaseHelper(context);
@@ -244,15 +219,13 @@ public class RexDatabaseUtilities {
         }
     }
 
-
     /**
-     *
-     * @param context
-     * @param itemId
-     * @return
-     * @author Zoe
+     * get all of the database data for a particular food given that food's database id from the results list fragment
+     * @param context this context
+     * @param itemId the database id of the item whose data will be retrieved
+     * @return a Cursor containing all of the food table database data that matches the provided itemId
+     * @author Zoe Abrams
      */
-    //get all of the database data for a particular food given that food's name
     public static Cursor getFoodById(Context context, long itemId){
 
         try {
@@ -278,11 +251,9 @@ public class RexDatabaseUtilities {
             return thisFood;
             */
         } catch (SQLiteException e) {
-            //TODO Add toast - food not available
             return null;
         }
     }
-
 
     /**
      * Updates dog name in dog profile.
