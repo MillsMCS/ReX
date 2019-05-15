@@ -20,6 +20,16 @@
         android:textStyle="bold"
         />
 
+    <View
+        android:id="@+id/allergyIndicator"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:padding="0dp"
+        android:layout_marginTop="0dp"
+        android:layout_centerHorizontal="true"
+        android:background="@color/rex_background"
+        />
+
     <ImageView
         android:id="@+id/detail_photo"
         android:layout_below="@+id/header"

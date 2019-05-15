@@ -14,6 +14,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 
 /**
  *
@@ -61,6 +64,18 @@ public class DetailFragment extends Fragment {
             name.setBackgroundColor(getResources().getColor(bgColor));
 
             //TODO Evaluate for allergy given particular dog and add blue to background if dog is allergic
+            //get dog's allergies
+            String[] allergyFoods = RexDatabaseUtilities.getAllergyNames(this.getActivity(), "1");
+            ArrayList<String> allergyList = new ArrayList<String> (Arrays.asList(allergyFoods));
+
+
+            //if food is in dog's allergies array, add border
+            if(allergyList.contains(nameText)){
+                View allergyIndicator = (View) view.getRootView().findViewById(R.id.allergyIndicator);
+                allergyIndicator.setBackgroundColor(getResources().getColor(R.color.colorAllergic));
+            }
+
+
 
             //set appropriate img
             String imgStr = items.getString(2);
