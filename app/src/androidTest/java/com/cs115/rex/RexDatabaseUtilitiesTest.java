@@ -5,42 +5,39 @@ import android.content.Context;
 import android.database.Cursor;
 import android.support.test.InstrumentationRegistry;
 
-import org.junit.After;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
 public class RexDatabaseUtilitiesTest {
 
     private static final int DOG1_ID = 0;
-    private static final String DOG2_ID = "1";
     private static final String DOG1_NAME = "Bruno";
     private static final String DOG1_WEIGHT = "235";
     private static final String DOG1_BREED = "Retriever";
     private static final String DOG1_PHOTO = null;
     private static final int FOOD1_ID = 1;
     private static final String FOOD1_NAME = "Alcohol";
+    private static final String FOOD1_TOX = "9";
     private static final String FOOD2_NAME = "Ch";
     private static final String FOOD3_NAME = "Chamomile";
     private static final String FOOD4_NAME = "Cherry";
     private static final String FOOD5_NAME = "Chicken";
     private static final String FOOD6_NAME = "Chive";
     private static final String FOOD7_NAME = "Chocolate";
-    private static final String FOOD3_BLURB = "2131492924";
-    private static final String FOOD3_TOX = "6";
-    private static final String FOOD3_PHOTO = "2131099739";
-    private static final int ALLERGY1_ID = 1;
+    private static final String FOOD1_BLURB = "2131492927";
+    private static final String FOOD1_PHOTO = "2131099733";
+    private static final String ALLERGY_ID = "12";
     private static final String NEW_NAME = "Benji";
     private static final String NEW_BREED = "Labrador";
     private static final String NEW_WEIGHT = "220";
     private static final String NEW_PHOTO = "photo";
-
-    // This creates a temporary context so database accesses in the tests are isolated.
     private Context context = InstrumentationRegistry.getTargetContext();
 
-//Running the updateDog() test will switch the old dog info to the new dog info. The next time
-    //the getDog() test is run, the new info will be expected
+
+    //Expects the updated dog values if run more than once
     @Test
     public void getDog() throws Exception {
         Cursor dogCursor = RexDatabaseUtilities.getDog(context);
@@ -55,48 +52,27 @@ public class RexDatabaseUtilitiesTest {
         }
     }
 
-    //Still not passing
     @Test
     public void getAllergies() throws Exception {
         RexDatabaseUtilities.addAllergy(context, FOOD1_ID, DOG1_ID);
         Cursor allergyCursor = RexDatabaseUtilities.getAllergies(context);
         if (allergyCursor != null) {
             allergyCursor.moveToFirst();
-            assertEquals("1", allergyCursor.getString(0));
-            //DatabaseUtils.dumpCursorToString(allergyCursor);
+            assertEquals(ALLERGY_ID, allergyCursor.getString(0));
         } else {
             fail();
         }
     }
 
+    //Fails: values from added record still present, not removed
     @Test
-    public void getAllergyNames() throws Exception {
+    public void removeAllergy() throws Exception {
         RexDatabaseUtilities.addAllergy(context, FOOD1_ID, DOG1_ID);
-        String[] allergyNames = RexDatabaseUtilities.getAllergyNames(context, "0");
-        if (allergyNames != null) {
-            assertEquals(FOOD1_NAME, allergyNames[1]);
-        } else {
-            fail();
-        }
+        RexDatabaseUtilities.removeAllergy(context, FOOD1_ID, DOG1_ID);
+        Cursor allergyCursor2 = RexDatabaseUtilities.getAllergies(context);
+        allergyCursor2.moveToFirst();
+        assertNull(allergyCursor2.getString(0));
     }
-
-    //Commented out test whose method has been removed
-    /*
-    //Same method as getAllergies(), also not passing
-    @Test
-    public void getFood() throws Exception {
-        RexDatabaseUtilities.addAllergy(context, FOOD1_ID, DOG1_ID);
-        Cursor allergyCursor = RexDatabaseUtilities.getFood(context);
-        if (allergyCursor != null){
-            allergyCursor.moveToFirst();
-            //assertEquals(ALLERGY1_ID, );
-            assertEquals(DOG2_ID, allergyCursor.getString(0));
-            //assertEquals(DOG1_ID, allergyCursor.getInt(2));
-        } else {
-            fail();
-        }
-    }
-    */
 
 
     @Test
@@ -119,8 +95,6 @@ public class RexDatabaseUtilitiesTest {
         }
     }
 
-
-    //commented out non-compiling test
     @Test
     public void getSelectedFoodList() throws Exception {
         Cursor foodListCursor = RexDatabaseUtilities.getSelectedFoodList(context, FOOD2_NAME);
@@ -154,35 +128,20 @@ public class RexDatabaseUtilitiesTest {
         }
     }
 
-    //Commented out test whose method has been removed
-    /*
     @Test
-    public void getFoodByName() throws Exception {
-        String[] food = RexDatabaseUtilities.getFoodByName(context, FOOD3_NAME);
-        if (food != null) {
-            assertEquals(FOOD3_NAME, food[0]);
-            assertEquals(FOOD3_TOX, food[1]);
-            assertEquals(FOOD3_PHOTO, food[2]);
-            assertEquals(FOOD3_BLURB, food[3]);
+    public void getFoodById() throws Exception {
+        Cursor foodId = RexDatabaseUtilities.getFoodById(context, FOOD1_ID);
+        if (foodId != null) {
+            foodId.moveToFirst();
+            assertEquals(FOOD1_NAME, foodId.getString(0));
+            assertEquals(FOOD1_TOX, foodId.getString(1));
+            assertEquals(FOOD1_PHOTO, foodId.getString(2));
+            assertEquals(FOOD1_BLURB, foodId.getString(3));
         } else {
             fail();
         }
     }
-    */
-
-
-    @Test
-    public void removeAllergy() throws Exception {
-        RexDatabaseUtilities.addAllergy(context, FOOD1_ID, DOG1_ID);
-        //Cursor allergyCursor = RexDatabaseUtilities.getAllergies(context);
-        RexDatabaseUtilities.removeAllergy(context, FOOD1_ID, DOG1_ID);
-
-        //allergyCursor.moveToFirst();
-        //assertEquals(false, allergyCursor);
-    }
-
-
-
+   
     @Test
     public void updateName() throws Exception {
         boolean success = RexDatabaseUtilities.updateName(context, NEW_NAME);
@@ -236,11 +195,4 @@ public class RexDatabaseUtilitiesTest {
         }
     }
 
-
-    @After
-    public void takeDown() {
-//        db.close();
-        //TODO: where does this really go?
-        //db.close();
-    }
 }
