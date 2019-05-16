@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,7 +15,7 @@ import android.widget.Toast;
 
 
 /**
- * Fragment attached to ProfileActivity which shows - and allows user to edit - their dog's name, weight, and breed.
+ * Fragment attached to {@link ProfileActivity} which shows - and allows user to edit - their dog's name, weight, and breed.
  */
 public class DogInfoFragment extends Fragment {
     private static final String TAG = "DOGFRAGMENT";
@@ -100,8 +99,6 @@ public class DogInfoFragment extends Fragment {
      *
      * Toggles whether TextEdits are editable.
      * When the user presses 'Save', changes are pushed to the database.
-     *
-     * @author: Maygan Lightstone
      */
     protected void onEditandSaveClick() {
         // if user is Editing, compare their new values to their old values

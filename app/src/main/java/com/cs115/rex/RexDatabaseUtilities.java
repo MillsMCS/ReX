@@ -7,8 +7,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-import android.view.LayoutInflater;
 
+/**
+ * Helper class that provides database access utility methods.
+ */
 public class RexDatabaseUtilities {
 
     private static String TAG = "databaseUtilities";
@@ -18,7 +20,6 @@ public class RexDatabaseUtilities {
      *
      * @param context the context
      * @return cursor with all the different elements of the dog from dog table or null if there's an error
-     * @author Karena Huang
      */
     public static Cursor getDog(Context context) {
         try {
@@ -48,7 +49,6 @@ public class RexDatabaseUtilities {
      *
      * @param context the context
      * @return all the allergies tied to a specific dog or null if there's an error
-     * @author Karena Huang
      */
     public static Cursor getAllergies(Context context) {
         try {
@@ -72,7 +72,6 @@ public class RexDatabaseUtilities {
      * @param context the context
      * @param dogId the dog ID shared with allergy table and dog table
      * @return string array with all allergies associated with a specific dog
-     * @author Karena Huang
      */
     public static String[] getAllergyNames(Context context, String dogId) {
         try {
@@ -102,7 +101,6 @@ public class RexDatabaseUtilities {
      *
      * @param context the context
      * @return food Array containing all food names
-     * @author Karena Huang
      */
     public static String[] getAllFoodNames(Context context) {
         try {
@@ -132,7 +130,6 @@ public class RexDatabaseUtilities {
      *
      * @param context the context
      * @return array of ints containing food IDs
-     * @author Karena Huang
      */
     public static int[] getAllFoodId(Context context) {
         try {
@@ -161,7 +158,6 @@ public class RexDatabaseUtilities {
      * @param context this context
      * @param searchName the user input search string
      * @return a Cursor containing the ids and names of all of the food table items that start with the search string
-     * @author Zoe Abrams
      */
     public static Cursor getSelectedFoodList(Context context, String searchName){
         try {
@@ -186,7 +182,6 @@ public class RexDatabaseUtilities {
      * @param context this context
      * @param searchName the user-inputted search string
      * @return String array containing the ids and names of all of the database items that start with the search string
-     * @author Zoe Abrams
      */
     public static String[] getSelectedFoodNames(Context context, String searchName){
         try {
@@ -224,7 +219,6 @@ public class RexDatabaseUtilities {
      * @param context this context
      * @param itemId the database id of the item whose data will be retrieved
      * @return a Cursor containing all of the food table database data that matches the provided itemId
-     * @author Zoe Abrams
      */
     public static Cursor getFoodById(Context context, long itemId){
 
@@ -261,7 +255,6 @@ public class RexDatabaseUtilities {
      * @param context the context
      * @param newDogName new dog name to be updated to in dog profile and in dog table
      * @return true if successful, false otherwise
-     * @author Karena Huang
      */
     public static boolean updateName(Context context, String newDogName) {
         try {

@@ -39,7 +39,6 @@ public class RexDatabaseUtilitiesTest {
     // This creates a temporary context so database accesses in the tests are isolated.
     private Context context = InstrumentationRegistry.getTargetContext();
 
-
 //Running the updateDog() test will switch the old dog info to the new dog info. The next time
     //the getDog() test is run, the new info will be expected
     @Test
@@ -81,6 +80,8 @@ public class RexDatabaseUtilitiesTest {
         }
     }
 
+    //Commented out test whose method has been removed
+    /*
     //Same method as getAllergies(), also not passing
     @Test
     public void getFood() throws Exception {
@@ -95,6 +96,7 @@ public class RexDatabaseUtilitiesTest {
             fail();
         }
     }
+    */
 
 
     @Test
@@ -117,6 +119,8 @@ public class RexDatabaseUtilitiesTest {
         }
     }
 
+
+    //commented out non-compiling test
     @Test
     public void getSelectedFoodList() throws Exception {
         Cursor foodListCursor = RexDatabaseUtilities.getSelectedFoodList(context, FOOD2_NAME);
@@ -150,6 +154,8 @@ public class RexDatabaseUtilitiesTest {
         }
     }
 
+    //Commented out test whose method has been removed
+    /*
     @Test
     public void getFoodByName() throws Exception {
         String[] food = RexDatabaseUtilities.getFoodByName(context, FOOD3_NAME);
@@ -162,6 +168,7 @@ public class RexDatabaseUtilitiesTest {
             fail();
         }
     }
+    */
 
 
     @Test
@@ -173,6 +180,7 @@ public class RexDatabaseUtilitiesTest {
         //allergyCursor.moveToFirst();
         //assertEquals(false, allergyCursor);
     }
+
 
 
     @Test
