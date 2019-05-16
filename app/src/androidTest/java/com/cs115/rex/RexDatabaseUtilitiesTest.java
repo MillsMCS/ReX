@@ -74,16 +74,6 @@ public class RexDatabaseUtilitiesTest {
         assertNull(allergyCursor2.getString(0));
     }
 
-    @Test
-    public void getAllergyNames() throws Exception {
-        RexDatabaseUtilities.addAllergy(context, FOOD1_ID, DOG1_ID);
-        String[] allergyNames = RexDatabaseUtilities.getAllergyNames(context, "0");
-        if (allergyNames != null) {
-            assertEquals(FOOD1_NAME, allergyNames[1]);
-        } else {
-            fail();
-        }
-    }
 
     @Test
     public void getAllFoodNames() throws Exception {
@@ -151,7 +141,7 @@ public class RexDatabaseUtilitiesTest {
             fail();
         }
     }
-
+   
     @Test
     public void updateName() throws Exception {
         boolean success = RexDatabaseUtilities.updateName(context, NEW_NAME);

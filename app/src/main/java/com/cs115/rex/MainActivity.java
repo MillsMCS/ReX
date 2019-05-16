@@ -7,12 +7,14 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class MainActivity extends MenuActivity implements ResultsFragment.Listener  {
+/**
+ * Top-level activity for the application, allowing the user to search and launching appropriate
+ * activities or fragments based on user interaction.
+ */
+public class MainActivity extends MenuActivity implements ResultsFragment.Listener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,41 +25,55 @@ public class MainActivity extends MenuActivity implements ResultsFragment.Listen
         setSupportActionBar(toolbar);
     }
 
+    /**
+     * Gets appropriate results from the database food table when user
+     * inputs a search item and clicks search.
+     *
+     * @param context    this context
+     * @param searchName the user's input search term
+     * @return String array containing all food items whose names start with the search term
+     */
     public String[] setResultList(Context context, String searchName) {
         return RexDatabaseUtilities.getSelectedFoodNames(context, searchName);
     }
 
-    //Activates search button, sending user to results
+    /**
+     * Activates search button, sending user to appropriate results {@link ResultsActivity},
+     * {@link ResultsFragment} when user inputs a search item and clicks search.
+     *
+     * @param view Associated view
+     */
     public void onClickSearch(View view) {
         String searchName = null;
         String[] searchResults = null;
 
-        EditText searchBar = (EditText)findViewById(R.id.search_bar);
+        EditText searchBar = (EditText) findViewById(R.id.search_bar);
 
-        try {
-            //Capitalize the first letter of the search term so it will match the inputs in the database
-            searchName = searchBar.getText().toString();
-            if(searchName.length() == 0) { throw new Exception(); }
-            searchName = searchName.substring(0, 1).toUpperCase() + searchName.substring(1);
-            //Log.d("DebugLog: ", "MainActivity - Value: " + searchName);
+        //Capitalize the first letter of the search term so it will match the inputs in the database
+        searchName = searchBar.getText().toString();
 
-        //a more specific exception would be nice - looking to account for empty search input
-        } catch (Exception e) {
+        //account for empty search string
+        if (searchName.isEmpty()) {
             //show error toast if no input
             Toast toast = Toast.makeText(this, "Please enter a search term", Toast.LENGTH_SHORT);
             toast.show();
-
             recreate();
+
+        } else {
+            searchName = searchName.substring(0, 1).toUpperCase() + searchName.substring(1);
+            //Log.d("DebugLog: ", "MainActivity - Value: " + searchName);
         }
 
         try {
             searchResults = setResultList(this, searchName);
             //Log.d("DebugLog: ", "MainActivity - Value: " + searchResults.length);
-            if(searchResults.length == 0) { throw new Exception(); }
+            if (searchResults.length == 0) {
+                throw new ArrayIndexOutOfBoundsException();
+            }
 
-        //a more specific exception would be nice - looking to account for no search results found
-        } catch (Exception e) {
-            //show error toast if no results
+        // account for no search results found
+        } catch (ArrayIndexOutOfBoundsException e) {
+            //show error toast if no results found
             Toast toast = Toast.makeText(this, "No results found. Please try a different search.", Toast.LENGTH_SHORT);
             toast.show();
 
@@ -77,11 +93,11 @@ public class MainActivity extends MenuActivity implements ResultsFragment.Listen
         } else {
 
             //Log.d("DebugLog: ", "MainActivity - name: " + searchName + "; " + "results: " + searchResults);
-            if(searchName.equals("") || searchResults == null) {
+            if (searchName.equals("") || searchResults == null) {
 
                 Intent intent = new Intent(this, MainActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putString("search_name",searchName);
+                bundle.putString("search_name", searchName);
                 intent.putExtras(bundle);
                 overridePendingTransition(0, 0);
                 startActivity(intent);
@@ -104,7 +120,11 @@ public class MainActivity extends MenuActivity implements ResultsFragment.Listen
         }
     }
 
-    //sends user to appropriate details when user clicks a result
+    /**
+     * Sends user to appropriate details {@link DetailActivity}, {@link DetailFragment} when user clicks a result
+     *
+     * @param id Food table item id corresponding to list item that user has clicked
+     */
     public void onClickResult(long id) {
         View resultsContainer = findViewById(R.id.detail_container);
         if (resultsContainer != null) {

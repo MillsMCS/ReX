@@ -18,11 +18,12 @@ import java.util.Arrays;
 
 
 /**
- *
+ * Fragment associated with {@link DetailActivity} that produces the detail page from the list of results. The accompanying view
+ * shows the appropriate food detail page based on the user's selection from the list of search results.
  */
 public class DetailFragment extends Fragment {
     public static final String RESULT_ID = "result_ID";
-    private long itemId;
+    protected long itemId;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -90,6 +91,11 @@ public class DetailFragment extends Fragment {
         }
     }
 
+    /**
+     * Instantiates a DetailFragment with saved arguments corresponding to the parameter.
+     * @param itemId the food table item id corresponding to the user's selection from the list of results
+     * @return DetailFragment with arguments corresponding to parameters
+     */
     public static DetailFragment newInstance(long itemId){
         DetailFragment detailFragment = new DetailFragment();
 
@@ -100,6 +106,10 @@ public class DetailFragment extends Fragment {
         return detailFragment;
     }
 
+    /**
+     * Sets local variables from a different activity or fragment.
+     * @param itemId the food table item id corresponding to the user's selection from the list of results
+     */
     public void setDataFromActivity(long itemId){
         this.itemId = itemId;
     }
