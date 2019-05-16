@@ -130,8 +130,6 @@ public class AllergyInfoFragment extends Fragment implements AdapterView.OnItemS
      *
      * Toggles visibility of Spinner, visibility of Spinner label, and whether buttons are enabled.
      * When the user presses 'Save', changes are pushed to the database.
-     *
-     * @author: Maygan Lightstone
      */
     protected void onEditandSaveClick() {
         // if the user is saving their

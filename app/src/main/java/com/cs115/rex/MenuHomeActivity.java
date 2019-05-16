@@ -6,14 +6,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 /**
- * Displays a paw button menu item that links to {@link ProfileActivity} and a dog house menu item
- * that links to {@link MainActivity}
- * Every activity except {@link ProfileActivity} that displays a home button extends this activity
- * so that the menu code is shared.
+ * Abstract menu class that displays a paw button menu item that links to {@link ProfileActivity} and a dog house button menu item
+ * that links to {@link MainActivity}.
+ * The general superclass of activities that display both the paw menu item and the dog house menu item.
  */
-public class MenuHomeActivity extends AppCompatActivity {
-    // DetailActivity and ResultsActivity extend this activity so that they display a home button
-    // on phones and on tablets in portrait orientation
+public abstract class MenuHomeActivity extends AppCompatActivity {
 
     //Menu - adds and activates dog house home button and paw button from menu_with_home.xml
     @Override

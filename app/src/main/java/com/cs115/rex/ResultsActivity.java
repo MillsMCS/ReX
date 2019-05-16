@@ -8,7 +8,7 @@ import android.util.Log;
 import android.view.View;
 
 /**
- * The activity that allows users to view the list of results. The associated fragment's {@link ResultsFragment} view
+ * Category-level activity that allows users to view the list of results. The associated fragment's {@link ResultsFragment} view
  * displays the list of search results.
  */
 public class ResultsActivity extends MenuHomeActivity implements ResultsFragment.Listener {
@@ -41,7 +41,6 @@ public class ResultsActivity extends MenuHomeActivity implements ResultsFragment
     /**
      * Sends user to appropriate details {@link DetailActivity}, {@link DetailFragment} when user clicks a result
      * @param id Food table item id corresponding to list item that user has clicked
-     * @return void
      */
     public void onClickResult(long id) {
         View detailContainer = findViewById(R.id.detail_container);

@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -100,8 +99,6 @@ public class DogInfoFragment extends Fragment {
      *
      * Toggles whether TextEdits are editable.
      * When the user presses 'Save', changes are pushed to the database.
-     *
-     * @author: Maygan Lightstone
      */
     protected void onEditandSaveClick() {
         // if user is Editing, compare their new values to their old values

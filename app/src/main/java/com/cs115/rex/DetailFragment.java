@@ -18,7 +18,7 @@ import java.util.Arrays;
 
 
 /**
- * The fragment that gets the user to the detail page from the list of results. The accompanying view
+ * Fragment associated with {@link DetailActivity} that produces the detail page from the list of results. The accompanying view
  * shows the appropriate food detail page based on the user's selection from the list of search results.
  */
 public class DetailFragment extends Fragment {
@@ -109,7 +109,6 @@ public class DetailFragment extends Fragment {
     /**
      * Sets local variables from a different activity or fragment.
      * @param itemId the food table item id corresponding to the user's selection from the list of results
-     * @return void
      */
     public void setDataFromActivity(long itemId){
         this.itemId = itemId;

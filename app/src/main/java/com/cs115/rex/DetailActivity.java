@@ -6,7 +6,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
 /**
- * The activity that allows users to view food detail pages. The associated fragment's {@link DetailFragment} view
+ * Detail-level activity that allows users to view food detail pages. The associated fragment's {@link DetailFragment} view
  * shows the appropriate food detail page based on the user's selection from the list of search results displayed by
  * the views associated with {@link ResultsActivity} and {@link ResultsFragment}.
  */

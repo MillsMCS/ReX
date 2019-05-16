@@ -6,6 +6,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+/**
+ * Helper class that provides database support methods for creation, data population and updates.
+ */
 public class RexDatabaseHelper extends SQLiteOpenHelper {
     private static final String DB_NAME = "rex";
     private static final int DB_VERSION = 1;

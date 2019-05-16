@@ -6,12 +6,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 /**
- * Displays a paw button menu item that links to {@link ProfileActivity}
- * Every activity that does not display a home button except ProfileActivity extends this activity
- * so that the menu code is shared.
- * ProfileActivity has its own specific local menu code.
+ * Abstract menu class that displays a paw button menu item that links to {@link ProfileActivity}.
+ * The general superclass of activities that display the paw menu item but do not also display a dog house menu item.
  */
-public class MenuActivity extends AppCompatActivity {
+public abstract class MenuActivity extends AppCompatActivity {
 
     //Menu - adds paw button from main menu
     @Override

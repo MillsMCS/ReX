@@ -19,7 +19,8 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 /**
- * Top-level category for the application's profile function. Displays and allows editing of dog profile.
+ * Top-level activity for the application's profile function. Displays and allows editing of dog profile.
+ * Does not have sub-activities, but calls {@link DogInfoFragment} and {@link AllergyInfoFragment}.
  */
 public class ProfileActivity extends AppCompatActivity {
 
@@ -155,7 +156,6 @@ public class ProfileActivity extends AppCompatActivity {
 
     /**
      * Starts the activity to choose photo from gallery
-     * @author Gavin Erezuma
      */
     public void choosePhotoFromGallery() {
         Intent galleryIntent = new Intent(Intent.ACTION_PICK,
